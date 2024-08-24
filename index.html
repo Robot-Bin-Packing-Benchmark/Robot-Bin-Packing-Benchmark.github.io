@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Robot-Bin-Packing-Benchmark</h2>
+
+<table>
+    <tr>
+        <th>Data</th>
+        <th>Method</th>
+        <th>Feasible Num</th>
+        <th>Space Utilization</th>
+        <th>Planning Time</th>
+        <th>All time</th>
+    </tr>
+    <!-- time_series -->
+    <tr>
+        <td rowspan="9">(宝洁，时序)</td>
+        <td>left_bottom</td>
+        <td>39</td>
+        <td>0.72473198</td>
+        <td>1.190944672</td>
+        <td>87.5552</td>
+    </tr>
+    <tr>
+        <td>heightmap_min</td>
+        <td>41</td>
+        <td>0.77948948</td>
+        <td>1.155697823</td>
+        <td>92.0444</td>
+    </tr>
+    <tr>
+        <td>LSAH</td>
+        <td>37</td>
+        <td>0.67106331</td>
+        <td>0.144632101</td>
+        <td>82.0659</td>
+    </tr>
+    <tr>
+        <td>MACS</td>
+        <td>38</td>
+        <td>0.69844206</td>
+        <td>0.257035732</td>
+        <td>84.3717</td>
+    </tr>
+    <tr>
+        <td>RANDOM</td>
+        <td>27</td>
+        <td>0.458735588</td>
+        <td>0.742690325</td>
+        <td>61.0361</td>
+    </tr>
+    <tr>
+        <td>OnlineBPH</td>
+        <td>37</td>
+        <td>0.67106331</td>
+        <td>0.102988243</td>
+        <td>82.2006</td>
+    </tr>
+    <tr>
+        <td>DBL</td>
+        <td>37</td>
+        <td>0.67106331</td>
+        <td>1.095422029</td>
+        <td>83.0561</td>
+    </tr>
+    <tr>
+        <td>BR</td>
+        <td>32</td>
+        <td>0.563885613</td>
+        <td>5.658205748</td>
+        <td>76.7375</td>
+    </tr>
+    <tr>
+        <td>pct</td>
+        <td>44</td>
+        <td>0.86162573</td>
+        <td>0.200680971</td>
+        <td>97.3727</td>
+    </tr>
+    <!-- semantic -->
+    <tr>
+        <td rowspan="9">(得力，占有率)</td>
+        <td>left_bottom</td>
+        <td>23</td>
+        <td>0.504685961</td>
+        <td>0.410507679</td>
+        <td>51.0077</td>
+    </tr>
+    <tr>
+        <td>heightmap_min</td>
+        <td>24</td>
+        <td>0.589012093</td>
+        <td>0.406583786</td>
+        <td>53.2615</td>
+    </tr>
+    <tr>
+        <td>LSAH</td>
+        <td>23</td>
+        <td>0.504685961</td>
+        <td>0.074710369</td>
+        <td>50.6598</td>
+    </tr>
+    <tr>
+        <td>MACS</td>
+        <td>23</td>
+        <td>0.504685961</td>
+        <td>0.180340767</td>
+        <td>50.8994</td>
+    </tr>
+    <tr>
+        <td>RANDOM</td>
+        <td>19</td>
+        <td>0.319110954</td>
+        <td>0.381729603</td>
+        <td>42.3453</td>
+    </tr>
+    <tr>
+        <td>OnlineBPH</td>
+        <td>23</td>
+        <td>0.504685961</td>
+        <td>0.504685961</td>
+        <td>50.6217</td>
+    </tr>
+    <tr>
+        <td>DBL</td>
+        <td>23</td>
+        <td>0.504685961</td>
+        <td>0.402638674</td>
+        <td>51.0411</td>
+    </tr>
+    <tr>
+        <td>BR</td>
+        <td>21</td>
+        <td>0.425694191</td>
+        <td>0.068558693</td>
+        <td>46.3389</td>
+    </tr>
+    <tr>
+        <td>pct</td>
+        <td>29</td>
+        <td>0.776810273</td>
+        <td>0.14501214</td>
+        <td>63.844</td>
+    </tr>
+    <!-- flat_long -->
+    <tr>
+        <td rowspan="9">(欧派，长条型)</td>
+        <td>left_bottom</td>
+        <td>35</td>
+        <td>0.477565177</td>
+        <td>0.3126719</td>
+        <td>76.6955</td>
+    </tr>
+    <tr>
+        <td>heightmap_min</td>
+        <td>15</td>
+        <td>0.197215278</td>
+        <td>0.134888649</td>
+        <td>33.3152</td>
+    </tr>
+    <tr>
+        <td>LSAH</td>
+        <td>35</td>
+        <td>0.477565177</td>
+        <td>0.058732271</td>
+        <td>76.4716</td>
+    </tr>
+    <tr>
+        <td>MACS</td>
+        <td>19</td>
+        <td>0.250433811</td>
+        <td>0.146538734</td>
+        <td>41.9352</td>
+    </tr>
+    <tr>
+        <td>RANDOM</td>
+        <td>15</td>
+        <td>0.197215278</td>
+        <td>0.129163504</td>
+        <td>33.2348</td>
+    </tr>
+    <tr>
+        <td>OnlineBPH</td>
+        <td>44</td>
+        <td>0.572379557</td>
+        <td>0.062882662</td>
+        <td>95.909</td>
+    </tr>
+    <tr>
+        <td>DBL</td>
+        <td>44</td>
+        <td>0.572379557</td>
+        <td>0.47977972</td>
+        <td>96.4302</td>
+    </tr>
+    <tr>
+        <td>BR</td>
+        <td>29</td>
+        <td>0.367777995</td>
+        <td>0.085472822</td>
+        <td>63.5208</td>
+    </tr>
+    <tr>
+        <td>pct</td>
+        <td>48</td>
+        <td>0.614157624</td>
+        <td>1.221791267</td>
+        <td>105.7685</td>
+    </tr>
+</table>
+
+</body>
+</html>
