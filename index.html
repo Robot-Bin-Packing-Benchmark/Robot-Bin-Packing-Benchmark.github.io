@@ -46,7 +46,7 @@
             width: 80%; /* 使表格容器宽度为80% */
             max-height: 400px; /* 限制表格最大高度 */
             overflow-y: auto; /* 当内容超出时，显示滚动条 */
-            margin: 20px auto; /* 使用auto居中对齐 */
+            margin: auto; /* 使用auto居中对齐 */
             display: block; /* 使div可以使用overflow属性 */
     }
     table {
@@ -169,8 +169,55 @@
     
     <p>The dataset contains a total of 6,849 such order records, including the dimensions, volume, weight, and occupancy rate of each office supply item in the order. Notably, the dataset also includes the names of office supplies, providing rich semantic information that helps optimize packing strategies. For example, many identical types of items can be grouped together to facilitate categorization and management. The occupancy rate information in the dataset helps evaluate the performance of algorithms in maximizing space utilization. Different office supplies may have different priorities and constraints during packing. The occupancy data can help verify whether an algorithm can handle these practical constraints, such as whether high-occupancy items need to be loaded first, or certain items cannot be packed together with others. The occupancy dataset for office supplies offers a more realistic testing environment for 3D bin packing algorithms, helping researchers evaluate and improve algorithm performance in real-world applications.</p>
 
-    <!-- Insert the second image -->
-    <img src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/image/time_series_dataset.png?raw=true" alt="Occupancy Dataset Format">
+    <!-- Insert the second dataset -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>name</th>
+                    <th>Length</th>
+                    <th>Width</th>
+                    <th>Height</th>
+                    <th>Proportion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>Sealing tape</td>
+                    <td>24.5</td>
+                    <td>35.5</td>
+                    <td>39</td>
+                    <td>0.71</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Neutral Pen 0.5mm bullet</td>
+                    <td>32.5</td>
+                    <td>42.5</td>
+                    <td>33.5</td>
+                    <td>0.54</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Solid glue (white)</td>
+                    <td>27.5</td>
+                    <td>35.5</td>
+                    <td>20</td>
+                    <td>0.48</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Marker (Black)</td>
+                    <td>32</td>
+                    <td>54</td>
+                    <td>30.5</td>
+                    <td>0.46</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- Leaderboard Section -->
 <h2>Leaderboard</h2>
