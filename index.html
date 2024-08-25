@@ -26,29 +26,34 @@
         font-weight: 600;
         font-size: 40px; /* 稍微增大全局大标题 */
     }
-    h2, h3, h4 {
+    h2{
         text-align: center; /* 居中对齐标题 */
         margin-bottom: 20px;
         font-family: 'Arial', sans-serif;
         font-weight: 600;
     }
-    h2 {
-        font-size: 28px; /* 稍微增大h2标题的字体大小 */
-    }
-    h3 {
-        font-size: 22px; /* 稍微增大h3标题的字体大小 */
-    }
-    h4 {
-        font-size: 26px; /* Leaderboard标题大小 */
+    h3{
+        text-align: left; /* 居中对齐标题 */
+        margin-bottom: 20px;
+        font-family: 'Arial', sans-serif;
+        font-weight: 600;
     }
     p, ol {
         text-align: justify; /* 段落两端对齐 */
         margin: 15px 0;
     }
+    .table-container {
+            width: 80%; /* 使表格容器宽度为80% */
+            max-height: 400px; /* 限制表格最大高度 */
+            overflow-y: auto; /* 当内容超出时，显示滚动条 */
+            margin: 20px auto; /* 使用auto居中对齐 */
+            display: block; /* 使div可以使用overflow属性 */
+    }
     table {
         width: 100%;
-        margin: 20px 0;
+        margin: 20px auto;
         border-collapse: collapse;
+        text-align: center;
         max-height: 400px; /* 限制表格最大高度 */
         overflow-y: auto; /* 当内容超出时，显示滚动条 */
         display: block; /* 使表格可以使用overflow属性 */
@@ -109,8 +114,55 @@
     
     <p>This dataset contains a total of 16,767 such order records, including the processing time of each order, the dimensions, volume, and weight of each item, and the quantity of items to be picked, sorted in a real-time sequence. Time-series sorted test data can better simulate the bin packing process in actual operations, making the test results more realistic. Some algorithms may perform poorly in real-world applications due to their inability to adapt to sequence requirements, or they may experience performance degradation or errors when faced with large volumes of continuous input data. Time-series sorted data helps verify whether algorithms can effectively handle specific constraints, such as requiring items to be loaded in a specific order or certain items not being allowed to be placed on top of others. This data can help identify bottlenecks and improvement points in algorithms, for example, by analyzing phases with low packing efficiency to find ways to improve the algorithm and enhance overall efficiency.</p>
 
-    <!-- Insert the first image -->
-    <img src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/image/occupancy_dataset.png?raw=true" alt="Time Series Dataset Format">
+    <!-- Insert the first dataset -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Length</th>
+                    <th>Width</th>
+                    <th>Height</th>
+                    <th>Vol/CS</th>
+                    <th>Gross weight</th>
+                    <th>Case_pick_finish_time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>35</td>
+                    <td>20.3</td>
+                    <td>20.8</td>
+                    <td>29.5568</td>
+                    <td>6.324</td>
+                    <td>2022/06/07, 00:24:37</td>
+                </tr>
+                <tr>
+                    <td>33.7</td>
+                    <td>19.1</td>
+                    <td>17</td>
+                    <td>10.94239</td>
+                    <td>5.874</td>
+                    <td>2022/06/07, 00:24:47</td>
+                </tr>
+                <tr>
+                    <td>35.3</td>
+                    <td>26.7</td>
+                    <td>24.1</td>
+                    <td>22.714491</td>
+                    <td>7.983</td>
+                    <td>2022/06/07, 00:24:59</td>
+                </tr>
+                <tr>
+                    <td>35</td>
+                    <td>20.3</td>
+                    <td>20.8</td>
+                    <td>29.5568</td>
+                    <td>6.327</td>
+                    <td>2022/06/07, 00:25:12</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
     <h3>B. 3D Regular Office Supplies Occupancy Dataset</h3>
     <p>In stationery stores, we often see a variety of office supplies arranged on shelves in a way that is both aesthetically pleasing and convenient for access. This arrangement requires consideration of each item's size, weight, and shape, aiming to maximize the use of limited space to accommodate more products. Efficiently arranging and packing these regularly shaped three-dimensional office supplies to maximize space utilization is also a significant challenge. Some office supply companies record information such as the name, dimensions, volume, weight, and occupancy rate of each office supply item in orders.</p>
@@ -121,7 +173,7 @@
     <img src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/image/time_series_dataset.png?raw=true" alt="Occupancy Dataset Format">
 
     <!-- Leaderboard Section -->
-<h4>Leaderboard</h4>
+<h2>Leaderboard</h2>
 <p>We tested a series of classic heuristic algorithms and learning-based algorithms for their performance on the 3D online regular bin packing problem. The tests were conducted on the 3D Regular Household Items Time-Series Dataset and the 3D Regular Office Supplies Occupancy Dataset provided. Below is a brief introduction to the algorithms we summarized.</p>
 
 <p>We introduced eight regular heuristic algorithms. The Left-Bottom heuristic selects the bottom-most, left-most, and back-most positions. The Heightmap-Min (HM) heuristic aims to minimize the volume increase observed from top to bottom, i.e., minimizing the height map sum. The LSAH heuristic selects the placement location that minimizes the surface area. The MACS heuristic chooses the position with the maximum available free space. The OnlineBPH heuristic selects the first available position in the EMS space sorted by the deep-bottom-left principle, avoiding blockage issues. The DBL heuristic selects the Deepest Bottom Left filling position. The BR heuristic selects a location in the EMS that is large and compatible with future items, assuming all possible item placements are known. The RANDOM heuristic randomly selects a placement location.</p>
@@ -138,7 +190,7 @@
 <p>The placement results of these eight heuristic methods and the learning-based PCT method under the three settings are shown in the tables below.</p>
 
 <!-- Table for Results -->
-<h4>Setting1</h4>
+<h3>Setting1</h3>
 <div class="table-container">
 <table>
     <thead>
@@ -381,7 +433,7 @@
         </video>
     </div>
 
-<h4>Setting2</h4>
+<h3>Setting2</h3>
 <table>
     <thead>
         <tr>
@@ -678,7 +730,7 @@
     </tbody>
 </table>
 
-<h4>Setting3</h4>
+<h3>Setting3</h3>
 <table>
     <thead>
         <tr>
