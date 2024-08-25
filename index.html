@@ -3,231 +3,980 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Table</title>
+    <title>Robot-Bin-Packing-Benchmark</title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+    }
+    .container {
+        max-width: 800px;
+        margin: 60px;
+        padding: 20px;
+        line-height: 1.6; /* 稍微减少行间距 */
+        text-align: justify; /* 两端对齐 */
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-family: 'Arial', sans-serif;
+        font-weight: 600;
+        font-size: 40px; /* 稍微增大全局大标题 */
+    }
+    h2, h3, h4 {
+        text-align: center; /* 居中对齐标题 */
+        margin-bottom: 20px;
+        font-family: 'Arial', sans-serif;
+        font-weight: 600;
+    }
+    h2 {
+        font-size: 28px; /* 稍微增大h2标题的字体大小 */
+    }
+    h3 {
+        font-size: 22px; /* 稍微增大h3标题的字体大小 */
+    }
+    h4 {
+        font-size: 26px; /* Leaderboard标题大小 */
+    }
+    p, ol {
+        text-align: justify; /* 段落两端对齐 */
+        margin: 15px 0;
+    }
+    table {
+        width: 100%;
+        margin: 20px 0;
+        border-collapse: collapse;
+        max-height: 400px; /* 限制表格最大高度 */
+        overflow-y: auto; /* 当内容超出时，显示滚动条 */
+        display: block; /* 使表格可以使用overflow属性 */
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 20px;
+    }
+    .video-container {
+            display: none; /* 初始隐藏视频 */
             text-align: center;
+            margin-top: 20px;
+    }
+</style>
+<script>
+        function showVideo(id) {
+            // 隐藏所有视频
+            var videos = document.getElementsByClassName('video-container');
+            for (var i = 0; i < videos.length; i++) {
+                videos[i].style.display = 'none';
+            }
+            // 显示选定的视频
+            var videoContainer = document.getElementById(id);
+            videoContainer.style.display = 'block';
         }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+</script>
 </head>
 <body>
 
-<h2>Robot-Bin-Packing-Benchmark</h2>
+<div class="container">
+    <h1>Robot-Bin-Packing-Benchmark</h1>
 
+    <!-- Introduction Section -->
+    <h2>Introduction</h2>
+    <p>The Three-Dimensional Bin Packing Problem (3D-BPP) is crucial in modern industrial and logistics systems. With the total social logistics costs reaching 18.2 trillion RMB, accounting for one-seventh of the Gross Domestic Product (GDP), the logistics industry has become a key sector in the national economy. Packaging is a core aspect of logistics, and effective 3D bin packing strategies can maximize transportation space utilization, reduce shipping costs, and ensure the stability and safety of goods. Under the framework of Industry 4.0, the use of robotic arms for 3D bin packing is becoming increasingly prevalent. Effective coordination of robotic arms in packing processes can enhance automation and intelligence in the packaging industry, reduce packaging material waste, and promote environmental sustainability.</p>
+
+    <p>This work makes the following major contributions:</p>
+    <ol>
+        <li>Provides a rich set of real industrial data targeted for the industry.</li>
+        <li>Develops a robust simulation environment for testing bin packing algorithms and introduces industrial-relevant evaluation metrics focused on robotic arm operations.</li>
+        <li>Conducts extensive tests on existing classical methods: A comprehensive evaluation of existing classical 3D bin packing algorithms and a summary of the test results.</li>
+    </ol>
+
+    <!-- Data Section -->
+    <h2>Data</h2>
+
+    <h3>A. 3D Regular Household Items Time-Series Dataset</h3>
+    <p>With the rapid development of e-commerce and the retail industry, the variety and quantity of household items have continuously increased. Efficiently arranging and packing these regularly shaped three-dimensional items to maximize space utilization has become a critical issue in logistics management. Many companies record specific information about each item's size, weight, volume, and its handling in storage and transportation, aiming to optimize picking and distribution processes.</p>
+    
+    <p>This dataset contains a total of 16,767 such order records, including the processing time of each order, the dimensions, volume, and weight of each item, and the quantity of items to be picked, sorted in a real-time sequence. Time-series sorted test data can better simulate the bin packing process in actual operations, making the test results more realistic. Some algorithms may perform poorly in real-world applications due to their inability to adapt to sequence requirements, or they may experience performance degradation or errors when faced with large volumes of continuous input data. Time-series sorted data helps verify whether algorithms can effectively handle specific constraints, such as requiring items to be loaded in a specific order or certain items not being allowed to be placed on top of others. This data can help identify bottlenecks and improvement points in algorithms, for example, by analyzing phases with low packing efficiency to find ways to improve the algorithm and enhance overall efficiency.</p>
+
+    <!-- Insert the first image -->
+    <img src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/image/occupancy_dataset.png?raw=true" alt="Time Series Dataset Format">
+
+    <h3>B. 3D Regular Office Supplies Occupancy Dataset</h3>
+    <p>In stationery stores, we often see a variety of office supplies arranged on shelves in a way that is both aesthetically pleasing and convenient for access. This arrangement requires consideration of each item's size, weight, and shape, aiming to maximize the use of limited space to accommodate more products. Efficiently arranging and packing these regularly shaped three-dimensional office supplies to maximize space utilization is also a significant challenge. Some office supply companies record information such as the name, dimensions, volume, weight, and occupancy rate of each office supply item in orders.</p>
+    
+    <p>The dataset contains a total of 6,849 such order records, including the dimensions, volume, weight, and occupancy rate of each office supply item in the order. Notably, the dataset also includes the names of office supplies, providing rich semantic information that helps optimize packing strategies. For example, many identical types of items can be grouped together to facilitate categorization and management. The occupancy rate information in the dataset helps evaluate the performance of algorithms in maximizing space utilization. Different office supplies may have different priorities and constraints during packing. The occupancy data can help verify whether an algorithm can handle these practical constraints, such as whether high-occupancy items need to be loaded first, or certain items cannot be packed together with others. The occupancy dataset for office supplies offers a more realistic testing environment for 3D bin packing algorithms, helping researchers evaluate and improve algorithm performance in real-world applications.</p>
+
+    <!-- Insert the second image -->
+    <img src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/image/time_series_dataset.png?raw=true" alt="Occupancy Dataset Format">
+
+    <!-- Leaderboard Section -->
+<h4>Leaderboard</h4>
+<p>We tested a series of classic heuristic algorithms and learning-based algorithms for their performance on the 3D online regular bin packing problem. The tests were conducted on the 3D Regular Household Items Time-Series Dataset and the 3D Regular Office Supplies Occupancy Dataset provided. Below is a brief introduction to the algorithms we summarized.</p>
+
+<p>We introduced eight regular heuristic algorithms. The Left-Bottom heuristic selects the bottom-most, left-most, and back-most positions. The Heightmap-Min (HM) heuristic aims to minimize the volume increase observed from top to bottom, i.e., minimizing the height map sum. The LSAH heuristic selects the placement location that minimizes the surface area. The MACS heuristic chooses the position with the maximum available free space. The OnlineBPH heuristic selects the first available position in the EMS space sorted by the deep-bottom-left principle, avoiding blockage issues. The DBL heuristic selects the Deepest Bottom Left filling position. The BR heuristic selects a location in the EMS that is large and compatible with future items, assuming all possible item placements are known. The RANDOM heuristic randomly selects a placement location.</p>
+
+<p>In learning-based methods, we chose the PCT method as a representative. The PCT method proposes using a packing configuration tree to represent the state and action space of packing and develops a deep reinforcement learning model to encode the spatial relationships of all configuration nodes, narrowing the exploration action space using limited leaf nodes. We trained the Online3D-BPP-PCT solver with default parameters, modifying the data used for training to match the item sizes in the benchmark datasets.</p>
+
+<p>We set up three settings:</p>
+<ul>
+    <li><strong>Setting 1</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
+    <li><strong>Setting 2</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
+    <li><strong>Setting 3</strong>: Consideration of physical simulation and robotic arms.</li>
+</ul>
+
+<p>The placement results of these eight heuristic methods and the learning-based PCT method under the three settings are shown in the tables below.</p>
+
+<!-- Table for Results -->
+<h4>Setting1</h4>
+<div class="table-container">
 <table>
-    <tr>
-        <th>Data</th>
-        <th>Method</th>
-        <th>Feasible Num</th>
-        <th>Space Utilization</th>
-        <th>Planning Time</th>
-        <th>All time</th>
-    </tr>
-    <!-- time_series -->
-    <tr>
-        <td rowspan="9">(宝洁，时序)</td>
-        <td>left_bottom</td>
-        <td>39</td>
-        <td>0.72473198</td>
-        <td>1.190944672</td>
-        <td>87.5552</td>
-    </tr>
-    <tr>
-        <td>heightmap_min</td>
-        <td>41</td>
-        <td>0.77948948</td>
-        <td>1.155697823</td>
-        <td>92.0444</td>
-    </tr>
-    <tr>
-        <td>LSAH</td>
-        <td>37</td>
-        <td>0.67106331</td>
-        <td>0.144632101</td>
-        <td>82.0659</td>
-    </tr>
-    <tr>
-        <td>MACS</td>
-        <td>38</td>
-        <td>0.69844206</td>
-        <td>0.257035732</td>
-        <td>84.3717</td>
-    </tr>
-    <tr>
-        <td>RANDOM</td>
-        <td>27</td>
-        <td>0.458735588</td>
-        <td>0.742690325</td>
-        <td>61.0361</td>
-    </tr>
-    <tr>
-        <td>OnlineBPH</td>
-        <td>37</td>
-        <td>0.67106331</td>
-        <td>0.102988243</td>
-        <td>82.2006</td>
-    </tr>
-    <tr>
-        <td>DBL</td>
-        <td>37</td>
-        <td>0.67106331</td>
-        <td>1.095422029</td>
-        <td>83.0561</td>
-    </tr>
-    <tr>
-        <td>BR</td>
-        <td>32</td>
-        <td>0.563885613</td>
-        <td>5.658205748</td>
-        <td>76.7375</td>
-    </tr>
-    <tr>
-        <td>pct</td>
-        <td>44</td>
-        <td>0.86162573</td>
-        <td>0.200680971</td>
-        <td>97.3727</td>
-    </tr>
-    <!-- semantic -->
-    <tr>
-        <td rowspan="9">(得力，占有率)</td>
-        <td>left_bottom</td>
-        <td>23</td>
-        <td>0.504685961</td>
-        <td>0.410507679</td>
-        <td>51.0077</td>
-    </tr>
-    <tr>
-        <td>heightmap_min</td>
-        <td>24</td>
-        <td>0.589012093</td>
-        <td>0.406583786</td>
-        <td>53.2615</td>
-    </tr>
-    <tr>
-        <td>LSAH</td>
-        <td>23</td>
-        <td>0.504685961</td>
-        <td>0.074710369</td>
-        <td>50.6598</td>
-    </tr>
-    <tr>
-        <td>MACS</td>
-        <td>23</td>
-        <td>0.504685961</td>
-        <td>0.180340767</td>
-        <td>50.8994</td>
-    </tr>
-    <tr>
-        <td>RANDOM</td>
-        <td>19</td>
-        <td>0.319110954</td>
-        <td>0.381729603</td>
-        <td>42.3453</td>
-    </tr>
-    <tr>
-        <td>OnlineBPH</td>
-        <td>23</td>
-        <td>0.504685961</td>
-        <td>0.504685961</td>
-        <td>50.6217</td>
-    </tr>
-    <tr>
-        <td>DBL</td>
-        <td>23</td>
-        <td>0.504685961</td>
-        <td>0.402638674</td>
-        <td>51.0411</td>
-    </tr>
-    <tr>
-        <td>BR</td>
-        <td>21</td>
-        <td>0.425694191</td>
-        <td>0.068558693</td>
-        <td>46.3389</td>
-    </tr>
-    <tr>
-        <td>pct</td>
-        <td>29</td>
-        <td>0.776810273</td>
-        <td>0.14501214</td>
-        <td>63.844</td>
-    </tr>
-    <!-- flat_long -->
-    <tr>
-        <td rowspan="9">(欧派，长条型)</td>
-        <td>left_bottom</td>
-        <td>35</td>
-        <td>0.477565177</td>
-        <td>0.3126719</td>
-        <td>76.6955</td>
-    </tr>
-    <tr>
-        <td>heightmap_min</td>
-        <td>15</td>
-        <td>0.197215278</td>
-        <td>0.134888649</td>
-        <td>33.3152</td>
-    </tr>
-    <tr>
-        <td>LSAH</td>
-        <td>35</td>
-        <td>0.477565177</td>
-        <td>0.058732271</td>
-        <td>76.4716</td>
-    </tr>
-    <tr>
-        <td>MACS</td>
-        <td>19</td>
-        <td>0.250433811</td>
-        <td>0.146538734</td>
-        <td>41.9352</td>
-    </tr>
-    <tr>
-        <td>RANDOM</td>
-        <td>15</td>
-        <td>0.197215278</td>
-        <td>0.129163504</td>
-        <td>33.2348</td>
-    </tr>
-    <tr>
-        <td>OnlineBPH</td>
-        <td>44</td>
-        <td>0.572379557</td>
-        <td>0.062882662</td>
-        <td>95.909</td>
-    </tr>
-    <tr>
-        <td>DBL</td>
-        <td>44</td>
-        <td>0.572379557</td>
-        <td>0.47977972</td>
-        <td>96.4302</td>
-    </tr>
-    <tr>
-        <td>BR</td>
-        <td>29</td>
-        <td>0.367777995</td>
-        <td>0.085472822</td>
-        <td>63.5208</td>
-    </tr>
-    <tr>
-        <td>pct</td>
-        <td>48</td>
-        <td>0.614157624</td>
-        <td>1.221791267</td>
-        <td>105.7685</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Method</th>
+            <th>Feasible Num</th>
+            <th>Space Utilization</th>
+            <th>Planning Time</th>
+            <th>All time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- time_series Group -->
+        <tr>
+            <td rowspan="9">time_series</td>
+            <td><a href="javascript:void(0)" onclick="showVideo('video-left_bottom-setting1')">left_bottom</a></td>
+            <td>39</td>
+            <td>0.72473198</td>
+            <td>1.190944672</td>
+            <td>87.5552</td>
+        </tr>
+        <tr>
+        <td><a href="javascript:void(0)" onclick="showVideo('video-heightmap_min-setting1')">heightmap_min</a></td>
+            <td>41</td>
+            <td>0.77948948</td>
+            <td>1.155697823</td>
+            <td>92.0444</td>
+        </tr>
+        <tr>
+            <td><a href="javascript:void(0)" onclick="showVideo('video-LSAH-setting1')">LSAH</a></td>
+            <td>37</td>
+            <td>0.67106331</td>
+            <td>0.144632101</td>
+            <td>82.0659</td>
+        </tr>
+        <tr>
+            <td><a href="javascript:void(0)" onclick="showVideo('video-MACS-setting1')">MACS</a></td>
+            <td>38</td>
+            <td>0.69844206</td>
+            <td>0.257035732</td>
+            <td>84.3717</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>27</td>
+            <td>0.458735588</td>
+            <td>0.742690325</td>
+            <td>61.0361</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>37</td>
+            <td>0.67106331</td>
+            <td>0.102988243</td>
+            <td>82.2006</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>37</td>
+            <td>0.67106331</td>
+            <td>1.095422029</td>
+            <td>83.0561</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>32</td>
+            <td>0.563885613</td>
+            <td>5.658205748</td>
+            <td>76.7375</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>44</td>
+            <td>0.86162573</td>
+            <td>0.200680971</td>
+            <td>97.3727</td>
+        </tr>
+        
+        <!-- occupancy Group -->
+        <tr>
+            <td rowspan="9">occupancy</td>
+            <td>left_bottom</td>
+            <td>23</td>
+            <td>0.504685961</td>
+            <td>0.410507679</td>
+            <td>51.0077</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>24</td>
+            <td>0.589012093</td>
+            <td>0.406583786</td>
+            <td>53.2615</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>23</td>
+            <td>0.504685961</td>
+            <td>0.074710369</td>
+            <td>50.6598</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>23</td>
+            <td>0.504685961</td>
+            <td>0.180340767</td>
+            <td>50.8994</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>19</td>
+            <td>0.319110954</td>
+            <td>0.381729603</td>
+            <td>42.3453</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>23</td>
+            <td>0.504685961</td>
+            <td>0.504685961</td>
+            <td>50.6217</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>23</td>
+            <td>0.504685961</td>
+            <td>0.402638674</td>
+            <td>51.0411</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>21</td>
+            <td>0.425694191</td>
+            <td>0.068558693</td>
+            <td>46.3389</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>29</td>
+            <td>0.776810273</td>
+            <td>0.14501214</td>
+            <td>63.844</td>
+        </tr>
+        
+        <!-- flat_long Group -->
+        <tr>
+            <td rowspan="9">flat_long</td>
+            <td>left_bottom</td>
+            <td>35</td>
+            <td>0.477565177</td>
+            <td>0.3126719</td>
+            <td>76.6955</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>15</td>
+            <td>0.197215278</td>
+            <td>0.134888649</td>
+            <td>33.3152</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>35</td>
+            <td>0.477565177</td>
+            <td>0.058732271</td>
+            <td>76.4716</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>19</td>
+            <td>0.250433811</td>
+            <td>0.146538734</td>
+            <td>41.9352</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>15</td>
+            <td>0.197215278</td>
+            <td>0.129163504</td>
+            <td>33.2348</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>44</td>
+            <td>0.572379557</td>
+            <td>0.062882662</td>
+            <td>95.909</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>44</td>
+            <td>0.572379557</td>
+            <td>0.47977972</td>
+            <td>96.4302</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>29</td>
+            <td>0.367777995</td>
+            <td>0.085472822</td>
+            <td>63.5208</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>48</td>
+            <td>0.614157624</td>
+            <td>1.221791267</td>
+            <td>105.7685</td>
+        </tr>
+    </tbody>
 </table>
+</div>
+
+<!-- Video Containers for Setting 1 -->
+    <div id="video-left_bottom-setting1" class="video-container">
+        <video width="600" controls>
+            <source src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/video/left_bottom_setting1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div id="video-heightmap_min-setting1" class="video-container">
+        <video width="600" controls>
+            <source src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/video/heightmap_min_setting1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <div id="video-LSAH-setting1" class="video-container">
+        <video width="600" controls>
+            <source src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/video/LSAH_setting1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div id="video-MACS-setting1" class="video-container">
+        <video width="600" controls>
+            <source src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/video/MACS-setting1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+<h4>Setting2</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Method</th>
+            <th>Feasible Num</th>
+            <th>Static Stability</th>
+            <th>Offset Mean</th>
+            <th>Offset Max</th>
+            <th>Space Utilization</th>
+            <th>Planning Time</th>
+            <th>All time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- time_series Group -->
+        <tr>
+            <td rowspan="9">time_series</td>
+            <td>left_bottom</td>
+            <td>33</td>
+            <td>0.360327802</td>
+            <td>0.001001929</td>
+            <td>0.012287689</td>
+            <td>0.591264363</td>
+            <td>0.978984356</td>
+            <td>103.8744</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>41</td>
+            <td>0.349601439</td>
+            <td>0.006330321</td>
+            <td>0.034205454</td>
+            <td>0.77948948</td>
+            <td>1.145718813</td>
+            <td>154.5817</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>25</td>
+            <td>0.408537198</td>
+            <td>0.000450939</td>
+            <td>0.003983964</td>
+            <td>0.435383872</td>
+            <td>0.083117008</td>
+            <td>71.3246</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>13</td>
+            <td>0.384694973</td>
+            <td>0.002025272</td>
+            <td>0.005887806</td>
+            <td>0.235500663</td>
+            <td>0.052158356</td>
+            <td>36.0217</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>3</td>
+            <td>0.286272986</td>
+            <td>0.004823987</td>
+            <td>0.014176334</td>
+            <td>0.056059353</td>
+            <td>0.036760092</td>
+            <td>8.6536</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>18</td>
+            <td>0.332736355</td>
+            <td>0.006646373</td>
+            <td>0.050021889</td>
+            <td>0.312144159</td>
+            <td>0.038419962</td>
+            <td>46.6519</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>35</td>
+            <td>0.367722295</td>
+            <td>0.002963743</td>
+            <td>0.021997784</td>
+            <td>0.635747743</td>
+            <td>1.013391018</td>
+            <td>116.2942</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>28</td>
+            <td>0.385688457</td>
+            <td>0.001772201</td>
+            <td>0.010520625</td>
+            <td>0.476438088</td>
+            <td>5.198503494</td>
+            <td>95.1105</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>44</td>
+            <td>0.378842964</td>
+            <td>0.01294753</td>
+            <td>0.080627628</td>
+            <td>0.86162573</td>
+            <td>0.209757328</td>
+            <td>175.6312</td>
+        </tr>
+        
+        <!-- occupancy Group -->
+        <tr>
+            <td rowspan="9">occupancy</td>
+            <td>left_bottom</td>
+            <td>20</td>
+            <td>0.373730347</td>
+            <td>0.000871653</td>
+            <td>0.00810159</td>
+            <td>0.381271448</td>
+            <td>0.336869478</td>
+            <td>54.6935</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>24</td>
+            <td>0.342234198</td>
+            <td>0.005027798</td>
+            <td>0.025859705</td>
+            <td>0.589012093</td>
+            <td>0.403398275</td>
+            <td>72.7201</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>20</td>
+            <td>0.385907367</td>
+            <td>0.001007134</td>
+            <td>0.010095592</td>
+            <td>0.381271448</td>
+            <td>0.067420483</td>
+            <td>54.9833</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>7</td>
+            <td>0.332925155</td>
+            <td>0.001618272</td>
+            <td>0.002631886</td>
+            <td>0.089044461</td>
+            <td>0.033384085</td>
+            <td>17.9363</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>4</td>
+            <td>0.269291407</td>
+            <td>0.0039962</td>
+            <td>0.014818621</td>
+            <td>0.067430444</td>
+            <td>0.049206495</td>
+            <td>10.013</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>8</td>
+            <td>0.3329027</td>
+            <td>0.001717214</td>
+            <td>0.003148579</td>
+            <td>0.099070503</td>
+            <td>0.010775328</td>
+            <td>20.6099</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>15</td>
+            <td>0.393644069</td>
+            <td>0.0000520386</td>
+            <td>0.000251243</td>
+            <td>0.195453712</td>
+            <td>0.218059778</td>
+            <td>39.7668</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>8</td>
+            <td>0.380401491</td>
+            <td>0.000526654</td>
+            <td>0.002311184</td>
+            <td>0.099070503</td>
+            <td>0.015935421</td>
+            <td>20.2063</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>25</td>
+            <td>0.349388815</td>
+            <td>0.023764543</td>
+            <td>0.330216876</td>
+            <td>0.641237744</td>
+            <td>0.100234985</td>
+            <td>88.8218</td>
+        </tr>
+        
+        <!-- flat_long Group -->
+<tr>
+    <td rowspan="9">flat_long</td>
+    <td>left_bottom</td>
+    <td>19</td>
+    <td>0.271943661</td>
+    <td>0.023463094</td>
+    <td>0.063022497</td>
+    <td>0.250433811</td>
+    <td>0.14583087</td>
+    <td>62.9809</td>
+</tr>
+<tr>
+    <td>heightmap_min</td>
+    <td>10</td>
+    <td>0.238118579</td>
+    <td>0.054856011</td>
+    <td>0.144264911</td>
+    <td>0.14130816</td>
+    <td>0.071263075</td>
+    <td>28.5519</td>
+</tr>
+<tr>
+    <td>LSAH</td>
+    <td>32</td>
+    <td>0.223347431</td>
+    <td>0.029488443</td>
+    <td>0.067792058</td>
+    <td>0.39885395</td>
+    <td>0.046927929</td>
+    <td>126.2891</td>
+</tr>
+<tr>
+    <td>MACS</td>
+    <td>5</td>
+    <td>0.174371146</td>
+    <td>0.00871665</td>
+    <td>0.018784946</td>
+    <td>0.076755208</td>
+    <td>0.019277573</td>
+    <td>12.7509</td>
+</tr>
+<tr>
+    <td>RANDOM</td>
+    <td>6</td>
+    <td>0.153779739</td>
+    <td>0.011083619</td>
+    <td>0.027415122</td>
+    <td>0.085034433</td>
+    <td>0.041100025</td>
+    <td>15.4209</td>
+</tr>
+<tr>
+    <td>OnlineBPH</td>
+    <td>15</td>
+    <td>0.217622121</td>
+    <td>0.024672815</td>
+    <td>0.056955926</td>
+    <td>0.197215278</td>
+    <td>0.015324116</td>
+    <td>47.009</td>
+</tr>
+<tr>
+    <td>DBL</td>
+    <td>16</td>
+    <td>0.296820975</td>
+    <td>0.012877232</td>
+    <td>0.067793132</td>
+    <td>0.216465278</td>
+    <td>0.119567633</td>
+    <td>51.2669</td>
+</tr>
+<tr>
+    <td>BR</td>
+    <td>16</td>
+    <td>0.221727323</td>
+    <td>0.026668429</td>
+    <td>0.061701997</td>
+    <td>0.216465278</td>
+    <td>0.04033494</td>
+    <td>44.6429</td>
+</tr>
+<tr>
+    <td>pct</td>
+    <td>19</td>
+    <td>0.279389156</td>
+    <td>0.014579652</td>
+    <td>0.054486371</td>
+    <td>0.250433811</td>
+    <td>0.098968267</td>
+    <td>61.5273</td>
+</tr>
+    </tbody>
+</table>
+
+<h4>Setting3</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Data</th>
+            <th>Method</th>
+            <th>Feasible Num</th>
+            <th>Static Stability</th>
+            <th>Offset Mean</th>
+            <th>Offset Max</th>
+            <th>Space Utilization</th>
+            <th>Planning Time</th>
+            <th>All time</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- time_series Group -->
+        <tr>
+            <td rowspan="9">time_series</td>
+            <td>left_bottom</td>
+            <td>33</td>
+            <td>0.360327802</td>
+            <td>0.001001929</td>
+            <td>0.012287689</td>
+            <td>0.591264363</td>
+            <td>0.978984356</td>
+            <td>103.8744</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>41</td>
+            <td>0.349601439</td>
+            <td>0.006330321</td>
+            <td>0.034205454</td>
+            <td>0.77948948</td>
+            <td>1.145718813</td>
+            <td>154.5817</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>25</td>
+            <td>0.408537198</td>
+            <td>0.000450939</td>
+            <td>0.003983964</td>
+            <td>0.435383872</td>
+            <td>0.083117008</td>
+            <td>71.3246</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>13</td>
+            <td>0.384694973</td>
+            <td>0.002025272</td>
+            <td>0.005887806</td>
+            <td>0.235500663</td>
+            <td>0.052158356</td>
+            <td>36.0217</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>3</td>
+            <td>0.286272986</td>
+            <td>0.004823987</td>
+            <td>0.014176334</td>
+            <td>0.056059353</td>
+            <td>0.036760092</td>
+            <td>8.6536</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>18</td>
+            <td>0.332736355</td>
+            <td>0.006646373</td>
+            <td>0.050021889</td>
+            <td>0.312144159</td>
+            <td>0.038419962</td>
+            <td>46.6519</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>35</td>
+            <td>0.367722295</td>
+            <td>0.002963743</td>
+            <td>0.021997784</td>
+            <td>0.635747743</td>
+            <td>1.013391018</td>
+            <td>116.2942</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>28</td>
+            <td>0.385688457</td>
+            <td>0.001772201</td>
+            <td>0.010520625</td>
+            <td>0.476438088</td>
+            <td>5.198503494</td>
+            <td>95.1105</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>44</td>
+            <td>0.378842964</td>
+            <td>0.01294753</td>
+            <td>0.080627628</td>
+            <td>0.86162573</td>
+            <td>0.209757328</td>
+            <td>175.6312</td>
+        </tr>
+        
+        <!-- occupancy Group -->
+        <tr>
+            <td rowspan="9">occupancy</td>
+            <td>left_bottom</td>
+            <td>20</td>
+            <td>0.373730347</td>
+            <td>0.000871653</td>
+            <td>0.00810159</td>
+            <td>0.381271448</td>
+            <td>0.336869478</td>
+            <td>54.6935</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>24</td>
+            <td>0.342234198</td>
+            <td>0.005027798</td>
+            <td>0.025859705</td>
+            <td>0.589012093</td>
+            <td>0.403398275</td>
+            <td>72.7201</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>20</td>
+            <td>0.385907367</td>
+            <td>0.001007134</td>
+            <td>0.010095592</td>
+            <td>0.381271448</td>
+            <td>0.067420483</td>
+            <td>54.9833</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>7</td>
+            <td>0.332925155</td>
+            <td>0.001618272</td>
+            <td>0.002631886</td>
+            <td>0.089044461</td>
+            <td>0.033384085</td>
+            <td>17.9363</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>4</td>
+            <td>0.269291407</td>
+            <td>0.0039962</td>
+            <td>0.014818621</td>
+            <td>0.067430444</td>
+            <td>0.049206495</td>
+            <td>10.013</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>8</td>
+            <td>0.3329027</td>
+            <td>0.001717214</td>
+            <td>0.003148579</td>
+            <td>0.099070503</td>
+            <td>0.010775328</td>
+            <td>20.6099</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>15</td>
+            <td>0.393644069</td>
+            <td>0.0000520386</td>
+            <td>0.000251243</td>
+            <td>0.195453712</td>
+            <td>0.218059778</td>
+            <td>39.7668</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>8</td>
+            <td>0.380401491</td>
+            <td>0.000526654</td>
+            <td>0.002311184</td>
+            <td>0.099070503</td>
+            <td>0.015935421</td>
+            <td>20.2063</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>25</td>
+            <td>0.349388815</td>
+            <td>0.023764543</td>
+            <td>0.330216876</td>
+            <td>0.641237744</td>
+            <td>0.100234985</td>
+            <td>88.8218</td>
+        </tr>
+        
+        <!-- flat_long Group -->
+        <tr>
+            <td rowspan="9">flat_long</td>
+            <td>left_bottom</td>
+            <td>19</td>
+            <td>0.271943661</td>
+            <td>0.023463094</td>
+            <td>0.063022497</td>
+            <td>0.250433811</td>
+            <td>0.14583087</td>
+            <td>62.9809</td>
+        </tr>
+        <tr>
+            <td>heightmap_min</td>
+            <td>10</td>
+            <td>0.238118579</td>
+            <td>0.054856011</td>
+            <td>0.144264911</td>
+            <td>0.14130816</td>
+            <td>0.071263075</td>
+            <td>28.5519</td>
+        </tr>
+        <tr>
+            <td>LSAH</td>
+            <td>32</td>
+            <td>0.223347431</td>
+            <td>0.029488443</td>
+            <td>0.067792058</td>
+            <td>0.39885395</td>
+            <td>0.046927929</td>
+            <td>126.2891</td>
+        </tr>
+        <tr>
+            <td>MACS</td>
+            <td>5</td>
+            <td>0.174371146</td>
+            <td>0.00871665</td>
+            <td>0.018784946</td>
+            <td>0.076755208</td>
+            <td>0.019277573</td>
+            <td>12.7509</td>
+        </tr>
+        <tr>
+            <td>RANDOM</td>
+            <td>6</td>
+            <td>0.153779739</td>
+            <td>0.011083619</td>
+            <td>0.027415122</td>
+            <td>0.085034433</td>
+            <td>0.041100025</td>
+            <td>15.4209</td>
+        </tr>
+        <tr>
+            <td>OnlineBPH</td>
+            <td>15</td>
+            <td>0.217622121</td>
+            <td>0.024672815</td>
+            <td>0.056955926</td>
+            <td>0.197215278</td>
+            <td>0.015324116</td>
+            <td>47.009</td>
+        </tr>
+        <tr>
+            <td>DBL</td>
+            <td>16</td>
+            <td>0.296820975</td>
+            <td>0.012877232</td>
+            <td>0.067793132</td>
+            <td>0.216465278</td>
+            <td>0.119567633</td>
+            <td>51.2669</td>
+        </tr>
+        <tr>
+            <td>BR</td>
+            <td>16</td>
+            <td>0.221727323</td>
+            <td>0.026668429</td>
+            <td>0.061701997</td>
+            <td>0.216465278</td>
+            <td>0.04033494</td>
+            <td>44.6429</td>
+        </tr>
+        <tr>
+            <td>pct</td>
+            <td>19</td>
+            <td>0.279389156</td>
+            <td>0.014579652</td>
+            <td>0.054486371</td>
+            <td>0.250433811</td>
+            <td>0.098968267</td>
+            <td>61.5273</td>
+        </tr>
+    </tbody>
+</table>
+
+
+</div>
 
 </body>
 </html>
