@@ -80,7 +80,7 @@
         var tr = document.createElement('tr');
         
         // Create the link to the child page based on the GitHub Pages structure
-        var childPageUrl = `details/${setting}_${dataType}_${row.Method}.html`;
+        var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
 
         // Fill in each cell manually with the dynamically generated link
         tr.innerHTML = `
