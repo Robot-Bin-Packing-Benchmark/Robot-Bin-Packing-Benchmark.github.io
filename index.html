@@ -5,172 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robot-Bin-Packing-Benchmark</title>
     <style>
-    body {
-        font-family: 'Times New Roman', Times, serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-    }
-    .container {
-        max-width: 800px;
-        margin: 60px;
-        padding: 20px;
-        line-height: 1.6; /* 稍微减少行间距 */
-        text-align: justify; /* 两端对齐 */
-    }
-    h1 {
-        text-align: center;
-        margin-bottom: 30px;
-        font-family: 'Arial', sans-serif;
-        font-weight: 600;
-        font-size: 40px; /* 稍微增大全局大标题 */
-    }
-    h2{
-        text-align: center; /* 居中对齐标题 */
-        margin-bottom: 20px;
-        font-family: 'Arial', sans-serif;
-        font-weight: 600;
-    }
-    h3{
-        text-align: left; /* 居中对齐标题 */
-        margin-bottom: 20px;
-        font-family: 'Arial', sans-serif;
-        font-weight: 600;
-    }
-    p, ol {
-        text-align: justify; /* 段落两端对齐 */
-        margin: 15px 0;
-    }
-    .table-container {
-            width: 80%; /* 使表格容器宽度为80% */
-            max-height: 400px; /* 限制表格最大高度 */
-            overflow-y: auto; /* 当内容超出时，显示滚动条 */
-            margin: auto; /* 使用auto居中对齐 */
-            display: block; /* 使div可以使用overflow属性 */
-    }
-    table {
-        width: 100%;
-        margin: 20px auto;
-        border-collapse: collapse;
-        text-align: center;
-        max-height: 400px; /* 限制表格最大高度 */
-        overflow-y: auto; /* 当内容超出时，显示滚动条 */
-        display: block; /* 使表格可以使用overflow属性 */
-    }
-    th, td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-    th {
-        background-color: #f2f2f2;
-    }
-    img {
-        width: 100%;
-        height: auto;
-        margin-bottom: 20px;
-    }
-    .video-container {
-            display: none; /* 初始隐藏视频 */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 60px;
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        h1, h2, h3 {
             text-align: center;
-            margin-top: 20px;
-    }
-    .controls {
-        margin: 20px 0;
-        text-align: center;
-    }
-    .controls select {
-        margin: 0 10px;
-        padding: 5px;
-    }
-</style>
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls select {
+            padding: 5px;
+            margin-left: 10px;
+        }
+    </style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-<script>
-        function loadCSVData(setting) {
-            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/leaderboard_${setting}.csv`;
+    <script>
+        function loadCSVData(setting, dataType) {
+            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/leaderboard_${setting}_${dataType}.csv`;
             Papa.parse(url, {
                 download: true,
                 header: true,
                 complete: function(results) {
-                    generateTable(results.data, setting);
+                    fillTable(results.data, setting, dataType);
                 }
             });
         }
 
-        function generateTable(data, setting) {
-            var container = document.getElementById(`table-${setting}`);
-            var table = document.createElement('table');
-            var thead = document.createElement('thead');
-            var tbody = document.createElement('tbody');
+        function fillTable(data, setting, dataType) {
+    var tableBody = document.querySelector(`#table-${setting} tbody`);
 
-            // Generate the table header
-            var headerRow = document.createElement('tr');
-            Object.keys(data[0]).forEach(function(key) {
-                var th = document.createElement('th');
-                th.textContent = key;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
+    // Clear any existing rows
+    tableBody.innerHTML = '';
 
-            // Generate the table body
-            data.forEach(function(row) {
-                var tr = document.createElement('tr');
-                Object.values(row).forEach(function(cell) {
-                    var td = document.createElement('td');
-                    td.textContent = cell;
-                    tr.appendChild(td);
-                });
-                tbody.appendChild(tr);
-            });
+    // Iterate over the CSV data and fill the table manually
+    data.forEach(function(row, index) {
+        var tr = document.createElement('tr');
+        
+        // Create the link to the child page based on the GitHub Pages structure
+        var childPageUrl = `details/${setting}_${dataType}_${row.Method}.html`;
 
-            table.appendChild(thead);
-            table.appendChild(tbody);
-            container.innerHTML = ''; // Clear previous content
-            container.appendChild(table);
-        }
+        // Fill in each cell manually with the dynamically generated link
+        tr.innerHTML = `
+            <td><a href="${childPageUrl}">${row.Method}</a></td>
+            <td>${row['Feasible Num']}</td>
+            <td>${row['Space Utilization']}</td>
+            <td>${row['Planning Time']}</td>
+            <td>${row['All time']}</td>
+        `;
+        
+        tableBody.appendChild(tr);
+    });
+}
+details
 
-        function updateDetails(setting) {
-            var dataType = document.getElementById(`data-select-${setting}`).value;
-            var method = document.getElementById(`method-select-${setting}`).value;
-            var groupData = document.getElementById(`group-select-${setting}`).value;
-
-            // Update table
-            var tableUrl = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/${setting}/${dataType}/${method}_results.csv`;
-            Papa.parse(tableUrl, {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    generateTable(results.data, `${setting}-details`);
-                }
-            });
-
-            // Update plot image
-            var plotUrl = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/${setting}/${dataType}/plots/${method}_results_plot.png`;
-            document.getElementById(`plot-${setting}`).src = plotUrl;
-
-            // Update video
-            var videoUrl = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/video/${setting}/${dataType}/${method}_${groupData}.mp4`;
-            var videoContainer = document.getElementById(`video-${setting}`);
-            videoContainer.innerHTML = `
-                <video width="600" controls>
-                    <source src="${videoUrl}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>`;
+        function onDataTypeChange() {
+            var dataType = document.getElementById("data-select-setting1").value;
+            loadCSVData('setting1', dataType);
         }
 
         window.onload = function() {
-            loadCSVData('setting1');
-            loadCSVData('setting2');
-            loadCSVData('setting3');
-
-            // Initialize default detail display
-            updateDetails('setting1');
-            updateDetails('setting2');
-            updateDetails('setting3');
+            // Default to loading time_series data
+            loadCSVData('setting1', 'time_series');
         };
-</script>
-
+    </script>
 </head>
 <body>
 
@@ -320,8 +255,33 @@
 
 <!-- Table for Results -->
 <!-- Placeholder for Setting 1 Table -->
-<h3>Setting1</h3>
-<div class="table-container" id="table-setting1"></div>
+<h2>Setting1</h2>
+<!-- Controls for selecting data type -->
+        <div class="controls">
+            <label for="data-select-setting1">Select Data Type:</label>
+            <select id="data-select-setting1" onchange="onDataTypeChange()">
+                <option value="time_series">time_series</option>
+                <option value="occupancy">occupancy</option>
+                <option value="flat_long">flat_long</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="table-setting1">
+                <thead>
+                    <tr>
+                        <th>Method</th>
+                        <th>Feasible Num</th>
+                        <th>Space Utilization</th>
+                        <th>Planning Time</th>
+                        <th>All time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be filled by JavaScript -->
+                </tbody>
+            </table>
+        </div>
 <div class="table-container">
 <img id="result-image-setting1-time_series" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series.png" alt="Time_series Result Image for Setting 1" style="width: 100%; max-width: 800px; display: block; margin: auto;">
 </div>
@@ -331,134 +291,7 @@
 <div class="table-container">
 <img id="result-image-setting1-flat_long" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/flat_long.png" alt="Flat_long Result Image for Setting 1" style="width: 100%; max-width: 800px; display: block; margin: auto;">
 </div>
-<!-- Controls for Setting 1 -->
-    <div class="controls">
-        <select id="data-select-setting1" onchange="updateDetails('setting1')">
-            <option value="time_series">time_series</option>
-            <option value="occupancy">occupancy</option>
-            <option value="flat_long">flat_long</option>
-        </select>
-        <select id="method-select-setting1" onchange="updateDetails('setting1')">
-            <option value="left_bottom">left_bottom</option>
-            <option value="heightmap_min">heightmap_min</option>
-            <option value="LSAH">LSAH</option>
-            <option value="MACS">MACS</option>
-            <option value="RANDOM">RANDOM</option>
-            <option value="OnlineBPH">OnlineBPH</option>
-            <option value="DBL">DBL</option>
-            <option value="BR">BR</option>
-            <option value="pct">pct</option>
-        </select>
-        <select id="group-select-setting1" onchange="updateDetails('setting1')">
-    <!-- Options from 0 to 29 -->
-    <script>
-        for (let i = 0; i < 30; i++) {
-            document.write(`<option value="${i}">${i}</option>`);
-        }
-    </script>
-</select>
-    </div>
-    <!-- Detailed Table for Setting 1 -->
-    <div class="table-container" id="table-setting1-details"></div>
-    <!-- Plot Image for Setting 1 -->
-    <div class="table-container">
-        <img id="plot-setting1" src="" alt="Performance Plot">
-    </div>
-    <!-- Video Container for Setting 1 -->
-    <div class="table-container" id="video-setting1"></div>
 
-
-
-<!-- Placeholder for Setting 2 Table -->
-<h3>Setting 2</h3>
-<div class="table-container" id="table-setting2"></div>
-<div class="table-container">
-<img id="result-image-setting2-time_series" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series.png" alt="Time_series Result Image for Setting 2" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="table-container">
-<img id="result-image-setting2-occupancy" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/occupancy.png" alt="Occupancy Result Image for Setting 2" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="table-container">
-<img id="result-image-setting2-flat_long" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/flat_long.png" alt="Flat_long Result Image for Setting 2" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="controls">
-        <select id="data-select-setting2" onchange="updateDetails('setting2')">
-            <option value="time_series">time_series</option>
-            <option value="occupancy">occupancy</option>
-            <option value="flat_long">flat_long</option>
-        </select>
-        <select id="method-select-setting2" onchange="updateDetails('setting2')">
-            <option value="left_bottom">left_bottom</option>
-            <option value="heightmap_min">heightmap_min</option>
-            <option value="LSAH">LSAH</option>
-            <option value="MACS">MACS</option>
-            <option value="RANDOM">RANDOM</option>
-            <option value="OnlineBPH">OnlineBPH</option>
-            <option value="DBL">DBL</option>
-            <option value="BR">BR</option>
-            <option value="pct">pct</option>
-        </select>
-        <select id="group-select-setting1" onchange="updateDetails('setting1')">
-    <!-- Options from 0 to 29 -->
-    <script>
-        for (let i = 0; i < 30; i++) {
-            document.write(`<option value="${i}">${i}</option>`);
-        }
-    </script>
-</select>
-    </div>
-    <div class="table-container" id="table-setting2-details"></div>
-    <div class="table-container">
-        <img id="plot-setting2" src="" alt="Performance Plot">
-    </div>
-    <div class="table-container" id="video-setting2"></div>
-
-
-<!-- Placeholder for Setting 3 Table -->
-<h3>Setting 3</h3>
-<div class="table-container" id="table-setting3"></div>
-<div class="table-container">
-<img id="result-image-setting3-time_series" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series.png" alt="Time_series Result Image for Setting 3" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="table-container">
-<img id="result-image-setting3-occupancy" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/occupancy.png" alt="Occupancy Result Image for Setting 3" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="table-container">
-<img id="result-image-setting3-flat_long" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/flat_long.png" alt="Flat_long Result Image for Setting 3" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="controls">
-    <select id="data-select-setting3" onchange="updateDetails('setting3')">
-        <option value="time_series">time_series</option>
-        <option value="occupancy">occupancy</option>
-        <option value="flat_long">flat_long</option>
-    </select>
-    <select id="method-select-setting3" onchange="updateDetails('setting3')">
-        <option value="left_bottom">left_bottom</option>
-        <option value="heightmap_min">heightmap_min</option>
-        <option value="LSAH">LSAH</option>
-        <option value="MACS">MACS</option>
-        <option value="RANDOM">RANDOM</option>
-        <option value="OnlineBPH">OnlineBPH</option>
-        <option value="DBL">DBL</option>
-        <option value="BR">BR</option>
-        <option value="pct">pct</option>
-    </select>
-    <select id="group-select-setting1" onchange="updateDetails('setting1')">
-    <!-- Options from 0 to 29 -->
-    <script>
-        for (let i = 0; i < 30; i++) {
-            document.write(`<option value="${i}">${i}</option>`);
-        }
-    </script>
-</select>
-</div>
-<div class="table-container" id="table-setting3-details"></div>
-<div class="table-container">
-    <img id="plot-setting3" src="" alt="Performance Plot">
-</div>
-<div class="table-container" id="video-setting3"></div>
-
-</div>
 
 </body>
 </html>
