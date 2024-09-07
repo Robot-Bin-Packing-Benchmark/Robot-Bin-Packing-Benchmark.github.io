@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details for Method</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 60px;
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls select {
+            padding: 5px;
+            margin-left: 10px;
+        }
+        video {
+            width: 600px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        // Function to parse URL query parameters
+        function getQueryParams() {
+            var params = {};
+            var queryString = window.location.search.substring(1);
+            var queryArray = queryString.split("&");
+
+            queryArray.forEach(function(param) {
+                var pair = param.split("=");
+                params[pair[0]] = decodeURIComponent(pair[1]);
+            });
+
+            return params;
+        }
+
+        // Function to load the CSV data
+        function loadDetailData(setting, dataType, method) {
+            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/${setting}/${dataType}/${method}_results.csv`;
+            Papa.parse(url, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    fillDetailTable(results.data);
+                }
+            });
+
+            // Set default plot image
+            loadPlotImage(setting, dataType, method, 0);
+
+            // Set default video
+            loadVideo(setting, dataType, method, 0);
+        }
+
+        // Function to fill the table with CSV data
+        function fillDetailTable(data) {
+            var tableBody = document.querySelector(`#table-setting1-details tbody`);
+
+            // Clear any existing rows
+            tableBody.innerHTML = '';
+
+            // Iterate over the CSV data and fill the table manually
+            data.forEach(function(row, index) {
+                var tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${row['Feasible Num']}</td>
+                    <td>${row['Space Utilization']}</td>
+                    <td>${row['Planning Time']}</td>
+                    <td>${row['All time']}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // Function to load plot image
+        function loadPlotImage(setting, dataType, method, groupIndex) {
+            var plotImageUrl = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/${setting}/${dataType}/plots/${method}_results_plot.png`;
+            document.getElementById('plot-setting1').src = plotImageUrl;
+        }
+
+        // Function to load video
+        function loadVideo(setting, dataType, method, groupIndex) {
+            var videoUrl = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/video/${setting}/${dataType}/${method}_${groupIndex}.mp4`;
+            document.getElementById('video-setting1').innerHTML = `
+                <video controls>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            `;
+        }
+
+        // Function to handle group selection change
+        function onGroupChange() {
+            var groupIndex = document.getElementById("group-select").value;
+            var setting = window.params.setting;
+            var dataType = window.params.dataType;
+            var method = window.params.method;
+
+            // Update plot image and video based on group selection
+            loadPlotImage(setting, dataType, method, groupIndex);
+            loadVideo(setting, dataType, method, groupIndex);
+        }
+
+        window.onload = function() {
+            // Get the parameters from the URL
+            window.params = getQueryParams();
+
+            var setting = window.params.setting;
+            var dataType = window.params.dataType;
+            var method = window.params.method;
+
+            // Load the initial data
+            loadDetailData(setting, dataType, method);
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Details for <span id="method-name"></span> Method</h1>
+
+        <!-- Controls for selecting group data -->
+        <div class="controls">
+            <label>Select Group:</label>
+            <select id="group-select" onchange="onGroupChange()">
+                <script>
+                    // Dynamically create options from 0 to 29
+                    for (let i = 0; i < 30; i++) {
+                        document.write(`<option value="${i}">${i}</option>`);
+                    }
+                </script>
+            </select>
+        </div>
+
+        <!-- Detailed table for the current method -->
+        <div class="table-container">
+            <table id="table-setting1-details">
+                <thead>
+                    <tr>
+                        <th>Test #</th>
+                        <th>Feasible Num</th>
+                        <th>Space Utilization</th>
+                        <th>Planning Time</th>
+                        <th>All time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be filled dynamically by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Plot image for the current method -->
+        <div class="table-container">
+            <img id="plot-setting1" src="" alt="Performance Plot">
+        </div>
+
+        <!-- Video container for the current method -->
+        <div class="table-container" id="video-setting1"></div>
+    </div>
+</body>
+</html>
