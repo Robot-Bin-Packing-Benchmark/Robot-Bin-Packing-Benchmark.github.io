@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Details for Left Bottom Method</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 60px;
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            text-align: center;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        video {
+            width: 600px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Details for Left Bottom Method</h1>
+
+        <!-- Detailed table for Left Bottom method -->
+        <div class="table-container">
+            <table id="table-details">
+                <thead>
+                    <tr>
+                        <th>Test #</th>
+                        <th>Feasible Num</th>
+                        <th>Space Utilization</th>
+                        <th>Planning Time</th>
+                        <th>All time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- You can fill this with actual data manually or dynamically with JavaScript -->
+                    <tr>
+                        <td>1</td>
+                        <td>39</td>
+                        <td>0.724731980324074</td>
+                        <td>1.19094467163086</td>
+                        <td>87.5552</td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Plot image for Left Bottom method -->
+        <div class="table-container">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/setting1/time_series/plots/left_bottom_results_plot.png" alt="Performance Plot for Left Bottom">
+        </div>
+
+        <!-- Video for Left Bottom method -->
+        <div class="table-container">
+            <video controls>
+                <source src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/video/setting1/time_series/left_bottom_0.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+</body>
+</html>
