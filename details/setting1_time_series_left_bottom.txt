@@ -1,0 +1,25 @@
+function fillTable(data, setting, dataType) {
+    var tableBody = document.querySelector(`#table-${setting} tbody`);
+
+    // Clear any existing rows
+    tableBody.innerHTML = '';
+
+    // Iterate over the CSV data and fill the table manually
+    data.forEach(function(row, index) {
+        var tr = document.createElement('tr');
+        
+        // Create the link to the child page based on the GitHub Pages structure
+        var childPageUrl = `${setting}_${dataType}_${row.Method}.html`;
+
+        // Fill in each cell manually with the dynamically generated link
+        tr.innerHTML = `
+            <td><a href="${childPageUrl}">${row.Method}</a></td>
+            <td>${row['Feasible Num']}</td>
+            <td>${row['Space Utilization']}</td>
+            <td>${row['Planning Time']}</td>
+            <td>${row['All time']}</td>
+        `;
+        
+        tableBody.appendChild(tr);
+    });
+}
