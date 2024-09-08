@@ -55,11 +55,10 @@
             margin-left: 10px;
         }
     </style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         function loadCSVData(setting, dataType) {
-            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/leaderboard_${setting}_${dataType}.csv`;
+            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/${setting}/${dataType}_results.csv`;
             Papa.parse(url, {
                 download: true,
                 header: true,
@@ -70,44 +69,119 @@
         }
 
         function fillTable(data, setting, dataType) {
-    var tableBody = document.querySelector(`#table-${setting} tbody`);
+            var tableBody = document.querySelector(`#table-${setting} tbody`);
+            var tableHead = document.querySelector(`#table-${setting} thead`);
 
-    // Clear any existing rows
-    tableBody.innerHTML = '';
+            // Clear any existing rows and headers
+            tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
 
-    // Iterate over the CSV data and fill the table manually
-    data.forEach(function(row, index) {
-        var tr = document.createElement('tr');
-        
-        // Create the link to the child page based on the GitHub Pages structure
-        var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
+            // Add console log to check if data is correctly passed
+            console.log("Filling Table with Data: ", data);
 
-        // Fill in each cell manually with the dynamically generated link
-        tr.innerHTML = `
-            <td><a href="${childPageUrl}">${row.Method}</a></td>
-            <td>${row['Feasible Num']}</td>
-            <td>${row['Space Utilization']}</td>
-            <td>${row['Planning Time']}</td>
-            <td>${row['All time']}</td>
-        `;
-        
-        tableBody.appendChild(tr);
-    });
-}
-details
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
+                return;
+            }
 
-        function onDataTypeChange() {
-            var dataType = document.getElementById("data-select-setting1").value;
-            loadCSVData('setting1', dataType);
+            // Dynamically generate table headers based on setting
+            if (setting === 'setting1') {
+                tableHead.innerHTML = `
+                    <tr>
+                        <th>Method</th>
+                        <th>Feasible Num</th>
+                        <th>Space Utilization</th>
+                        <th>Planning Time</th>
+                        <th>Packing time</th>
+                    </tr>
+                `;
+            } else {
+                tableHead.innerHTML = `
+                    <tr>
+                        <th>Method</th>
+                        <th>Feasible Num</th>
+                        <th>Space Utilization</th>
+                        <th>Planning Time</th>
+                        <th>Packing time</th>
+                        <th>Static Stability</th>
+                        <th>Position Offset Mean</th>
+                        <th>Position Offset Max</th>
+                    </tr>
+                `;
+            }
+
+            // Iterate over the CSV data and fill the table manually
+            data.forEach(function(row, index) {
+                // Check if the row contains undefined values
+                if (!row.Method || row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
+                    console.warn(`Skipping row with incomplete data at index ${index}: `, row);
+                    return; // Skip this row if any critical value is undefined
+                }
+
+                var tr = document.createElement('tr');
+                // Create the link to the child page based on the GitHub Pages structure
+                var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
+
+                if (setting === 'setting1') {
+                    tr.innerHTML = `
+                        <td><a href="details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}">${row.Method}</a></td>
+                        <td>${row['Feasible Num']}</td>
+                        <td>${row['Space Utilization']}</td>
+                        <td>${row['Planning Time']}</td>
+                        <td>${row['Packing time']}</td>
+                    `;
+                } else {
+                    tr.innerHTML = `
+                        <td><a href="details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}">${row.Method}</a></td>
+                        <td>${row['Feasible Num']}</td>
+                        <td>${row['Space Utilization']}</td>
+                        <td>${row['Planning Time']}</td>
+                        <td>${row['Packing time']}</td>
+                        <td>${row['Static Stability']}</td>
+                        <td>${row['Position Offset Mean']}</td>
+                        <td>${row['Position Offset Max']}</td>
+                    `;
+                }
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function onDataTypeChange(setting) {
+            var dataType = document.getElementById(`data-select-${setting}`).value;
+
+            // Load the corresponding CSV data
+            loadCSVData(setting, dataType);
+            // Update images for the selected data type
+            if (setting === 'setting1') {
+            // Update the two images for Setting 1
+            document.getElementById("result-image-setting1-1").src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_feasible_num_packing_time_planning_time.png`;
+            document.getElementById("result-image-setting1-2").src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_utilization.png`;
+            } else {
+            // Update the three images for Setting 2 and 3
+            document.getElementById(`result-image-${setting}-1`).src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_feasible_num_packing_time_planning_time.png`;
+            document.getElementById(`result-image-${setting}-2`).src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_position_offset.png`;
+            document.getElementById(`result-image-${setting}-3`).src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_stability_utilization.png`;
+            }
         }
 
         window.onload = function() {
-            // Default to loading time_series data
-            loadCSVData('setting1', 'time_series');
+            // Default to loading time_series data for Setting 1, 2, and 3
+            document.getElementById("data-select-setting1").value = "time_series";
+            onDataTypeChange('setting1');
+
+            document.getElementById("data-select-setting2").value = "time_series";
+            onDataTypeChange('setting2');
+
+            document.getElementById("data-select-setting3").value = "time_series";
+            onDataTypeChange('setting3');
         };
     </script>
 </head>
 <body>
+
+
+
+
 
 <div class="container">
     <h1>Robot-Bin-Packing-Benchmark</h1>
@@ -184,7 +258,7 @@ details
     <h3>B. 3D Regular Office Supplies Occupancy Dataset</h3>
     <p>In stationery stores, we often see a variety of office supplies arranged on shelves in a way that is both aesthetically pleasing and convenient for access. This arrangement requires consideration of each item's size, weight, and shape, aiming to maximize the use of limited space to accommodate more products. Efficiently arranging and packing these regularly shaped three-dimensional office supplies to maximize space utilization is also a significant challenge. Some office supply companies record information such as the name, dimensions, volume, weight, and occupancy rate of each office supply item in orders.</p>
     
-    <p>The dataset contains a total of 6,849 such order records, including the dimensions, volume, weight, and occupancy rate of each office supply item in the order. Notably, the dataset also includes the names of office supplies, providing rich semantic information that helps optimize packing strategies. For example, many identical types of items can be grouped together to facilitate categorization and management. The occupancy rate information in the dataset helps evaluate the performance of algorithms in maximizing space utilization. Different office supplies may have different priorities and constraints during packing. The occupancy data can help verify whether an algorithm can handle these practical constraints, such as whether high-occupancy items need to be loaded first, or certain items cannot be packed together with others. The occupancy dataset for office supplies offers a more realistic testing environment for 3D bin packing algorithms, helping researchers evaluate and improve algorithm performance in real-world applications.</p>
+    <p>The dataset contains a total of 6,849 such order records, including the dimensions, volume, weight, and occupancy rate of each office supply item in the order. Notably, the dataset also includes the names of office supplies, providing rich occupancy information that helps optimize packing strategies. For example, many identical types of items can be grouped together to facilitate categorization and management. The occupancy rate information in the dataset helps evaluate the performance of algorithms in maximizing space utilization. Different office supplies may have different priorities and constraints during packing. The occupancy data can help verify whether an algorithm can handle these practical constraints, such as whether high-occupancy items need to be loaded first, or certain items cannot be packed together with others. The occupancy dataset for office supplies offers a more realistic testing environment for 3D bin packing algorithms, helping researchers evaluate and improve algorithm performance in real-world applications.</p>
 
     <!-- Insert the second dataset -->
     <div class="table-container">
@@ -236,62 +310,91 @@ details
         </table>
     </div>
 
-    <!-- Leaderboard Section -->
-<h2>Leaderboard</h2>
-<p>We tested a series of classic heuristic algorithms and learning-based algorithms for their performance on the 3D online regular bin packing problem. The tests were conducted on the 3D Regular Household Items Time-Series Dataset and the 3D Regular Office Supplies Occupancy Dataset provided. Below is a brief introduction to the algorithms we summarized.</p>
 
-<p>We introduced eight regular heuristic algorithms. The Left-Bottom heuristic selects the bottom-most, left-most, and back-most positions. The Heightmap-Min (HM) heuristic aims to minimize the volume increase observed from top to bottom, i.e., minimizing the height map sum. The LSAH heuristic selects the placement location that minimizes the surface area. The MACS heuristic chooses the position with the maximum available free space. The OnlineBPH heuristic selects the first available position in the EMS space sorted by the deep-bottom-left principle, avoiding blockage issues. The DBL heuristic selects the Deepest Bottom Left filling position. The BR heuristic selects a location in the EMS that is large and compatible with future items, assuming all possible item placements are known. The RANDOM heuristic randomly selects a placement location.</p>
+    <!-- Leaderboard for Setting 1 -->
+    <h2>Setting 1</h2>
+    <div class="controls">
+        <label for="data-select-setting1">Select Data Type:</label>
+        <select id="data-select-setting1" onchange="onDataTypeChange('setting1')">
+            <option value="time_series">time_series</option>
+            <option value="occupancy">occupancy</option>
+            <option value="flat_long">flat_long</option>
+        </select>
+    </div>
 
-<p>In learning-based methods, we chose the PCT method as a representative. The PCT method proposes using a packing configuration tree to represent the state and action space of packing and develops a deep reinforcement learning model to encode the spatial relationships of all configuration nodes, narrowing the exploration action space using limited leaf nodes. We trained the Online3D-BPP-PCT solver with default parameters, modifying the data used for training to match the item sizes in the benchmark datasets.</p>
+    <div class="table-container">
+        <table id="table-setting1">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-<p>We set up three settings:</p>
-<ul>
-    <li><strong>Setting 1</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
-    <li><strong>Setting 2</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
-    <li><strong>Setting 3</strong>: Consideration of physical simulation and robotic arms.</li>
-</ul>
+    <!-- Images for Setting 1 -->
+    <div class="table-container">
+        <img id="result-image-setting1-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result1 Image for Setting 1">
+    </div>
+    <div class="table-container">
+        <img id="result-image-setting1-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_utilization.png" alt="Result2 Image for Setting 1">
+    </div>
 
-<p>The placement results of these eight heuristic methods and the learning-based PCT method under the three settings are shown in the tables below.</p>
+    <!-- Leaderboard for Setting 2 -->
+    <h2>Setting 2</h2>
+    <div class="controls">
+        <label for="data-select-setting2">Select Data Type:</label>
+        <select id="data-select-setting2" onchange="onDataTypeChange('setting2')">
+            <option value="time_series">time_series</option>
+            <option value="occupancy">occupancy</option>
+            <option value="flat_long">flat_long</option>
+        </select>
+    </div>
 
-<!-- Table for Results -->
-<!-- Placeholder for Setting 1 Table -->
-<h2>Setting1</h2>
-<!-- Controls for selecting data type -->
-        <div class="controls">
-            <label for="data-select-setting1">Select Data Type:</label>
-            <select id="data-select-setting1" onchange="onDataTypeChange()">
-                <option value="time_series">time_series</option>
-                <option value="occupancy">occupancy</option>
-                <option value="flat_long">flat_long</option>
-            </select>
-        </div>
+    <div class="table-container">
+        <table id="table-setting2">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-        <div class="table-container">
-            <table id="table-setting1">
-                <thead>
-                    <tr>
-                        <th>Method</th>
-                        <th>Feasible Num</th>
-                        <th>Space Utilization</th>
-                        <th>Planning Time</th>
-                        <th>All time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Rows will be filled by JavaScript -->
-                </tbody>
-            </table>
-        </div>
-<div class="table-container">
-<img id="result-image-setting1-time_series" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series.png" alt="Time_series Result Image for Setting 1" style="width: 100%; max-width: 800px; display: block; margin: auto;">
+    <!-- Images for Setting 2 -->
+    <div class="table-container">
+        <img id="result-image-setting2-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result1 Image for Setting 2">
+    </div>
+    <div class="table-container">
+        <img id="result-image-setting2-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_position_offset.png" alt="Result2 Image for Setting 2">
+    </div>
+    <div class="table-container">
+        <img id="result-image-setting2-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_stability_utilization.png" alt="Result3 Image for Setting 2">
+    </div>
+
+    <!-- Leaderboard for Setting 3 -->
+    <h2>Setting 3</h2>
+    <div class="controls">
+        <label for="data-select-setting3">Select Data Type:</label>
+        <select id="data-select-setting3" onchange="onDataTypeChange('setting3')">
+            <option value="time_series">time_series</option>
+            <option value="occupancy">occupancy</option>
+            <option value="flat_long">flat_long</option>
+        </select>
+    </div>
+
+    <div class="table-container">
+        <table id="table-setting3">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- Images for Setting 3 -->
+    <div class="table-container">
+        <img id="result-image-setting3-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result1 Image for Setting 3">
+    </div>
+    <div class="table-container">
+        <img id="result-image-setting3-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_position_offset.png" alt="Result2 Image for Setting 3">
+    </div>
+    <div class="table-container">
+        <img id="result-image-setting3-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_stability_utilization.png" alt="Result3 Image for Setting 3">
+    </div>
 </div>
-<div class="table-container">
-<img id="result-image-setting1-occupancy" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/occupancy.png" alt="Occupancy Result Image for Setting 1" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-<div class="table-container">
-<img id="result-image-setting1-flat_long" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/flat_long.png" alt="Flat_long Result Image for Setting 1" style="width: 100%; max-width: 800px; display: block; margin: auto;">
-</div>
-
 
 </body>
 </html>
