@@ -25,9 +25,10 @@
             font-weight: 600;
         }
         .table-container {
-            display: flex;
+            display: block;
             justify-content: center;
             margin: 20px auto;
+            text-align: center; /* 如果需要图片居中显示，可以添加此行 */
         }
         table {
             border-collapse: collapse;
@@ -42,6 +43,7 @@
             background-color: #f2f2f2;
         }
         img {
+            display: block; /* 将 img 元素设为块级元素 */
             width: 100%;
             height: auto;
             margin-bottom: 20px;
@@ -78,7 +80,7 @@
 
         // Function to load the CSV data
         function loadDetailData(setting, dataType, method) {
-            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/${setting}/${dataType}/${method}_results.csv`;
+            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/${setting}/${dataType}/${method}_results.csv`;
             Papa.parse(url, {
                 download: true,
                 header: true,
@@ -87,8 +89,8 @@
                 }
             });
 
-            // Set default plot image
-            loadPlotImage(setting, dataType, method, 0);
+            // Dynamically load images based on setting
+            loadPlotImages(setting, dataType, method);
 
             // Set default video
             loadVideo(setting, dataType, method, 0);
@@ -101,8 +103,18 @@
             // Clear any existing rows
             tableBody.innerHTML = '';
 
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
+                return;
+            }
+
             // Iterate over the CSV data and fill the table manually
             data.forEach(function(row, index) {
+                // Check if the row contains undefined values
+                if (row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
+                    console.warn(`Skipping row with incomplete data at index ${index}: `, row);
+                    return; // Skip this row if any critical value is undefined
+                }
                 var tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${index + 1}</td>
@@ -115,10 +127,38 @@
             });
         }
 
-        // Function to load plot image
-        function loadPlotImage(setting, dataType, method, groupIndex) {
-            var plotImageUrl = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/result/${setting}/${dataType}/plots/${method}_results_plot.png`;
-            document.getElementById('plot-setting1').src = plotImageUrl;
+        // Function to load plot images
+        function loadPlotImages(setting, dataType, method) {
+            var imageContainer = document.getElementById('plot-images');
+            imageContainer.innerHTML = ''; // Clear previous images
+
+            // Image 1: Feasible num and all time
+            var img1 = document.createElement('img');
+            img1.src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}/${method}_results_feasible_num_all_time.png`;
+            img1.alt = "Feasible Num and All Time";
+            imageContainer.appendChild(img1);
+
+            // Image 2: Utilization time
+            var img2 = document.createElement('img');
+            img2.src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}/${method}_results_utilization_time.png`;
+            img2.alt = "Utilization Time";
+            imageContainer.appendChild(img2);
+
+            // If setting is 2 or 3, load the third image
+            if (setting === 'setting2' || setting === 'setting3') {
+                imageContainer.innerHTML = ''; // Clear previous images
+                imageContainer.appendChild(img1);
+
+                var img3 = document.createElement('img');
+                img3.src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}/${method}_results_position_offset.png`;
+                img3.alt = "Position Offset";
+                imageContainer.appendChild(img3);
+
+                var img4 = document.createElement('img');
+                img4.src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}/${method}_results_stability_utilization_time.png`;
+                img4.alt = "Stability Utilization Time";
+                imageContainer.appendChild(img4);
+            }
         }
 
         // Function to load video
@@ -139,8 +179,8 @@
             var dataType = window.params.dataType;
             var method = window.params.method;
 
-            // Update plot image and video based on group selection
-            loadPlotImage(setting, dataType, method, groupIndex);
+            // Update plot images and video based on group selection
+            loadPlotImages(setting, dataType, method);
             loadVideo(setting, dataType, method, groupIndex);
         }
 
@@ -179,7 +219,7 @@
             <table id="table-setting1-details">
                 <thead>
                     <tr>
-                        <th>Test #</th>
+                        <th>Data Group</th>
                         <th>Feasible Num</th>
                         <th>Space Utilization</th>
                         <th>Planning Time</th>
@@ -192,10 +232,8 @@
             </table>
         </div>
 
-        <!-- Plot image for the current method -->
-        <div class="table-container">
-            <img id="plot-setting1" src="" alt="Performance Plot">
-        </div>
+        <!-- Plot images for the current method -->
+        <div class="table-container" id="plot-images"></div>
 
         <!-- Video container for the current method -->
         <div class="table-container" id="video-setting1"></div>
