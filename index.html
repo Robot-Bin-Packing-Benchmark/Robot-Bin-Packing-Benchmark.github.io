@@ -310,6 +310,25 @@
         </table>
     </div>
 
+    <!-- Leaderboard Section -->
+    <h2>Leaderboard</h2>
+    <p>We tested a series of classic heuristic algorithms and learning-based algorithms for their performance on the 3D online regular bin packing problem. The tests were conducted on the 3D Regular Household Items Time-Series Dataset and the 3D Regular Office Supplies Occupancy Dataset provided. Below is a brief introduction to the algorithms we summarized.</p>
+
+    <p>We introduced eight regular heuristic algorithms. The Left-Bottom heuristic selects the bottom-most, left-most, and back-most positions. The Heightmap-Min (HM) heuristic aims to minimize the volume increase observed from top to bottom, i.e., minimizing the height map sum. The LSAH heuristic selects the placement location that minimizes the surface area. The MACS heuristic chooses the position with the maximum available free space. The OnlineBPH heuristic selects the first available position in the EMS space sorted by the deep-bottom-left principle, avoiding blockage issues. The DBL heuristic selects the Deepest Bottom Left filling position. The BR heuristic selects a location in the EMS that is large and compatible with future items, assuming all possible item placements are known. The RANDOM heuristic randomly selects a placement location.</p>
+
+    <p>In learning-based methods, we chose the PCT method as a representative. The PCT method proposes using a packing configuration tree to represent the state and action space of packing and develops a deep reinforcement learning model to encode the spatial relationships of all configuration nodes, narrowing the exploration action space using limited leaf nodes. We trained the Online3D-BPP-PCT solver with default parameters, modifying the data used for training to match the item sizes in the benchmark datasets.</p>
+
+    <p>We set up three settings:</p>
+    <ul>
+        <li><strong>Setting 1</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
+        <li><strong>Setting 2</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
+        <li><strong>Setting 3</strong>: Consideration of physical simulation and robotic arms.</li>
+    </ul>
+
+    <p>The placement results of these eight heuristic methods and the learning-based PCT method under the three settings are shown in the tables below.</p>
+
+
+
 
     <!-- Leaderboard for Setting 1 -->
     <h2>Setting 1</h2>
