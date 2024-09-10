@@ -13,7 +13,7 @@
             justify-content: center;
         }
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 60px;
             padding: 20px;
             line-height: 1.6;
@@ -33,13 +33,42 @@
             border-collapse: collapse;
             margin: auto;
             text-align: center;
+            width: 100%; /* 设置表格宽度为100%，确保三个表格宽度一致 */
+            max-width: 1000px; /* 设置最大宽度，与setting2、setting3对齐 */
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 10px;
         }
+        /* 表格头部点击效果 */
         th {
-            background-color: #f2f2f2;
+            background-color: #f5f5f5;
+            color: #0056b3; /* 设置字体颜色为暗蓝色 */
+            cursor: pointer; /* 添加手型光标 */
+            text-align: center; /* 文本居中 */
+            padding: 10px; /* 适当调整表头的填充 */
+        }
+
+        /* Method列颜色统一为蓝色 */
+        td a {
+            color: #0056b3; /* 设置统一暗蓝色 */
+            text-decoration: none; /* 去掉下划线 */
+            font-weight: bold; /* 加粗字体 */
+        }
+
+        /* 点击Method链接后颜色不变 */
+        td a:visited {
+            color: #0056b3; /* 保持点击后颜色不变 */
+        }
+
+
+        /* 隔行颜色不同 */
+        tbody tr:nth-child(odd) {
+          background-color: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+          background-color: #ffffff;
         }
         img {
             width: 100%;
@@ -57,6 +86,44 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
+        function sortTable(column, setting, dataType) {
+            var tableBody = document.querySelector(`#table-${setting} tbody`);
+            var rowsArray = Array.from(tableBody.rows);
+
+            // Toggle between ascending and descending
+            var currentSortOrder = tableBody.getAttribute('data-sort-order') || 'asc';
+            var newSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+            tableBody.setAttribute('data-sort-order', newSortOrder);
+
+            // Sort rows based on the column
+            rowsArray.sort(function(a, b) {
+                var aValue = a.cells[getColumnIndex(column, setting)].innerText;
+                var bValue = b.cells[getColumnIndex(column, setting)].innerText;
+
+                if (!isNaN(aValue) && !isNaN(bValue)) {
+                    // Numeric comparison
+                    return newSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+                } else {
+                    // String comparison
+                    return newSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                }
+            });
+
+            // Re-add sorted rows to the table body
+            rowsArray.forEach(row => tableBody.appendChild(row));
+}
+
+        function getColumnIndex(column, setting) {
+            var columns = (setting === 'setting1') ? 
+        ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time'] :
+        ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
+    
+            return columns.indexOf(column);
+}
+
+
+
+
         function loadCSVData(setting, dataType) {
             var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/${setting}/${dataType}_results.csv`;
             Papa.parse(url, {
@@ -84,31 +151,61 @@
                 return;
             }
 
+            // Helper function to parse numbers and handle non-numeric values
+            function parseNumber(value, forMin = false) {
+                var num = parseFloat(value);
+                // 对于最小值，非数值设置为Infinity；对于最大值，设置为-1，这样不会影响计算
+                return isNaN(num) ? (forMin ? Infinity : -1) : num;
+            }
+
+	    // 找到各列的最大值或最小值
+            var maxFeasibleNum = Math.max(...data.map(row => parseNumber(row['Feasible Num'])));
+            var maxSpaceUtilization = Math.max(...data.map(row => parseNumber(row['Space Utilization'])));
+            var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
+
+            var minPlanningTime = Math.min(...data.map(row => parseNumber(row['Planning Time'], true)));
+            var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing time'], true)));
+            var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
+            var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
+
+
+	    console.log("maxFeasibleNum: ", maxFeasibleNum);
+            console.log("maxSpaceUtilization: ", maxSpaceUtilization);
+	    console.log("maxStaticStability: ", maxStaticStability);
+            console.log("minPlanningTime: ", minPlanningTime);
+	    console.log("minPackingTime: ", minPackingTime);
+            console.log("minPositionOffsetMean: ", minPositionOffsetMean);
+	    console.log("minPositionOffsetMax: ", minPositionOffsetMax);
+
+
+
             // Dynamically generate table headers based on setting
+
             if (setting === 'setting1') {
                 tableHead.innerHTML = `
                     <tr>
                         <th>Method</th>
-                        <th>Feasible Num</th>
-                        <th>Space Utilization</th>
-                        <th>Planning Time</th>
-                        <th>Packing time</th>
-                    </tr>
-                `;
+                        <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
+                        <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
+                        <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
+                        <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
+                        </tr>
+                            `;
             } else {
                 tableHead.innerHTML = `
                     <tr>
                         <th>Method</th>
-                        <th>Feasible Num</th>
-                        <th>Space Utilization</th>
-                        <th>Planning Time</th>
-                        <th>Packing time</th>
-                        <th>Static Stability</th>
-                        <th>Position Offset Mean</th>
-                        <th>Position Offset Max</th>
+                        <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
+                        <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
+                        <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
+                        <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
+                        <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability</th>
+                        <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean</th>
+                        <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max</th>
                     </tr>
-                `;
-            }
+                            `;
+                        }
+
 
             // Iterate over the CSV data and fill the table manually
             data.forEach(function(row, index) {
@@ -122,26 +219,30 @@
                 // Create the link to the child page based on the GitHub Pages structure
                 var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
 
-                if (setting === 'setting1') {
-                    tr.innerHTML = `
-                        <td><a href="details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}">${row.Method}</a></td>
-                        <td>${row['Feasible Num']}</td>
-                        <td>${row['Space Utilization']}</td>
-                        <td>${row['Planning Time']}</td>
-                        <td>${row['Packing time']}</td>
-                    `;
-                } else {
-                    tr.innerHTML = `
-                        <td><a href="details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}">${row.Method}</a></td>
-                        <td>${row['Feasible Num']}</td>
-                        <td>${row['Space Utilization']}</td>
-                        <td>${row['Planning Time']}</td>
-                        <td>${row['Packing time']}</td>
-                        <td>${row['Static Stability']}</td>
-                        <td>${row['Position Offset Mean']}</td>
-                        <td>${row['Position Offset Max']}</td>
-                    `;
-                }
+
+                var feasibleNum = parseNumber(row['Feasible Num']);
+                var spaceUtilization = parseNumber(row['Space Utilization']);
+                var planningTime = parseNumber(row['Planning Time'], true);
+                var packingTime = parseNumber(row['Packing time'], true);
+                var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
+                var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
+                var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
+
+
+
+
+                tr.innerHTML = `
+            <td><a href="${childPageUrl}">${row.Method}</a></td>
+            <td style="${feasibleNum === maxFeasibleNum ? 'font-weight: bold;' : ''}">${feasibleNum}</td>
+            <td style="${spaceUtilization === maxSpaceUtilization ? 'font-weight: bold;' : ''}">${spaceUtilization}</td>
+            <td style="${planningTime === minPlanningTime ? 'font-weight: bold;' : ''}">${planningTime}</td>
+            <td style="${packingTime === minPackingTime ? 'font-weight: bold;' : ''}">${packingTime}</td>
+            ${setting !== 'setting1' ? `<td style="${staticStability === maxStaticStability ? 'font-weight: bold;' : ''}">${staticStability}</td>` : ''}
+            ${setting !== 'setting1' ? `<td style="${positionOffsetMean === minPositionOffsetMean ? 'font-weight: bold;' : ''}">${positionOffsetMean}</td>` : ''}
+            ${setting !== 'setting1' ? `<td style="${positionOffsetMax === minPositionOffsetMax ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
+        `;
+
+
                 tableBody.appendChild(tr);
             });
         }
