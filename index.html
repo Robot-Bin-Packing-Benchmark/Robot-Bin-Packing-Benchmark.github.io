@@ -3,32 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robot-Bin-Packing-Benchmark</title>
+    <title>Robot Bin Packing Benchmark</title>
     <style>
-        body {
-            font-family: 'Times New Roman', Times, serif;
+        body, html {
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-weight: 400;
         }
-        .container {
-            max-width: 1000px;
-            margin: 60px;
-            padding: 20px;
-            line-height: 1.6;
-            text-align: justify;
-        }
+
         h1, h2, h3 {
             text-align: center;
             font-family: 'Arial', sans-serif;
             font-weight: 600;
         }
-        .table-container {
-            display: flex;
-            justify-content: center;
-            margin: 20px auto;
-        }
+
         table {
             border-collapse: collapse;
             margin: auto;
@@ -40,252 +31,201 @@
             border: 1px solid #ddd;
             padding: 10px;
         }
-        /* 表格头部点击效果 */
         th {
             background-color: #f5f5f5;
-            color: #0056b3; /* 设置字体颜色为暗蓝色 */
-            cursor: pointer; /* 添加手型光标 */
-            text-align: center; /* 文本居中 */
-            padding: 10px; /* 适当调整表头的填充 */
+            color: #0056b3;
+            cursor: pointer;
+            text-align: center;
+            padding: 10px;
         }
-
-        /* Method列颜色统一为蓝色 */
         td a {
-            color: #0056b3; /* 设置统一暗蓝色 */
-            text-decoration: none; /* 去掉下划线 */
-            font-weight: bold; /* 加粗字体 */
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
         }
-
-        /* 点击Method链接后颜色不变 */
         td a:visited {
-            color: #0056b3; /* 保持点击后颜色不变 */
+            color: #0056b3;
         }
 
-
-        /* 隔行颜色不同 */
         tbody tr:nth-child(odd) {
-          background-color: #f9f9f9;
+            background-color: #f9f9f9;
         }
 
         tbody tr:nth-child(even) {
-          background-color: #ffffff;
+            background-color: #ffffff;
         }
-        img {
-            width: 100%;
-            height: auto;
-            margin-bottom: 20px;
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
         }
-        .controls {
-            text-align: center;
-            margin-bottom: 20px;
+
+        .navbar-left, .navbar-right {
+            padding-left: 180px;
+            padding-right: 180px;
         }
-        .controls select {
-            padding: 5px;
-            margin-left: 10px;
+
+        .navbar-left {
+            font-size: 20px;
+            font-weight: bold;
+            color: #cccccc;
+        }
+
+        .navbar-left a, .navbar-right a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar-right a {
+            font-size: 16px;
+            color: #cccccc;
+            text-decoration: none;
+            padding: 0 18px;
+            font-weight: 500;
+        }
+
+        .navbar-right a:hover {
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .carousel-container {
+            position: relative;
+            width: 100vw;
+            height: 400px;
+            margin: 50px 0;
+            overflow: hidden;
+        }
+
+        .carousel-images {
+            width: 100vw;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out; /* 淡入淡出效果 */
+        }
+
+        .carousel-images.active {
+            opacity: 1;
+        }
+
+        .carousel-prev, .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .carousel-prev {
+            left: 10px;
+        }
+
+        .carousel-next {
+            right: 10px;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .carousel-indicators span {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .carousel-indicators span.active {
+            background-color: white;
+        }
+
+        .carousel-container::before, .carousel-container::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 400px;
+            z-index: 1;
+        }
+
+        .carousel-container::before {
+            left: 0;
+            background: linear-gradient(to right, rgba(128, 128, 128, 1), rgba(128, 128, 128, 0));
+        }
+
+        .carousel-container::after {
+            right: 0;
+            background: linear-gradient(to left, rgba(128, 128, 128, 1), rgba(128, 128, 128, 0));
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script>
-        function sortTable(column, setting, dataType) {
-            var tableBody = document.querySelector(`#table-${setting} tbody`);
-            var rowsArray = Array.from(tableBody.rows);
-
-            // Toggle between ascending and descending
-            var currentSortOrder = tableBody.getAttribute('data-sort-order') || 'asc';
-            var newSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-            tableBody.setAttribute('data-sort-order', newSortOrder);
-
-            // Sort rows based on the column
-            rowsArray.sort(function(a, b) {
-                var aValue = a.cells[getColumnIndex(column, setting)].innerText;
-                var bValue = b.cells[getColumnIndex(column, setting)].innerText;
-
-                if (!isNaN(aValue) && !isNaN(bValue)) {
-                    // Numeric comparison
-                    return newSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-                } else {
-                    // String comparison
-                    return newSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-                }
-            });
-
-            // Re-add sorted rows to the table body
-            rowsArray.forEach(row => tableBody.appendChild(row));
-}
-
-        function getColumnIndex(column, setting) {
-            var columns = (setting === 'setting1') ? 
-        ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time'] :
-        ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
-    
-            return columns.indexOf(column);
-}
-
-
-
-
-        function loadCSVData(setting, dataType) {
-            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/${setting}/${dataType}_results.csv`;
-            Papa.parse(url, {
-                download: true,
-                header: true,
-                complete: function(results) {
-                    fillTable(results.data, setting, dataType);
-                }
-            });
-        }
-
-        function fillTable(data, setting, dataType) {
-            var tableBody = document.querySelector(`#table-${setting} tbody`);
-            var tableHead = document.querySelector(`#table-${setting} thead`);
-
-            // Clear any existing rows and headers
-            tableBody.innerHTML = '';
-            tableHead.innerHTML = '';
-
-            // Add console log to check if data is correctly passed
-            console.log("Filling Table with Data: ", data);
-
-            if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
-                return;
-            }
-
-            // Helper function to parse numbers and handle non-numeric values
-            function parseNumber(value, forMin = false) {
-                var num = parseFloat(value);
-                // 对于最小值，非数值设置为Infinity；对于最大值，设置为-1，这样不会影响计算
-                return isNaN(num) ? (forMin ? Infinity : -1) : num;
-            }
-
-	    // 找到各列的最大值或最小值
-            var maxFeasibleNum = Math.max(...data.map(row => parseNumber(row['Feasible Num'])));
-            var maxSpaceUtilization = Math.max(...data.map(row => parseNumber(row['Space Utilization'])));
-            var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
-
-            var minPlanningTime = Math.min(...data.map(row => parseNumber(row['Planning Time'], true)));
-            var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing time'], true)));
-            var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
-            var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
-
-
-	    console.log("maxFeasibleNum: ", maxFeasibleNum);
-            console.log("maxSpaceUtilization: ", maxSpaceUtilization);
-	    console.log("maxStaticStability: ", maxStaticStability);
-            console.log("minPlanningTime: ", minPlanningTime);
-	    console.log("minPackingTime: ", minPackingTime);
-            console.log("minPositionOffsetMean: ", minPositionOffsetMean);
-	    console.log("minPositionOffsetMax: ", minPositionOffsetMax);
-
-
-
-            // Dynamically generate table headers based on setting
-
-            if (setting === 'setting1') {
-                tableHead.innerHTML = `
-                    <tr>
-                        <th>Method</th>
-                        <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
-                        <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
-                        <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
-                        <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
-                        </tr>
-                            `;
-            } else {
-                tableHead.innerHTML = `
-                    <tr>
-                        <th>Method</th>
-                        <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
-                        <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
-                        <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
-                        <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
-                        <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability</th>
-                        <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean</th>
-                        <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max</th>
-                    </tr>
-                            `;
-                        }
-
-
-            // Iterate over the CSV data and fill the table manually
-            data.forEach(function(row, index) {
-                // Check if the row contains undefined values
-                if (!row.Method || row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
-                    console.warn(`Skipping row with incomplete data at index ${index}: `, row);
-                    return; // Skip this row if any critical value is undefined
-                }
-
-                var tr = document.createElement('tr');
-                // Create the link to the child page based on the GitHub Pages structure
-                var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
-
-
-                var feasibleNum = parseNumber(row['Feasible Num']);
-                var spaceUtilization = parseNumber(row['Space Utilization']);
-                var planningTime = parseNumber(row['Planning Time'], true);
-                var packingTime = parseNumber(row['Packing time'], true);
-                var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
-                var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
-                var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
-
-
-
-
-                tr.innerHTML = `
-            <td><a href="${childPageUrl}">${row.Method}</a></td>
-            <td style="${feasibleNum === maxFeasibleNum ? 'font-weight: bold;' : ''}">${feasibleNum}</td>
-            <td style="${spaceUtilization === maxSpaceUtilization ? 'font-weight: bold;' : ''}">${spaceUtilization}</td>
-            <td style="${planningTime === minPlanningTime ? 'font-weight: bold;' : ''}">${planningTime}</td>
-            <td style="${packingTime === minPackingTime ? 'font-weight: bold;' : ''}">${packingTime}</td>
-            ${setting !== 'setting1' ? `<td style="${staticStability === maxStaticStability ? 'font-weight: bold;' : ''}">${staticStability}</td>` : ''}
-            ${setting !== 'setting1' ? `<td style="${positionOffsetMean === minPositionOffsetMean ? 'font-weight: bold;' : ''}">${positionOffsetMean}</td>` : ''}
-            ${setting !== 'setting1' ? `<td style="${positionOffsetMax === minPositionOffsetMax ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
-        `;
-
-
-                tableBody.appendChild(tr);
-            });
-        }
-
-        function onDataTypeChange(setting) {
-            var dataType = document.getElementById(`data-select-${setting}`).value;
-
-            // Load the corresponding CSV data
-            loadCSVData(setting, dataType);
-            // Update images for the selected data type
-            if (setting === 'setting1') {
-            // Update the two images for Setting 1
-            document.getElementById("result-image-setting1-1").src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_feasible_num_packing_time_planning_time.png`;
-            document.getElementById("result-image-setting1-2").src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_utilization.png`;
-            } else {
-            // Update the three images for Setting 2 and 3
-            document.getElementById(`result-image-${setting}-1`).src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_feasible_num_packing_time_planning_time.png`;
-            document.getElementById(`result-image-${setting}-2`).src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_position_offset.png`;
-            document.getElementById(`result-image-${setting}-3`).src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}_results_stability_utilization.png`;
-            }
-        }
-
-        window.onload = function() {
-            // Default to loading time_series data for Setting 1, 2, and 3
-            document.getElementById("data-select-setting1").value = "time_series";
-            onDataTypeChange('setting1');
-
-            document.getElementById("data-select-setting2").value = "time_series";
-            onDataTypeChange('setting2');
-
-            document.getElementById("data-select-setting3").value = "time_series";
-            onDataTypeChange('setting3');
-        };
-    </script>
 </head>
 <body>
 
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">Robot Bin Packing Benchmark</a>
+        </div>
+        <div class="navbar-right">
+            <a href="index.html">Home</a>
+            <a href="benchmark.html">Benchmarks</a>
+            <a href="documentation.html">Documentation</a>
+            <a href="submit.html">Submit</a>
+        </div>
+    </div>
 
+    <!-- 轮播图容器 -->
+    <div class="carousel-container">
+        <img class="carousel-images active" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/index1.png" alt="Image 1">
+        <img class="carousel-images" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/index2.png" alt="Image 2">
+        <img class="carousel-images" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/index3.png" alt="Image 3">
+        <img class="carousel-images" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/index4.png" alt="Image 4">
+        <img class="carousel-images" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/index5.png" alt="Image 5">
+        
+        <button class="carousel-prev">❮</button>
+        <button class="carousel-next">❯</button>
 
+        <div class="carousel-indicators">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
 
-
-<div class="container">
-    <h1>Robot-Bin-Packing-Benchmark</h1>
+    <!-- 页面内容 -->
+    <div class="container">
 
     <!-- Introduction Section -->
     <h2>Introduction</h2>
@@ -297,7 +237,7 @@
         <li>Develops a robust simulation environment for testing bin packing algorithms and introduces industrial-relevant evaluation metrics focused on robotic arm operations.</li>
         <li>Conducts extensive tests on existing classical methods: A comprehensive evaluation of existing classical 3D bin packing algorithms and a summary of the test results.</li>
     </ol>
-
+    
     <!-- Data Section -->
     <h2>Data</h2>
 
@@ -428,93 +368,48 @@
 
     <p>The placement results of these eight heuristic methods and the learning-based PCT method under the three settings are shown in the tables below.</p>
 
-
-
-
-    <!-- Leaderboard for Setting 1 -->
-    <h2>Setting 1</h2>
-    <div class="controls">
-        <label for="data-select-setting1">Select Data Type:</label>
-        <select id="data-select-setting1" onchange="onDataTypeChange('setting1')">
-            <option value="time_series">time_series</option>
-            <option value="occupancy">occupancy</option>
-            <option value="flat_long">flat_long</option>
-        </select>
-    </div>
-
-    <div class="table-container">
-        <table id="table-setting1">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- Images for Setting 1 -->
-    <div class="table-container">
-        <img id="result-image-setting1-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result1 Image for Setting 1">
-    </div>
-    <div class="table-container">
-        <img id="result-image-setting1-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_utilization.png" alt="Result2 Image for Setting 1">
-    </div>
-
-    <!-- Leaderboard for Setting 2 -->
-    <h2>Setting 2</h2>
-    <div class="controls">
-        <label for="data-select-setting2">Select Data Type:</label>
-        <select id="data-select-setting2" onchange="onDataTypeChange('setting2')">
-            <option value="time_series">time_series</option>
-            <option value="occupancy">occupancy</option>
-            <option value="flat_long">flat_long</option>
-        </select>
-    </div>
-
-    <div class="table-container">
-        <table id="table-setting2">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- Images for Setting 2 -->
-    <div class="table-container">
-        <img id="result-image-setting2-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result1 Image for Setting 2">
-    </div>
-    <div class="table-container">
-        <img id="result-image-setting2-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_position_offset.png" alt="Result2 Image for Setting 2">
-    </div>
-    <div class="table-container">
-        <img id="result-image-setting2-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_stability_utilization.png" alt="Result3 Image for Setting 2">
-    </div>
-
-    <!-- Leaderboard for Setting 3 -->
-    <h2>Setting 3</h2>
-    <div class="controls">
-        <label for="data-select-setting3">Select Data Type:</label>
-        <select id="data-select-setting3" onchange="onDataTypeChange('setting3')">
-            <option value="time_series">time_series</option>
-            <option value="occupancy">occupancy</option>
-            <option value="flat_long">flat_long</option>
-        </select>
-    </div>
-
-    <div class="table-container">
-        <table id="table-setting3">
-            <thead></thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!-- Images for Setting 3 -->
-    <div class="table-container">
-        <img id="result-image-setting3-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result1 Image for Setting 3">
-    </div>
-    <div class="table-container">
-        <img id="result-image-setting3-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_position_offset.png" alt="Result2 Image for Setting 3">
-    </div>
-    <div class="table-container">
-        <img id="result-image-setting3-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_stability_utilization.png" alt="Result3 Image for Setting 3">
-    </div>
 </div>
+
+    <script>
+        let currentIndex = 0;
+        const images = document.querySelectorAll('.carousel-images');
+        const indicators = document.querySelectorAll('.carousel-indicators span');
+        const prevButton = document.querySelector('.carousel-prev');
+        const nextButton = document.querySelector('.carousel-next');
+
+        function showImage(index) {
+            images.forEach((img, i) => {
+                img.classList.remove('active');
+                indicators[i].classList.remove('active');
+                if (i === index) {
+                    img.classList.add('active'); // 只显示当前图片
+                    indicators[i].classList.add('active');
+                }
+            });
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            showImage(currentIndex);
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            showImage(currentIndex);
+        }
+
+        nextButton.addEventListener('click', nextImage);
+        prevButton.addEventListener('click', prevImage);
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                showImage(currentIndex);
+            });
+        });
+
+        setInterval(nextImage, 5000); // 每五秒自动切换
+    </script>
 
 </body>
 </html>
