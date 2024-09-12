@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preload" href="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/setting.png" as="image">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot-Bin-Packing-Benchmark</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .navbar-left, .navbar-right {
+            padding-left: 180px;
+            padding-right: 180px;
+        }
+
+        .navbar-left {
+            font-size: 20px;
+            font-weight: bold;
+            color: #cccccc;
+        }
+
+        .navbar-left a, .navbar-right a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar-right a {
+            font-size: 16px;
+            color: #cccccc;
+            text-decoration: none;
+            padding: 0 18px;
+            font-weight: 500;
+        }
+
+        .navbar-right a:hover {
+            color: white;
+        }
+
+        /* 为第一张图片单独设置样式 */
+        .first-container {
+            max-width: 1000px;
+            margin: 50px auto 10px; /* 上方留出空间，下方的margin减小 */
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        /* 设置图片高度为400px */
+        .first-container img {
+            width: 100%;
+            height: 400px; /* 固定高度为 400px */
+            object-fit: contain; /* 保持图片比例并进行裁剪 */
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 10px auto 10px; /* 顶部留出空间放导航栏 */
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px auto;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            text-align: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            color: #0056b3;
+            cursor: pointer;
+            text-align: center;
+            padding: 10px;
+        }
+
+        td a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        td a:visited {
+            color: #0056b3;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .controls select {
+            padding: 5px;
+            margin-left: 10px;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        function sortTable(column, setting, dataType) {
+            var tableBody = document.querySelector(`#table-${setting} tbody`);
+            var rowsArray = Array.from(tableBody.rows);
+
+            var currentSortOrder = tableBody.getAttribute('data-sort-order') || 'asc';
+            var newSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+            tableBody.setAttribute('data-sort-order', newSortOrder);
+
+            rowsArray.sort(function(a, b) {
+                var aValue = a.cells[getColumnIndex(column, setting)].innerText;
+                var bValue = b.cells[getColumnIndex(column, setting)].innerText;
+
+                if (!isNaN(aValue) && !isNaN(bValue)) {
+                    return newSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+                } else {
+                    return newSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                }
+            });
+
+            rowsArray.forEach(row => tableBody.appendChild(row));
+        }
+
+        function getColumnIndex(column, setting) {
+            var columns = (setting === 'setting1') ? 
+                ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time'] :
+                ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
+    
+            return columns.indexOf(column);
+        }
+
+        function loadCSVData(setting, dataType) {
+            var url = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/csv/${setting}/${dataType}_results.csv`;
+            Papa.parse(url, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    fillTable(results.data, setting, dataType);
+                }
+            });
+        }
+
+        function fillTable(data, setting, dataType) {
+            var tableBody = document.querySelector(`#table-${setting} tbody`);
+            var tableHead = document.querySelector(`#table-${setting} thead`);
+
+            tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
+
+            if (data.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
+                return;
+            }
+
+            // Helper function to parse numbers and handle non-numeric values
+            function parseNumber(value, forMin = false) {
+                var num = parseFloat(value);
+                // 对于最小值，非数值设置为Infinity；对于最大值，设置为-1，这样不会影响计算
+                return isNaN(num) ? (forMin ? Infinity : -1) : num;
+            }
+
+            var maxFeasibleNum = Math.max(...data.map(row => parseNumber(row['Feasible Num'])));
+            var maxSpaceUtilization = Math.max(...data.map(row => parseNumber(row['Space Utilization'])));
+            var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
+
+            var minPlanningTime = Math.min(...data.map(row => parseNumber(row['Planning Time'], true)));
+            var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing time'], true)));
+            var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
+            var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
+
+
+            console.log("maxFeasibleNum: ", maxFeasibleNum);
+            console.log("maxSpaceUtilization: ", maxSpaceUtilization);
+	    console.log("maxStaticStability: ", maxStaticStability);
+            console.log("minPlanningTime: ", minPlanningTime);
+	    console.log("minPackingTime: ", minPackingTime);
+            console.log("minPositionOffsetMean: ", minPositionOffsetMean);
+	    console.log("minPositionOffsetMax: ", minPositionOffsetMax);
+
+
+
+            var headers = (setting === 'setting1') ? `
+                <tr>
+                    <th>Method</th>
+                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
+                    <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
+                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
+                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
+                </tr>` : `
+                <tr>
+                    <th>Method</th>
+                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
+                    <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
+                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
+                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
+                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability</th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean</th>
+                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max</th>
+                </tr>`;
+
+            tableHead.innerHTML = headers;
+
+            data.forEach(function(row, index) {
+                // Check if the row contains undefined values
+                if (!row.Method || row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
+                    console.warn(`Skipping row with incomplete data at index ${index}: `, row);
+                    return; // Skip this row if any critical value is undefined
+                }
+                var tr = document.createElement('tr');
+                var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
+
+                var feasibleNum = parseNumber(row['Feasible Num']);
+                var spaceUtilization = parseNumber(row['Space Utilization']);
+                var planningTime = parseNumber(row['Planning Time'], true);
+                var packingTime = parseNumber(row['Packing time'], true);
+                var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
+                var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
+                var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
+
+
+                tr.innerHTML = `
+                <td><a href="${childPageUrl}">${row.Method}</a></td>
+                <td style="${feasibleNum === maxFeasibleNum ? 'font-weight: bold;' : ''}">${feasibleNum}</td>
+                <td style="${spaceUtilization === maxSpaceUtilization ? 'font-weight: bold;' : ''}">${spaceUtilization}</td>
+                <td style="${planningTime === minPlanningTime ? 'font-weight: bold;' : ''}">${planningTime}</td>
+                <td style="${packingTime === minPackingTime ? 'font-weight: bold;' : ''}">${packingTime}</td>
+                ${setting !== 'setting1' ? `<td style="${staticStability === maxStaticStability ? 'font-weight: bold;' : ''}">${staticStability}</td>` : ''}
+                ${setting !== 'setting1' ? `<td style="${positionOffsetMean === minPositionOffsetMean ? 'font-weight: bold;' : ''}">${positionOffsetMean}</td>` : ''}
+                ${setting !== 'setting1' ? `<td style="${positionOffsetMax === minPositionOffsetMax ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
+            `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function onDataTypeChange(setting) {
+            var dataType = document.getElementById(`data-select-${setting}`).value;
+            loadCSVData(setting, dataType);
+        }
+
+        window.onload = function() {
+            document.getElementById("data-select-setting1").value = "time_series";
+            onDataTypeChange('setting1');
+            document.getElementById("data-select-setting2").value = "time_series";
+            onDataTypeChange('setting2');
+            document.getElementById("data-select-setting3").value = "time_series";
+            onDataTypeChange('setting3');
+        };
+    </script>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">Robot Bin Packing Benchmark</a>
+        </div>
+        <div class="navbar-right">
+            <a href="index.html">Home</a>
+            <a href="benchmark.html">Benchmarks</a>
+            <a href="documentation.html">Documentation</a>
+            <a href="submit.html">Submit</a>
+        </div>
+    </div>
+
+    <!-- Benchmark Image -->
+    <div class="first-container">
+        <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/image/setting.png" alt="Benchmark Setting Image">
+    </div>
+
+    <!-- Setting 1 Leaderboard -->
+    <div class="container">
+        <h2>Setting 1</h2>
+        <div class="controls">
+            <label for="data-select-setting1">Select Data Type:</label>
+            <select id="data-select-setting1" onchange="onDataTypeChange('setting1')">
+                <option value="time_series">time_series</option>
+                <option value="occupancy">occupancy</option>
+                <option value="flat_long">flat_long</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="table-setting1">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <img id="result-image-setting1-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1 for Setting 1">
+        </div>
+        <div class="table-container">
+            <img id="result-image-setting1-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_utilization.png" alt="Result Image 2 for Setting 1">
+        </div>
+    </div>
+
+    <!-- Setting 2 Leaderboard -->
+    <div class="container">
+        <h2>Setting 2</h2>
+        <div class="controls">
+            <label for="data-select-setting2">Select Data Type:</label>
+            <select id="data-select-setting2" onchange="onDataTypeChange('setting2')">
+                <option value="time_series">time_series</option>
+                <option value="occupancy">occupancy</option>
+                <option value="flat_long">flat_long</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="table-setting2">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <img id="result-image-setting2-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1 for Setting 2">
+        </div>
+        <div class="table-container">
+            <img id="result-image-setting2-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_position_offset.png" alt="Result Image 2 for Setting 2">
+        </div>
+        <div class="table-container">
+            <img id="result-image-setting2-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_stability_utilization.png" alt="Result Image 3 for Setting 2">
+        </div>
+    </div>
+
+    <!-- Setting 3 Leaderboard -->
+    <div class="container">
+        <h2>Setting 3</h2>
+        <div class="controls">
+            <label for="data-select-setting3">Select Data Type:</label>
+            <select id="data-select-setting3" onchange="onDataTypeChange('setting3')">
+                <option value="time_series">time_series</option>
+                <option value="occupancy">occupancy</option>
+                <option value="flat_long">flat_long</option>
+            </select>
+        </div>
+
+        <div class="table-container">
+            <table id="table-setting3">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div class="table-container">
+            <img id="result-image-setting3-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1 for Setting 3">
+        </div>
+        <div class="table-container">
+            <img id="result-image-setting3-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_position_offset.png" alt="Result Image 2 for Setting 3">
+        </div>
+        <div class="table-container">
+            <img id="result-image-setting3-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_stability_utilization.png" alt="Result Image 3 for Setting 3">
+        </div>
+    </div>
+
+</body>
+</html>
