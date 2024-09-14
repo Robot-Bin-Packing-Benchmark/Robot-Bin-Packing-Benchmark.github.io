@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Bin Packing Benchmark</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-weight: 400;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .navbar-left, .navbar-right {
+            padding-left: 180px;
+            padding-right: 180px;
+        }
+
+        .navbar-left {
+            font-size: 20px;
+            font-weight: bold;
+            color: #cccccc;
+        }
+
+        .navbar-left a, .navbar-right a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar-right a {
+            font-size: 16px;
+            color: #cccccc;
+            text-decoration: none;
+            padding: 0 18px;
+            font-weight: 500;
+        }
+
+        .navbar-right a:hover {
+            color: white;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* 修改正文部分链接的样式 */
+        .container a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container a:visited {
+            color: #0056b3;
+        }
+
+        /* 强制按钮文字变为白色 */
+        .btn-primary {
+            color: #ffffff !important; /* 使用 !important 确保字体颜色变为白色 */
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">Robot Bin Packing Benchmark</a>
+        </div>
+        <div class="navbar-right">
+            <a href="index.html">Home</a>
+            <a href="benchmark.html">Benchmarks</a>
+            <a href="documentation.html">Documentation</a>
+            <a href="submit.html">Submit</a>
+        </div>
+    </div>
+
+    <!-- 页面内容 -->
+    <div class="container">
+    
+    <!-- Data Section -->
+    <h2>Important: Submission policy</h2>
+    <p>Parameter tuning <b>is only allowed on the training data</b>. Evaluating on the test data via this evaluation server <b>must only be done once for the final system</b>. It is not permitted to use it to train systems, for example by trying out different parameter values and choosing the best. Only one version must be evaluated (which performed best on the training data). This is to avoid overfitting on the test data. Results of different parameter settings of an algorithm can therefore only be reported on the training set. To help enforce this policy, we block updates to the test set results of a method for two weeks after a test set submission. You can split up the training data into training and validation sets yourself as you wish.</p>
+    <p>It is not permitted to register on this webpage with <b>multiple e-mail addresses nor information misrepresenting the identity of the user</b>. We will ban users or domains if required.</p>
+
+    <div class="text-center">
+        <h4>You can reach the authors at the following address:</h4>
+        <p><a href="mailto:robot-bin-packing-benchmark@gmail.com">robot-bin-packing-benchmark@gmail.com</a></p>
+        <a href="mailto:robot-bin-packing-benchmark@gmail.com" class="btn btn-primary">Send email</a>
+    </div>
+                
+    <div class="text-center">
+        <h4>For comments or questions please also check out our github site:</h4>
+        <p><a href="https://robot-bin-packing-benchmark.github.io/" target="_blank">https://robot-bin-packing-benchmark.github.io/</a></p>
+    </div>
+
+    </div>
+
+</body>
+</html>
