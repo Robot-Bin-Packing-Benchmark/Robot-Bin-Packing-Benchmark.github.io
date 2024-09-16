@@ -110,6 +110,7 @@
         th, td {
             border: 1px solid #ddd;
             padding: 10px;
+            position: relative; /* Add for arrow positioning */
         }
 
         th {
@@ -118,6 +119,24 @@
             cursor: pointer;
             text-align: center;
             padding: 10px;
+        }
+
+        /* Arrow icons */
+        th .arrow {
+            display: inline-block;
+            margin-left: 5px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+        }
+
+        th .arrow.asc {
+            border-bottom: 6px solid #0056b3;
+        }
+
+        th .arrow.desc {
+            border-top: 6px solid #0056b3;
         }
 
         td a {
@@ -150,27 +169,50 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
-        function sortTable(column, setting, dataType) {
+        function sortTable(column, setting, dataType, initialSortOrder = null) {
             var tableBody = document.querySelector(`#table-${setting} tbody`);
             var rowsArray = Array.from(tableBody.rows);
 
-            var currentSortOrder = tableBody.getAttribute('data-sort-order') || 'asc';
-            var newSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-            tableBody.setAttribute('data-sort-order', newSortOrder);
+            // 判断是首次排序还是用户点击表头触发的排序
+            var currentSortOrder;
+            if (initialSortOrder) {
+                currentSortOrder = initialSortOrder; // 用于初次加载表格时设置默认排序顺序
+            } else {
+                // 判断当前列是否已经是降序排序
+                var previousSortedColumn = tableBody.getAttribute('data-sorted-column');
+                if (previousSortedColumn === column) {
+                    // 如果当前列已排序，反转排序顺序
+                    currentSortOrder = tableBody.getAttribute('data-sort-order') === 'asc' ? 'desc' : 'asc';
+                } else {
+                    // 如果是新列，默认设置为降序
+                    currentSortOrder = 'desc';
+                }
+            }
+
+            // 更新排序顺序和排序的列
+            tableBody.setAttribute('data-sort-order', currentSortOrder);
+            tableBody.setAttribute('data-sorted-column', column);
 
             rowsArray.sort(function(a, b) {
                 var aValue = a.cells[getColumnIndex(column, setting)].innerText;
                 var bValue = b.cells[getColumnIndex(column, setting)].innerText;
 
                 if (!isNaN(aValue) && !isNaN(bValue)) {
-                    return newSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+                    return currentSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
                 } else {
-                    return newSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                    return currentSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
                 }
             });
 
             rowsArray.forEach(row => tableBody.appendChild(row));
+
+            // 更新箭头图标
+            updateArrowIcons(column, setting, currentSortOrder);
         }
+
+
+
+
 
         function getColumnIndex(column, setting) {
             var columns = (setting === 'setting1') ? 
@@ -178,6 +220,22 @@
                 ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
     
             return columns.indexOf(column);
+        }
+
+        function updateArrowIcons(sortedColumn, setting, sortOrder) {
+            var tableHead = document.querySelector(`#table-${setting} thead`);
+            var headers = tableHead.querySelectorAll('th');
+
+            headers.forEach(function(header, index) {
+                var arrow = header.querySelector('.arrow');
+
+                if (header.textContent.trim() === sortedColumn) {
+                    arrow.classList.toggle('asc', sortOrder === 'asc');
+                    arrow.classList.toggle('desc', sortOrder === 'desc');
+                } else {
+                    arrow.classList.remove('asc', 'desc');
+                }
+            });
         }
 
         function loadCSVData(setting, dataType) {
@@ -206,7 +264,6 @@
             // Helper function to parse numbers and handle non-numeric values
             function parseNumber(value, forMin = false) {
                 var num = parseFloat(value);
-                // 对于最小值，非数值设置为Infinity；对于最大值，设置为-1，这样不会影响计算
                 return isNaN(num) ? (forMin ? Infinity : -1) : num;
             }
 
@@ -232,30 +289,29 @@
 
             var headers = (setting === 'setting1') ? `
                 <tr>
-                    <th>Method</th>
-                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
-                    <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
-                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
-                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
+                    <th data-column="Method">Method<span class="arrow"></span></th>
+                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
+                    <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization<span class="arrow"></span></th>
+                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time<span class="arrow"></span></th>
                 </tr>` : `
                 <tr>
-                    <th>Method</th>
-                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num</th>
-                    <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization</th>
-                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time</th>
-                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time</th>
-                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability</th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean</th>
-                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max</th>
+                    <th data-column="Method">Method<span class="arrow"></span></th>
+                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
+                    <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization<span class="arrow"></span></th>
+                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
                 </tr>`;
 
             tableHead.innerHTML = headers;
 
+            // Populate table data
             data.forEach(function(row, index) {
-                // Check if the row contains undefined values
                 if (!row.Method || row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
-                    console.warn(`Skipping row with incomplete data at index ${index}: `, row);
-                    return; // Skip this row if any critical value is undefined
+                    return;
                 }
                 var tr = document.createElement('tr');
                 var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
@@ -267,7 +323,6 @@
                 var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
                 var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
                 var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
-
 
                 tr.innerHTML = `
                 <td><a href="${childPageUrl}">${row.Method}</a></td>
@@ -281,6 +336,9 @@
             `;
                 tableBody.appendChild(tr);
             });
+
+            // 默认按 'Feasible Num' 排序并更新箭头
+            sortTable('Feasible Num', setting, dataType, 'desc');
         }
 
         function onDataTypeChange(setting) {
