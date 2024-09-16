@@ -3,34 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details for Method</title>
+    <title>Results for method</title> <!-- This will be dynamically updated -->
     <style>
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Helvetica', 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            background-color: #f8f9fa;
             display: flex;
             justify-content: center;
         }
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 60px;
             padding: 20px;
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
             line-height: 1.6;
-            text-align: justify;
         }
-        h1, h2, h3 {
+        h1 {
             text-align: center;
             font-family: 'Arial', sans-serif;
             font-weight: 600;
+            margin-bottom: 30px;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        table.info-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        table.info-table th {
+            text-align: left;
+            padding: 8px;
+            background-color: #f2f2f2;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        table.info-table td {
+            padding: 8px;
+            font-size: 16px;
+        }
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .controls select {
+            padding: 5px;
+            margin-left: 10px;
         }
         .table-container {
             display: block;
             justify-content: center;
             margin: 20px auto;
-            text-align: center; /* 如果需要图片居中显示，可以添加此行 */
+            text-align: center;
         }
-        table {
+        table.data-table {
             border-collapse: collapse;
             margin: auto;
             text-align: center;
@@ -43,23 +89,19 @@
             background-color: #f2f2f2;
         }
         img {
-            display: block; /* 将 img 元素设为块级元素 */
+            display: block;
             width: 100%;
             height: auto;
             margin-bottom: 20px;
-        }
-        .controls {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .controls select {
-            padding: 5px;
-            margin-left: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         video {
-            width: 600px;
+            width: 100%;
             height: auto;
             margin-bottom: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
@@ -76,6 +118,34 @@
             });
 
             return params;
+        }
+
+        // Function to get the description based on the setting
+        function getDescription(setting) {
+            switch (setting) {
+                case 'setting1':
+                    return "No consideration of physical simulation, no consideration of robotic arms.";
+                case 'setting2':
+                    return "Consideration of physical simulation, no consideration of robotic arms.";
+                case 'setting3':
+                    return "Consideration of physical simulation and robotic arms.";
+                default:
+                    return "";
+            }
+        }
+
+        // Function to get the dataset description based on the dataType
+        function getDatasetDescription(dataType) {
+            switch (dataType) {
+                case 'time_series':
+                    return "3D Regular Household Items Time-Series Dataset";
+                case 'occupancy':
+                    return "3D Regular Office Supplies Occupancy Dataset";
+                case 'flat_long':
+                    return "3D Regular Long Items Dataset";
+                default:
+                    return "";
+            }
         }
 
         // Function to load the CSV data
@@ -146,9 +216,6 @@
 
             // If setting is 2 or 3, load the third image
             if (setting === 'setting2' || setting === 'setting3') {
-                imageContainer.innerHTML = ''; // Clear previous images
-                imageContainer.appendChild(img1);
-
                 var img3 = document.createElement('img');
                 img3.src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}/${method}_results_position_offset.png`;
                 img3.alt = "Position Offset";
@@ -192,6 +259,19 @@
             var dataType = window.params.dataType;
             var method = window.params.method;
 
+            // Update the title and heading
+            document.title = `Results for ${method}`;
+            document.querySelector('h1').textContent = `Results for ${method}`;
+
+            // Update the information table
+            document.getElementById('setting-info').textContent = setting.charAt(0).toUpperCase() + setting.slice(1);
+            document.getElementById('describe-info').textContent = getDescription(setting);
+            document.getElementById('datatype-info').textContent = getDatasetDescription(dataType);
+            document.getElementById('programming-language-info').textContent = "Python";
+            document.getElementById('hardware-info').textContent = "GeForce 3090";
+            document.getElementById('submission-date-info').textContent = "16 Sep, 2024";
+            document.getElementById('last-edited-info').textContent = "16 Sep, 2024";
+
             // Load the initial data
             loadDetailData(setting, dataType, method);
         };
@@ -199,14 +279,49 @@
 </head>
 <body>
     <div class="container">
-        <h1>Details for <span id="method-name"></span> Method</h1>
+        <div class="top-bar">
+            <button class="back-button" onclick="history.back()">← Back</button>
+        </div>
+
+        <h1>Results for method</h1>
+
+        <!-- Information Table -->
+        <table class="info-table">
+            <tr>
+                <th>Setting</th>
+                <td id="setting-info"></td>
+            </tr>
+            <tr>
+                <th>Describe</th>
+                <td id="describe-info"></td>
+            </tr>
+            <tr>
+                <th>DataType</th>
+                <td id="datatype-info"></td>
+            </tr>
+            <tr>
+                <th>Programming language(s)</th>
+                <td id="programming-language-info"></td>
+            </tr>
+            <tr>
+                <th>Hardware</th>
+                <td id="hardware-info"></td>
+            </tr>
+            <tr>
+                <th>Submission creation date</th>
+                <td id="submission-date-info"></td>
+            </tr>
+            <tr>
+                <th>Last edited</th>
+                <td id="last-edited-info"></td>
+            </tr>
+        </table>
 
         <!-- Controls for selecting group data -->
         <div class="controls">
             <label>Select Group:</label>
             <select id="group-select" onchange="onGroupChange()">
                 <script>
-                    // Dynamically create options from 0 to 29
                     for (let i = 0; i < 30; i++) {
                         document.write(`<option value="${i}">${i}</option>`);
                     }
@@ -216,7 +331,7 @@
 
         <!-- Detailed table for the current method -->
         <div class="table-container">
-            <table id="table-setting1-details">
+            <table id="table-setting1-details" class="data-table">
                 <thead>
                     <tr>
                         <th>Data Group</th>
