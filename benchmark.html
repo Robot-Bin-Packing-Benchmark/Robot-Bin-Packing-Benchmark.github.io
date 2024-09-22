@@ -216,8 +216,8 @@
 
         function getColumnIndex(column, setting) {
             var columns = (setting === 'setting1') ? 
-                ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time'] :
-                ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
+                ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing Time'] :
+                ['Method', 'Feasible Num', 'Space Utilization', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
     
             return columns.indexOf(column);
         }
@@ -272,7 +272,7 @@
             var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
 
             var minPlanningTime = Math.min(...data.map(row => parseNumber(row['Planning Time'], true)));
-            var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing time'], true)));
+            var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing Time'], true)));
             var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
             var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
 
@@ -293,14 +293,14 @@
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
                     <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
-                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                 </tr>` : `
                 <tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
                     <th onclick="sortTable('Space Utilization', '${setting}', '${dataType}')">Space Utilization<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
-                    <th onclick="sortTable('Packing time', '${setting}', '${dataType}')">Packing time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
                     <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
                     <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
@@ -319,7 +319,7 @@
                 var feasibleNum = parseNumber(row['Feasible Num']);
                 var spaceUtilization = parseNumber(row['Space Utilization']);
                 var planningTime = parseNumber(row['Planning Time'], true);
-                var packingTime = parseNumber(row['Packing time'], true);
+                var packingTime = parseNumber(row['Packing Time'], true);
                 var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
                 var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
                 var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
