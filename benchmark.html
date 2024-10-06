@@ -512,7 +512,7 @@
         <h2>Setting 1：Ideal Conditions</h2>
 	<p>Without considering physical simulation or robot motion trajectory planning, we only consider the optimal performance of the algorithm, which we call ideal conditions.</p>
         <div class="controls">
-            <label for="data-select-setting1">Select Data Type:</label>
+            <label for="data-select-setting1">Test Set:</label>
             <select id="data-select-setting1" onchange="onDataTypeChange('setting1')">
                 <option value="time_series">time_series</option>
                 <option value="occupancy">occupancy</option>
@@ -537,10 +537,10 @@
 
     <!-- Setting 2 Leaderboard -->
     <div class="container">
-        <h2>Setting 2：physical simulation condition</h2>
+        <h2>Setting 2：Physical Simulation Condition</h2>
 	<p>Considering physical simulation, but not considering the robot motion trajectory planning, we get the performance of the algorithm under real physical simulation. The performance of the algorithm varies with the stability of the position selection, which we call physical simulation condition.</p>
         <div class="controls">
-            <label for="data-select-setting2">Select Data Type:</label>
+            <label for="data-select-setting2">Test Set:</label>
             <select id="data-select-setting2" onchange="onDataTypeChange('setting2')">
                 <option value="time_series">time_series</option>
                 <option value="occupancy">occupancy</option>
@@ -568,10 +568,10 @@
 
     <!-- Setting 3 Leaderboard -->
     <div class="container">
-        <h2>Setting 3：robot path planning condition</h2>
+        <h2>Setting 3：Robot Path Planning Condition</h2>
 	<p>Considering physical simulation and robot motion trajectory planning, we introduce a robot to grab the box and place it at the target location to obtain the actual performance of the algorithm in a real industrial environment. The performance of the algorithm varies depending on the actual accessibility of the location selection, which we call the robot path planning condition.</p>
         <div class="controls">
-            <label for="data-select-setting3">Select Data Type:</label>
+            <label for="data-select-setting3">Test Set:</label>
             <select id="data-select-setting3" onchange="onDataTypeChange('setting3')">
                 <option value="time_series">time_series</option>
                 <option value="occupancy">occupancy</option>
