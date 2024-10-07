@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +19,31 @@
             text-align: center;
             font-family: 'Arial', sans-serif;
             font-weight: 600;
+        }
+
+        /* 左侧目录样式 */
+        .sidebar {
+            position: fixed;
+            top: 60px; /* 确保在导航栏下方 */
+            left: 0;
+            width: 200px;
+            padding: 20px;
+            background-color: #f4f4f4;
+            height: 100%;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar a {
+            display: block;
+            margin: 10px 0;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover {
+            color: #0056b3;
         }
 
         table {
@@ -221,9 +247,10 @@
         }
 
         .container {
+            margin-left: 220px; /* 给左侧目录留出空间 */
             max-width: 900px;
             margin: 0 auto;
-            padding: 100px;
+            padding: 100px 20px;
             line-height: 1.6;
             text-align: justify;
         }
@@ -232,7 +259,7 @@
 <body>
 
     <!-- 导航栏 -->
-    <div class="navbar">
+    <div class="navbar" id="navbar">
         <div class="navbar-left">
             <a href="index.html">Robot Bin Packing Benchmark</a>
         </div>
@@ -253,14 +280,56 @@
         }
     </script>
 
-    
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const sidebarLinks = document.querySelectorAll(".sidebar a");
+        const navbar = document.getElementById("navbar");
+
+        // 确保导航栏存在，防止为空时报错
+        if (navbar) {
+            const navbarHeight = navbar.offsetHeight; // 获取导航栏高度
+
+            // 遍历每个目录链接，监听点击事件
+            sidebarLinks.forEach(link => {
+                link.addEventListener("click", function(e) {
+                    e.preventDefault(); // 阻止默认的锚链接跳转行为
+
+                    // 获取目标锚点
+                    const targetId = this.getAttribute("href").substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        // 计算滚动位置，减去导航栏高度
+                        const targetPosition = targetElement.offsetTop - navbarHeight;
+
+                        // 平滑滚动到目标位置
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                });
+            });
+        } else {
+            console.error("导航栏元素未找到");
+        }
+    });
+    </script>
+
+    <!-- 左侧目录 -->
+    <div class="sidebar">
+        <a href="#dataset-a">1. DataA: 3D Regular Household Items Dataset</a>
+        <a href="#dataset-b">2. DataB: 3D Regular Office Supplies Dataset</a>
+        <a href="#environment">3. Simulation Environment</a>
+    </div>    
+
     <!-- 页面内容 -->
     <div class="container">
     
     <!-- Data Section -->
-    <h2>Data</h2>
+    <h2 id="data">Data</h2>
 
-    <h3>A. 3D Regular Household Items Time-Series Dataset</h3>
+    <h3 id="dataset-a">A. 3D Regular Household Items Time-Series Dataset</h3>
     <p>With the rapid development of e-commerce and the retail industry, the variety and quantity of household items have continuously increased. Efficiently arranging and packing these regularly shaped three-dimensional items to maximize space utilization has become a critical issue in logistics management. Many companies record specific information about each item's size, weight, volume, and its handling in storage and transportation, aiming to optimize picking and distribution processes.</p>
     
     <p>This dataset contains a total of 16,767 such order records, including the processing time of each order, the dimensions, volume, and weight of each item, and the quantity of items to be picked, sorted in a real-time sequence. Time-series sorted test data can better simulate the bin packing process in actual operations, making the test results more realistic. Some algorithms may perform poorly in real-world applications due to their inability to adapt to sequence requirements, or they may experience performance degradation or errors when faced with large volumes of continuous input data. Time-series sorted data helps verify whether algorithms can effectively handle specific constraints, such as requiring items to be loaded in a specific order or certain items not being allowed to be placed on top of others. This data can help identify bottlenecks and improvement points in algorithms, for example, by analyzing phases with low packing efficiency to find ways to improve the algorithm and enhance overall efficiency.</p>
@@ -315,7 +384,7 @@
         </table>
     </div>
 
-    <h3>B. 3D Regular Office Supplies Occupancy Dataset</h3>
+    <h3 id="dataset-b">B. 3D Regular Office Supplies Occupancy Dataset</h3>
     <p>In stationery stores, we often see a variety of office supplies arranged on shelves in a way that is both aesthetically pleasing and convenient for access. This arrangement requires consideration of each item's size, weight, and shape, aiming to maximize the use of limited space to accommodate more products. Efficiently arranging and packing these regularly shaped three-dimensional office supplies to maximize space utilization is also a significant challenge. Some office supply companies record information such as the name, dimensions, volume, weight, and occupancy rate of each office supply item in orders.</p>
     
     <p>The dataset contains a total of 6,849 such order records, including the dimensions, volume, weight, and occupancy rate of each office supply item in the order. Notably, the dataset also includes the names of office supplies, providing rich occupancy information that helps optimize packing strategies. For example, many identical types of items can be grouped together to facilitate categorization and management. The occupancy rate information in the dataset helps evaluate the performance of algorithms in maximizing space utilization. Different office supplies may have different priorities and constraints during packing. The occupancy data can help verify whether an algorithm can handle these practical constraints, such as whether high-occupancy items need to be loaded first, or certain items cannot be packed together with others. The occupancy dataset for office supplies offers a more realistic testing environment for 3D bin packing algorithms, helping researchers evaluate and improve algorithm performance in real-world applications.</p>
@@ -370,8 +439,8 @@
         </table>
     </div>
 
-    <!-- Leaderboard Section -->
-    <h2>Leaderboard</h2>
+    <!-- Simulation Environment Section -->
+    <h2 id="environment"> Simulation Environment </h2>
     <p>We tested a series of classic heuristic algorithms and learning-based algorithms for their performance on the 3D online regular bin packing problem. The tests were conducted on the 3D Regular Household Items Time-Series Dataset and the 3D Regular Office Supplies Occupancy Dataset provided. Below is a brief introduction to the algorithms we summarized.</p>
 
     <p>We introduced eight regular heuristic algorithms. The Left-Bottom heuristic selects the bottom-most, left-most, and back-most positions. The Heightmap-Min (HM) heuristic aims to minimize the volume increase observed from top to bottom, i.e., minimizing the height map sum. The LSAH heuristic selects the placement location that minimizes the surface area. The MACS heuristic chooses the position with the maximum available free space. The OnlineBPH heuristic selects the first available position in the EMS space sorted by the deep-bottom-left principle, avoiding blockage issues. The DBL heuristic selects the Deepest Bottom Left filling position. The BR heuristic selects a location in the EMS that is large and compatible with future items, assuming all possible item placements are known. The RANDOM heuristic randomly selects a placement location.</p>
