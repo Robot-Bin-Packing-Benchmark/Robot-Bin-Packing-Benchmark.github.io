@@ -279,9 +279,27 @@
             background-color: #ffffff;
         }
 
+	/* 添加一个新的 class 用于解释文本 */
+        .explanation {
+            display: inline-block;
+            margin-left: 20px; /* 与选择条保持间距 */
+            font-weight: normal;
+            white-space: normal; /* 允许解释内容换行 */
+            max-width: 800px; /* 设置一个最大宽度，控制换行位置 */
+        }
+
         .controls {
-            text-align: center;
+            display: flex;
+            justify-content: flex-start; /* 将选择条和解释文本靠左对齐 */
             margin-bottom: 20px;
+        }
+
+	.controls .select-container {
+            white-space: nowrap; /* 确保 "Test Set" 和下拉框不换行 */
+        }
+
+	.controls label {
+            font-weight: bold; /* 加粗 Test Set 文本 */
         }
 
         .controls select {
@@ -477,6 +495,47 @@
             onDataTypeChange('setting3');
         };
     </script>
+
+    <script>
+    function updateExplanation(setting) {
+        const dataType = document.getElementById(`data-select-${setting}`).value;
+        let explanationText;
+
+        // 根据选择的值显示不同的解释
+        switch (dataType) {
+            case 'time_series':
+                explanationText = "We use the data transmitted in time series in real industrial scenarios as test data. The data is organized into a series of continuous time series data starting from a randomly selected starting point.";
+                break;
+            case 'occupancy':
+                explanationText = "We use data selected by order occupancy in real industrial scenarios as test data. The data is sorted into occupancy data that is randomly selected based on occupancy and conforms to the actual production frequency.";
+                break;
+            case 'flat_long':
+                explanationText = "We use the long furniture data in real industrial scenarios as test data, and organize the data into industrial data with particularly long length or width that conforms to actual production.";
+                break;
+            default:
+                explanationText = "";
+        }
+
+        // 更新对应的解释文本
+        document.getElementById(`explanation-${setting}`).textContent = explanationText;
+    }
+
+    // 初始化时更新解释
+    window.onload = function() {
+        document.getElementById("data-select-setting1").value = "time_series";
+        onDataTypeChange('setting1');
+        updateExplanation('setting1');
+
+        document.getElementById("data-select-setting2").value = "time_series";
+        onDataTypeChange('setting2');
+        updateExplanation('setting2');
+
+        document.getElementById("data-select-setting3").value = "time_series";
+        onDataTypeChange('setting3');
+        updateExplanation('setting3');
+    };
+</script>
+
 </head>
 <body>
 
@@ -512,12 +571,17 @@
         <h2>Setting 1：Ideal Conditions</h2>
 	<p>Without considering physical simulation or robot motion trajectory planning, we only consider the optimal performance of the algorithm, which we call ideal conditions.</p>
         <div class="controls">
-            <label for="data-select-setting1">Test Set:</label>
-            <select id="data-select-setting1" onchange="onDataTypeChange('setting1')">
-                <option value="time_series">time_series</option>
-                <option value="occupancy">occupancy</option>
-                <option value="flat_long">flat_long</option>
-            </select>
+            <!-- 确保 Test Set 和下拉框不换行 -->
+            <div class="select-container">
+                <label for="data-select-setting1">Test Set:</label>
+                <select id="data-select-setting1" onchange="onDataTypeChange('setting1'); updateExplanation('setting1')">
+                    <option value="time_series">time_series</option>
+                    <option value="occupancy">occupancy</option>
+                    <option value="flat_long">flat_long</option>
+                </select>
+            </div>
+            <!-- 添加用于显示解释的容器 -->
+            <span id="explanation-setting1" class="explanation">We use the data transmitted in time series in real industrial scenarios as test data. The data is organized into a series of continuous time series data starting from a randomly selected starting point.</span>
         </div>
 
         <div class="table-container">
@@ -540,12 +604,16 @@
         <h2>Setting 2：Physical Simulation Condition</h2>
 	<p>Considering physical simulation, but not considering the robot motion trajectory planning, we get the performance of the algorithm under real physical simulation. The performance of the algorithm varies with the stability of the position selection, which we call physical simulation condition.</p>
         <div class="controls">
-            <label for="data-select-setting2">Test Set:</label>
-            <select id="data-select-setting2" onchange="onDataTypeChange('setting2')">
-                <option value="time_series">time_series</option>
-                <option value="occupancy">occupancy</option>
-                <option value="flat_long">flat_long</option>
-            </select>
+            <div class="select-container">
+                <label for="data-select-setting2">Test Set:</label>
+                <select id="data-select-setting2" onchange="onDataTypeChange('setting2'); updateExplanation('setting2')">
+                    <option value="time_series">time_series</option>
+                    <option value="occupancy">occupancy</option>
+                    <option value="flat_long">flat_long</option>
+                </select>
+            </div>
+            <!-- 添加用于显示解释的容器 -->
+            <span id="explanation-setting2" class="explanation">We use the data transmitted in time series in real industrial scenarios as test data. The data is organized into a series of continuous time series data starting from a randomly selected starting point.</span>
         </div>
 
         <div class="table-container">
@@ -571,12 +639,16 @@
         <h2>Setting 3：Robot Path Planning Condition</h2>
 	<p>Considering physical simulation and robot motion trajectory planning, we introduce a robot to grab the box and place it at the target location to obtain the actual performance of the algorithm in a real industrial environment. The performance of the algorithm varies depending on the actual accessibility of the location selection, which we call the robot path planning condition.</p>
         <div class="controls">
-            <label for="data-select-setting3">Test Set:</label>
-            <select id="data-select-setting3" onchange="onDataTypeChange('setting3')">
-                <option value="time_series">time_series</option>
-                <option value="occupancy">occupancy</option>
-                <option value="flat_long">flat_long</option>
-            </select>
+            <div class="select-container">
+                <label for="data-select-setting3">Test Set:</label>
+                <select id="data-select-setting3" onchange="onDataTypeChange('setting3'); updateExplanation('setting3')">
+                    <option value="time_series">time_series</option>
+                    <option value="occupancy">occupancy</option>
+                    <option value="flat_long">flat_long</option>
+                </select>
+            </div>
+            <!-- 添加用于显示解释的容器 -->
+            <span id="explanation-setting3" class="explanation">We use the data transmitted in time series in real industrial scenarios as test data. The data is organized into a series of continuous time series data starting from a randomly selected starting point.</span>
         </div>
 
         <div class="table-container">
