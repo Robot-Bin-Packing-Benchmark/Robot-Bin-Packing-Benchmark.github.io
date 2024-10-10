@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Bin Packing Benchmark</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-weight: 400;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: auto;
+            text-align: center;
+            width: 100%; /* 设置表格宽度为100%，确保三个表格宽度一致 */
+            max-width: 1000px; /* 设置最大宽度，与setting2、setting3对齐 */
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        th {
+            background-color: #f5f5f5;
+            color: #0056b3;
+            cursor: pointer;
+            text-align: center;
+            padding: 10px;
+        }
+        td a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        td a:visited {
+            color: #0056b3;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .navbar-left {
+            font-size: 20px;
+            font-weight: bold;
+            color: #cccccc;
+            padding-left: 180px;
+        }
+
+        .navbar-left a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar-right {
+            padding-right: 180px;
+        }
+
+        .navbar-right a {
+            font-size: 16px;
+            color: #cccccc;
+            text-decoration: none;
+            padding: 0 18px;
+            font-weight: 500;
+        }
+
+        .navbar-right a:hover {
+            color: white;
+        }
+
+        /* 保证导航栏在宽度缩小时不会换行 */
+        .navbar-left, .navbar-right {
+            white-space: nowrap;
+        }
+
+	/* 折叠菜单图标，默认不显示 */
+        .menu-icon {
+            display: none;
+        }
+
+        /* 媒体查询，用于在页面缩小时调整样式 */
+        @media (max-width: 1200px) {
+            .navbar-left, .navbar-right {
+                padding-left: 100px;
+                padding-right: 100px;
+            }
+        }
+
+	@media (max-width: 1150px) {
+            .navbar-left, .navbar-right {
+                padding-left: 87px;
+                padding-right: 87px;
+            }
+        }
+
+	@media (max-width: 1100px) {
+            .navbar-left, .navbar-right {
+                padding-left: 75px;
+                padding-right: 75px;
+            }
+        }
+
+	@media (max-width: 1050px) {
+            .navbar-left, .navbar-right {
+                padding-left: 63px;
+                padding-right: 75px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .navbar-left, .navbar-right {
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+        }
+	
+	/* 在992px到768px范围内，逐步减少padding */
+	@media (max-width: 952px) {
+            .navbar-left, .navbar-right {
+                padding-left: 45px;
+                padding-right: 45px;
+            }
+        }
+
+	
+        @media (max-width: 900px) {
+            .navbar-left, .navbar-right {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .navbar-left, .navbar-right {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .navbar-left, .navbar-right {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .navbar {
+                justify-content: center;
+                padding: 15px 0;
+            }
+
+            .navbar-left {
+                padding: 0;
+                text-align: center;
+                flex-grow: 1;
+            }
+
+            .navbar-right {
+                display: none;
+            }
+
+            /* 折叠菜单图标 */
+            .menu-icon {
+                display: block;
+                font-size: 30px;
+                color: white;
+                position: absolute;
+                right: 20px;
+                cursor: pointer;
+            }
+
+            /* 折叠菜单展开内容 */
+            .navbar-right.active {
+                display: block;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background-color: #333;
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 1001;
+            }
+
+            .navbar-right.active a {
+                display: block;
+                margin: 5px 0;
+                padding: 5px 0;
+            }
+        }
+
+	.image-section {
+  	  max-width: 900px;
+  	  margin: 0 auto 20px auto; /* 去掉顶部的 margin，改用 JavaScript 动态计算 */
+   	 text-align: center;
+	}
+
+	.image-section img {
+   	 width: 100%;
+    	height: auto;
+	}
+
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+	
+	.video-carousel-container {
+            position: relative;
+            width: 100vw;
+            height: 330px; /* 视频容器的高度 */
+            margin-bottom: 44px; /* 与下方内容的距离 */
+            padding-left: 0px; /* 增大左右边距 */
+            padding-right: 0px; /* 增大左右边距 */
+        }
+
+        .video-group {
+            display: none; /* 默认隐藏所有视频组 */
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-group.active {
+            display: flex; /* 只显示当前活动的视频组 */
+        }
+
+        .video-group video {
+            width: 30%;
+	    margin: 0 10px; /* 设置每个视频之间的空隙 */
+            height: auto;
+        }
+	
+	.video-description {
+            max-width: 900px;
+  	  margin: 20px auto;
+  	  font-size: 16px;
+  	  line-height: 1.6;
+  	  text-align: justify;
+  	  padding: 0 20px;
+	}
+
+        .carousel-prev, .carousel-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .carousel-prev {
+            left: 10px;
+        }
+
+        .carousel-next {
+            right: 10px;
+        }
+
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .carousel-indicators span {
+            width: 10px;
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .carousel-indicators span.active {
+            background-color: white;
+        }
+
+        /* 控制视频轮播容器和导航栏的距离 */
+        .video-carousel-container {
+            margin-top: 80px; /* 根据实际导航栏高度动态调整 */
+        }
+
+	/* 当屏幕宽度小于 768px 时只显示第一个视频 */
+        @media (max-width: 768px) {
+            .video-group video {
+   	     display: none; /* 隐藏所有视频 */
+  	  }
+
+  	  .video-group video:first-child {
+    	    display: block; /* 只显示每组中的第一个视频 */
+    	    width: 90%; /* 让视频适应页面宽度 */
+   	    height: auto; /* 保持视频比例 */
+	    margin: 0 auto; /* 让视频居中 */
+  	  }
+
+  	  /* 调整视频轮播容器的高度，以适应单个视频 */
+  	  .video-carousel-container {
+  	      height: auto; /* 让容器自适应内容高度 */
+  	      padding-left: 0; /* 移除左右边距 */
+  	      padding-right: 0;
+  	  }
+
+ 	   /* 隐藏左右切换按钮和指示器 */
+ 	   .carousel-prev, .carousel-next, .carousel-indicators {
+  	      display: none;
+  	  }
+	}
+
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <div class="navbar" id="navbar">
+        <div class="navbar-left">
+            <a href="index.html">Robot Bin Packing Benchmark</a>
+        </div>
+        <div class="navbar-right" id="navbar-right">
+            <a href="index.html">Home</a>
+            <a href="benchmark.html">Benchmarks</a>
+            <a href="documentation.html">Documentation</a>
+            <a href="submit.html">Submit</a>
+        </div>
+        <!-- 折叠菜单图标 -->
+        <span class="menu-icon" id="menu-icon" onclick="toggleMenu()">&#9776;</span>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var navbarRight = document.getElementById("navbar-right");
+            navbarRight.classList.toggle("active");
+        }
+    </script>
+
+    
+
+    <div class="image-section">
+        <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/order.jpg" alt="Order Image">
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // 获取导航栏和图片部分
+    const navbar = document.getElementById('navbar');
+    const imageSection = document.querySelector('.image-section');
+    
+    // 计算导航栏高度并调整图片的 margin-top
+    function adjustImageSectionMargin() {
+        const navbarHeight = navbar.offsetHeight;
+        imageSection.style.marginTop = `${navbarHeight + 10}px`; // 导航栏下方留出10px空隙
+    }
+
+    // 页面加载时和窗口调整大小时调用
+    adjustImageSectionMargin(); // 页面加载时立即调整
+    window.onresize = adjustImageSectionMargin; // 页面大小改变时调整
+});
+    </script>
+
+
+
+
+    <!-- 页面内容 -->
+    <div class="container">
+
+    <!-- Introduction Section -->
+    <h2>Introduction</h2>
+    <p>The Three-Dimensional Bin Packing Problem (3D-BPP) is crucial in modern industrial and logistics systems. With the total social logistics costs reaching 18.2 trillion RMB, accounting for one-seventh of the Gross Domestic Product (GDP), the logistics industry has become a key sector in the national economy. Packaging is a core aspect of logistics, and effective 3D bin packing strategies can maximize transportation space utilization, reduce shipping costs, and ensure the stability and safety of goods. Under the framework of Industry 4.0, the use of robotic arms for 3D bin packing is becoming increasingly prevalent. Effective coordination of robotic arms in packing processes can enhance automation and intelligence in the packaging industry, reduce packaging material waste, and promote environmental sustainability.</p>
+
+    <p>This work makes the following major contributions:</p>
+    <ol>
+        <li>Provides a rich set of real industrial data targeted for the industry.</li>
+        <li>Develops a robust simulation environment for testing bin packing algorithms and introduces industrial-relevant evaluation metrics focused on robotic arm operations.</li>
+        <li>Conducts extensive tests on existing classical methods: A comprehensive evaluation of existing classical 3D bin packing algorithms and a summary of the test results.</li>
+    </ol>
+
+    <p>We set up three settings:</p>
+    <ul>
+        <li><strong>Setting 1</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
+        <li><strong>Setting 2</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
+        <li><strong>Setting 3</strong>: Consideration of physical simulation and robotic arms.</li>
+    </ul>
+
+    <p>The placement results of these eight heuristic methods and the learning-based PCT method  and TAP method under the three settings are shown in the Benchmarks section.</p>
+
+</div>
+
+    <!-- 视频轮播容器 -->
+    <div class="video-carousel-container" id="videoCarousel">
+        <!-- 第一组视频 -->
+        <div class="video-group active">
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/time_series.mp4" autoplay muted loop></video>
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/occupancy.mp4" autoplay muted loop></video>
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/flat_long.mp4" autoplay muted loop></video>
+        </div>
+        
+        <!-- 第二组视频 -->
+        <div class="video-group">
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/time_series.mp4" autoplay muted loop></video>
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/occupancy.mp4" autoplay muted loop></video>
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/flat_long.mp4" autoplay muted loop></video>
+        </div>
+
+        <!-- 第三组视频 -->
+        <div class="video-group">
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/time_series.mp4" autoplay muted loop></video>
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/occupancy.mp4" autoplay muted loop></video>
+            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/flat_long.mp4" autoplay muted loop></video>
+        </div>
+
+        <!-- 左右切换按钮 -->
+        <button class="carousel-prev">❮</button>
+        <button class="carousel-next">❯</button>
+
+        <!-- 轮播指示器 -->
+        <div class="carousel-indicators">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const videoGroups = document.querySelectorAll('.video-group');
+        const indicators = document.querySelectorAll('.carousel-indicators span');
+        const prevButton = document.querySelector('.carousel-prev');
+        const nextButton = document.querySelector('.carousel-next');
+
+        // 获取顶部导航栏高度并调整视频容器与导航栏的距离
+        const navbar = document.getElementById('navbar');
+        const videoCarousel = document.getElementById('videoCarousel');
+        function adjustCarouselMargin() {
+            const navbarHeight = navbar.offsetHeight;
+            videoCarousel.style.marginTop = `${navbarHeight + 10}px`; // 给导航栏和视频容器留一点空隙
+        }
+
+        // 显示当前的视频组
+        function showVideoGroup(index) {
+            videoGroups.forEach((group, i) => {
+                group.classList.remove('active');
+                indicators[i].classList.remove('active');
+                if (i === index) {
+                    group.classList.add('active');
+                    indicators[i].classList.add('active');
+                    // 重新播放当前视频组中的所有视频
+                    const videos = group.querySelectorAll('video');
+                    videos.forEach(video => {
+                        video.currentTime = 0;
+                        video.play();
+                    });
+                }
+            });
+        }
+
+        // 显示下一个视频组
+        function nextVideoGroup() {
+            currentIndex = (currentIndex + 1) % videoGroups.length;
+            showVideoGroup(currentIndex);
+        }
+
+        // 显示上一个视频组
+        function prevVideoGroup() {
+            currentIndex = (currentIndex - 1 + videoGroups.length) % videoGroups.length;
+            showVideoGroup(currentIndex);
+        }
+
+        nextButton.addEventListener('click', nextVideoGroup);
+        prevButton.addEventListener('click', prevVideoGroup);
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                currentIndex = index;
+                showVideoGroup(currentIndex);
+            });
+        });
+
+        // 在页面加载时调整视频轮播容器与导航栏的距离
+        window.onload = adjustCarouselMargin;
+        window.onresize = adjustCarouselMargin;
+    </script>
+
+
+    <!-- 视频轮播器下方的解释文本容器 -->
+    <div class="video-description" id="videoDescription"></div>
+
+    <script>
+    // 视频组对应的描述文本
+
+const descriptions = [
+    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: time_series, occupancy, and flat_long under Setting 1：Ideal Conditions. Without considering physical simulation or robot motion trajectory planning, we only consider the optimal performance of the algorithm, which we call ideal conditions.",
+    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: time_series, occupancy, and flat_long under Setting 2：Physical Simulation Condition. Considering physical simulation, but not considering the robot motion trajectory planning, we get the performance of the algorithm under real physical simulation. The performance of the algorithm varies with the stability of the position selection, which we call physical simulation condition.",
+    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: time_series, occupancy, and flat_long under Setting 3：Robot Path Planning Condition. Considering physical simulation and robot motion trajectory planning, we introduce a robot to grab the box and place it at the target location to obtain the actual performance of the algorithm in a real industrial environment. The performance of the algorithm varies depending on the actual accessibility of the location selection, which we call the robot path planning condition."
+];
+
+/*
+const descriptions = [
+"",
+"",
+""
+];
+*/
+
+// 获取视频描述容器
+const videoDescription = document.getElementById('videoDescription');
+
+// 初始化显示第一组视频的描述
+videoDescription.innerText = descriptions[0];
+
+// 显示当前的视频组并更新描述
+function showVideoGroup(index) {
+    videoGroups.forEach((group, i) => {
+        group.classList.remove('active');
+        indicators[i].classList.remove('active');
+        if (i === index) {
+            group.classList.add('active');
+            indicators[i].classList.add('active');
+            // 重新播放当前视频组中的所有视频
+            const videos = group.querySelectorAll('video');
+            videos.forEach(video => {
+                video.currentTime = 0;
+                video.play();
+            });
+            // 更新视频描述
+            videoDescription.innerText = descriptions[index];
+        }
+    });
+}
+    </script>
+
+<p><br>&nbsp;<br>&nbsp;</p>
+   
+</body>
+</html>
