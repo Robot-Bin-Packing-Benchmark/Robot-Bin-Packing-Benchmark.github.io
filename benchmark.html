@@ -306,6 +306,47 @@
             padding: 5px;
             margin-left: 10px;
         }
+
+	.carousel-container {
+    position: relative;
+    width: 100%; 
+    max-width: 800px;
+    margin: 20px auto; /* 图片居中并设置下方间距 */
+    overflow: hidden; 
+}
+
+.carousel-images {
+    display: flex;
+    transition: transform 0.5s ease-in-out; /* 平滑过渡效果 */
+}
+
+.carousel-images img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.carousel-prev, .carousel-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.carousel-prev {
+    left: 10px;
+}
+
+.carousel-next {
+    right: 10px;
+}
+	
+	
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
@@ -536,6 +577,61 @@
     };
 </script>
 
+<script>
+function showSlide(index, totalSlides, carouselId) {
+    const carouselImages = document.getElementById(carouselId);
+    if (!carouselImages) {
+        console.error(`Element with ID ${carouselId} not found.`);
+        return; // 如果找不到元素，直接返回，避免错误
+    }
+    
+    if (index >= totalSlides) {
+        index = 0; // 回到第一个
+    } else if (index < 0) {
+        index = totalSlides - 1; // 回到最后一个
+    }
+    const offset = -index * 100; // 计算偏移量
+    carouselImages.style.transform = `translateX(${offset}%)`;
+}
+
+let currentIndex2 = 0;
+let currentIndex3 = 0;
+let currentIndex4 = 0;
+
+function nextSlide(totalSlides, carouselId) {
+    if (carouselId === 'carouselImages2') {
+        currentIndex2 = (currentIndex2 + 1) % totalSlides;
+        showSlide(currentIndex2, totalSlides, carouselId);
+    }
+    if (carouselId === 'carouselImages3') {
+        currentIndex3 = (currentIndex3 + 1) % totalSlides;
+        showSlide(currentIndex3, totalSlides, carouselId);
+    }
+    if (carouselId === 'carouselImages4') {
+        currentIndex3 = (currentIndex4 + 1) % totalSlides;
+        showSlide(currentIndex4, totalSlides, carouselId);
+    }
+}
+
+function prevSlide(totalSlides, carouselId) {
+    if (carouselId === 'carouselImages2') {
+        currentIndex2 = (currentIndex2 - 1 + totalSlides) % totalSlides;
+        showSlide(currentIndex2, totalSlides, carouselId);
+    }
+    if (carouselId === 'carouselImages3') {
+        currentIndex3 = (currentIndex3 - 1 + totalSlides) % totalSlides;
+        showSlide(currentIndex3, totalSlides, carouselId);
+    }
+    if (carouselId === 'carouselImages4') {
+        currentIndex3 = (currentIndex4 - 1 + totalSlides) % totalSlides;
+        showSlide(currentIndex4, totalSlides, carouselId);
+    }
+}
+
+</script>
+
+
+
 </head>
 <body>
 
@@ -590,13 +686,18 @@
                 <tbody></tbody>
             </table>
         </div>
+	
 
-        <div class="table-container">
-            <img id="result-image-setting1-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1 for Setting 1">
+	<div class="carousel-container">
+            <div class="carousel-images" id="carouselImages2">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_utilization.png" alt="Result Image 2">
         </div>
-        <div class="table-container">
-            <img id="result-image-setting1-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_utilization.png" alt="Result Image 2 for Setting 1">
+        <button class="carousel-prev" onclick="prevSlide(2, 'carouselImages2')">❮</button>
+        <button class="carousel-next" onclick="nextSlide(2, 'carouselImages2')">❯</button>
         </div>
+
+
     </div>
 
     <!-- Setting 2 Leaderboard -->
@@ -623,15 +724,19 @@
             </table>
         </div>
 
-        <div class="table-container">
-            <img id="result-image-setting2-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1 for Setting 2">
+
+
+	<div class="carousel-container">
+            <div class="carousel-images" id="carouselImages3">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_position_offset.png" alt="Result Image 2">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_stability_utilization.png" alt="Result Image 3">
         </div>
-        <div class="table-container">
-            <img id="result-image-setting2-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_position_offset.png" alt="Result Image 2 for Setting 2">
+        <button class="carousel-prev" onclick="prevSlide(3, 'carouselImages3')">❮</button>
+        <button class="carousel-next" onclick="nextSlide(3, 'carouselImages3')">❯</button>
         </div>
-        <div class="table-container">
-            <img id="result-image-setting2-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_stability_utilization.png" alt="Result Image 3 for Setting 2">
-        </div>
+
+
     </div>
 
     <!-- Setting 3 Leaderboard -->
@@ -658,15 +763,16 @@
             </table>
         </div>
 
-        <div class="table-container">
-            <img id="result-image-setting3-1" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1 for Setting 3">
+	<div class="carousel-container">
+            <div class="carousel-images" id="carouselImages4">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_position_offset.png" alt="Result Image 2">
+            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_stability_utilization.png" alt="Result Image 3">
         </div>
-        <div class="table-container">
-            <img id="result-image-setting3-2" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_position_offset.png" alt="Result Image 2 for Setting 3">
+        <button class="carousel-prev" onclick="prevSlide(3, 'carouselImages4')">❮</button>
+        <button class="carousel-next" onclick="nextSlide(3, 'carouselImages4')">❯</button>
         </div>
-        <div class="table-container">
-            <img id="result-image-setting3-3" src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_stability_utilization.png" alt="Result Image 3 for Setting 3">
-        </div>
+
     </div>
 
 </body>
