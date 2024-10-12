@@ -578,37 +578,36 @@
 </script>
 
 <script>
+let currentIndex2 = 0;
+let currentIndex3 = 0;
+let currentIndex4 = 0;
+
 function showSlide(index, totalSlides, carouselId) {
     const carouselImages = document.getElementById(carouselId);
     if (!carouselImages) {
         console.error(`Element with ID ${carouselId} not found.`);
-        return; // 如果找不到元素，直接返回，避免错误
+        return;
     }
-    
+
     if (index >= totalSlides) {
         index = 0; // 回到第一个
     } else if (index < 0) {
         index = totalSlides - 1; // 回到最后一个
     }
+
     const offset = -index * 100; // 计算偏移量
     carouselImages.style.transform = `translateX(${offset}%)`;
 }
-
-let currentIndex2 = 0;
-let currentIndex3 = 0;
-let currentIndex4 = 0;
 
 function nextSlide(totalSlides, carouselId) {
     if (carouselId === 'carouselImages2') {
         currentIndex2 = (currentIndex2 + 1) % totalSlides;
         showSlide(currentIndex2, totalSlides, carouselId);
-    }
-    if (carouselId === 'carouselImages3') {
+    } else if (carouselId === 'carouselImages3') {
         currentIndex3 = (currentIndex3 + 1) % totalSlides;
         showSlide(currentIndex3, totalSlides, carouselId);
-    }
-    if (carouselId === 'carouselImages4') {
-        currentIndex3 = (currentIndex4 + 1) % totalSlides;
+    } else if (carouselId === 'carouselImages4') {
+        currentIndex4 = (currentIndex4 + 1) % totalSlides;
         showSlide(currentIndex4, totalSlides, carouselId);
     }
 }
@@ -617,17 +616,14 @@ function prevSlide(totalSlides, carouselId) {
     if (carouselId === 'carouselImages2') {
         currentIndex2 = (currentIndex2 - 1 + totalSlides) % totalSlides;
         showSlide(currentIndex2, totalSlides, carouselId);
-    }
-    if (carouselId === 'carouselImages3') {
+    } else if (carouselId === 'carouselImages3') {
         currentIndex3 = (currentIndex3 - 1 + totalSlides) % totalSlides;
         showSlide(currentIndex3, totalSlides, carouselId);
-    }
-    if (carouselId === 'carouselImages4') {
-        currentIndex3 = (currentIndex4 - 1 + totalSlides) % totalSlides;
+    } else if (carouselId === 'carouselImages4') {
+        currentIndex4 = (currentIndex4 - 1 + totalSlides) % totalSlides;
         showSlide(currentIndex4, totalSlides, carouselId);
     }
 }
-
 </script>
 
 
