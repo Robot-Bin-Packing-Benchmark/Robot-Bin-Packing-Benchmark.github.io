@@ -241,18 +241,18 @@
         }
 	
 	.video-carousel-container {
+	    max-width: 900px; /* 限制轮播器最大宽度与文字内容一致 */
             position: relative;
-            width: 100vw;
-            height: 330px; /* 视频容器的高度 */
-            margin-bottom: 44px; /* 与下方内容的距离 */
-            padding-left: 0px; /* 增大左右边距 */
-            padding-right: 0px; /* 增大左右边距 */
+            width: 100%; /* 确保宽度自适应 */
+            height: 210px; /* 视频容器的高度 */
+            margin: 20px auto 44px auto; /* 居中并调整上下边距 */
+            padding: 0 20px; /* 与文字部分保持一致的内边距 */
         }
 
         .video-group {
             display: none; /* 默认隐藏所有视频组 */
             width: 100%;
-            justify-content: center;
+            justify-content: space-around; /* 使视频在组内均匀分布 */
             align-items: center;
         }
 
@@ -261,7 +261,7 @@
         }
 
         .video-group video {
-            width: 30%;
+            width: calc(33.33% - 20px); /* 确保三个视频均匀分布并留出间距 */
 	    margin: 0 10px; /* 设置每个视频之间的空隙 */
             height: auto;
         }
@@ -282,7 +282,7 @@
             background-color: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
-            padding: 10px;
+            padding: 7px;
             cursor: pointer;
             z-index: 2;
         }
@@ -297,7 +297,7 @@
 
         .carousel-indicators {
             position: absolute;
-            bottom: 10px;
+            bottom: 5px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
