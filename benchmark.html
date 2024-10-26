@@ -522,9 +522,47 @@
             sortTable('Feasible Num', setting, dataType, 'desc');
         }
 
+
+	
+	function generateCarouselImages(setting) {
+            const carouselId = `carouselImages${parseInt(setting.slice(-1)) + 1}`;
+            const carouselImages = document.getElementById(carouselId);
+
+            if (!carouselImages) {
+                console.error(`Carousel with ID ${carouselId} not found.`);
+                return; // 如果找不到对应的轮播图元素，终止函数
+            }
+
+            const selectedValue = document.getElementById(`data-select-${setting}`).value;
+
+            // 根据选择的值和 setting 的不同生成对应的图片路径
+            let imagePaths;
+
+            if (setting === 'setting2' || setting === 'setting3') {
+                imagePaths = [
+            `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${selectedValue}_results_packing_time_feasible_num.png`,
+            `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${selectedValue}_results_position_offset.png`,
+            `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${selectedValue}_results_space_utilization_static_stability_planning_time.png`
+                ];
+            } else {
+                imagePaths = [
+            `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${selectedValue}_results_feasible_num_packing_time_planning_time.png`,
+            `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${selectedValue}_results_utilization.png`
+                ];
+            }
+
+            // 插入新的图片
+            carouselImages.innerHTML = imagePaths.map(
+                path => `<img src="${path}" alt="Carousel Image">`
+            ).join('');
+        }
+
+
         function onDataTypeChange(setting) {
             var dataType = document.getElementById(`data-select-${setting}`).value;
             loadCSVData(setting, dataType);
+            generateCarouselImages(setting);  // 生成轮播图图片
+	    updateExplanation(setting);
         }
 
         window.onload = function() {
@@ -666,7 +704,7 @@ function prevSlide(totalSlides, carouselId) {
             <!-- 确保 Test Set 和下拉框不换行 -->
             <div class="select-container">
                 <label for="data-select-setting1">Test Set:</label>
-                <select id="data-select-setting1" onchange="onDataTypeChange('setting1'); updateExplanation('setting1')">
+                <select id="data-select-setting1" onchange="onDataTypeChange('setting1');updateExplanation('setting1')">
                     <option value="time_series">time_series</option>
                     <option value="occupancy">occupancy</option>
                     <option value="flat_long">flat_long</option>
@@ -686,8 +724,6 @@ function prevSlide(totalSlides, carouselId) {
 
 	<div class="carousel-container">
             <div class="carousel-images" id="carouselImages2">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting1/time_series_results_utilization.png" alt="Result Image 2">
         </div>
         <button class="carousel-prev" onclick="prevSlide(2, 'carouselImages2')">❮</button>
         <button class="carousel-next" onclick="nextSlide(2, 'carouselImages2')">❯</button>
@@ -724,9 +760,6 @@ function prevSlide(totalSlides, carouselId) {
 
 	<div class="carousel-container">
             <div class="carousel-images" id="carouselImages3">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_position_offset.png" alt="Result Image 2">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting2/time_series_results_stability_utilization.png" alt="Result Image 3">
         </div>
         <button class="carousel-prev" onclick="prevSlide(3, 'carouselImages3')">❮</button>
         <button class="carousel-next" onclick="nextSlide(3, 'carouselImages3')">❯</button>
@@ -761,9 +794,6 @@ function prevSlide(totalSlides, carouselId) {
 
 	<div class="carousel-container">
             <div class="carousel-images" id="carouselImages4">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_feasible_num_packing_time_planning_time.png" alt="Result Image 1">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_position_offset.png" alt="Result Image 2">
-            <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/setting3/time_series_results_stability_utilization.png" alt="Result Image 3">
         </div>
         <button class="carousel-prev" onclick="prevSlide(3, 'carouselImages4')">❮</button>
         <button class="carousel-next" onclick="nextSlide(3, 'carouselImages4')">❯</button>
