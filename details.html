@@ -155,7 +155,7 @@
                 download: true,
                 header: true,
                 complete: function(results) {
-                    fillDetailTable(results.data);
+                    fillDetailTable(results.data, setting);
                 }
             });
 
@@ -167,35 +167,102 @@
         }
 
         // Function to fill the table with CSV data
-        function fillDetailTable(data) {
-            var tableBody = document.querySelector(`#table-setting1-details tbody`);
+	function fillDetailTable(data, setting) {
+    var tableHead = document.querySelector(`#table-setting-details thead`);
+    var tableBody = document.querySelector(`#table-setting-details tbody`);
 
-            // Clear any existing rows
-            tableBody.innerHTML = '';
+    // Clear any existing rows in the table
+    tableHead.innerHTML = '';
+    tableBody.innerHTML = '';
 
-            if (data.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
-                return;
-            }
+    // Dynamically generate thead based on setting
+    var headRow = document.createElement('tr');
+    if (setting === 'setting1') {
+        headRow.innerHTML = `
+            <th>Data Group</th>
+            <th>Feasible Num</th>
+            <th>Space Utilization</th>
+            <th>Planning Time</th>
+            <th>All time</th>
+        `;
+    } else if (setting === 'setting2') {
+        headRow.innerHTML = `
+            <th>Data Group</th>
+            <th>Feasible Num</th>
+            <th>Static Stability</th>
+            <th>Position Offset Mean</th>
+            <th>Position Offset Max</th>
+            <th>Occupancy</th>
+            <th>Planning Time</th>
+            <th>All time</th>
+        `;
+    } else if (setting === 'setting3') {
+        headRow.innerHTML = `
+            <th>Data Group</th>
+            <th>Feasible Num</th>
+            <th>Arm Path</th>
+            <th>Static Stability</th>
+            <th>Position Offset Mean</th>
+            <th>Position Offset Max</th>
+            <th>Occupancy</th>
+            <th>Planning Time</th>
+            <th>All time</th>
+        `;
+    }
+    tableHead.appendChild(headRow);
 
-            // Iterate over the CSV data and fill the table manually
-            data.forEach(function(row, index) {
-                // Check if the row contains undefined values
-                if (row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
-                    console.warn(`Skipping row with incomplete data at index ${index}: `, row);
-                    return; // Skip this row if any critical value is undefined
-                }
-                var tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index}</td>
-                    <td>${row['Feasible Num']}</td>
-                    <td>${row['Space Utilization']}</td>
-                    <td>${row['Planning Time']}</td>
-                    <td>${row['All time']}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
+    // Fill tbody with data
+    if (data.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="5">No data available</td></tr>';
+        return;
+    }
+
+    data.forEach(function(row, index) {
+        if (row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
+            console.warn(`Skipping row with incomplete data at index ${index}: `, row);
+            return; // Skip this row if any critical value is undefined
         }
+
+        var tr = document.createElement('tr');
+        if (setting === 'setting1') {
+            tr.innerHTML = `
+                <td>${index}</td>
+                <td>${row['Feasible Num']}</td>
+                <td>${row['Space Utilization']}</td>
+                <td>${row['Planning Time']}</td>
+                <td>${row['All time']}</td>
+            `;
+        } else if (setting === 'setting2') {
+            tr.innerHTML = `
+                <td>${index}</td>
+                <td>${row['Feasible Num']}</td>
+                <td>${row['Static Stability']}</td>
+                <td>${row['Position Offset Mean']}</td>
+                <td>${row['Position Offset Max']}</td>
+                <td>${row['Occupancy']}</td>
+                <td>${row['Planning Time']}</td>
+                <td>${row['All time']}</td>
+            `;
+        } else if (setting === 'setting3') {
+            tr.innerHTML = `
+                <td>${index}</td>
+                <td>${row['Feasible Num']}</td>
+                <td>${row['Arm Path']}</td>
+                <td>${row['Static Stability']}</td>
+                <td>${row['Position Offset Mean']}</td>
+                <td>${row['Position Offset Max']}</td>
+                <td>${row['Occupancy']}</td>
+                <td>${row['Planning Time']}</td>
+                <td>${row['All time']}</td>
+            `;
+        }
+        tableBody.appendChild(tr);
+    });
+}
+                
+
+
+
 
         // Function to load plot images
         function loadPlotImages(setting, dataType, method) {
@@ -208,11 +275,13 @@
             img1.alt = "Feasible Num and All Time";
             imageContainer.appendChild(img1);
 
+	    if (setting === 'setting1') {
             // Image 2: Utilization time
             var img2 = document.createElement('img');
             img2.src = `https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/plt/${setting}/${dataType}/${method}_results_utilization_time.png`;
             img2.alt = "Utilization Time";
             imageContainer.appendChild(img2);
+	}
 
             // If setting is 2 or 3, load the third image
             if (setting === 'setting2' || setting === 'setting3') {
@@ -334,15 +403,9 @@
 
         <!-- Detailed table for the current method -->
         <div class="table-container">
-            <table id="table-setting1-details" class="data-table">
+            <table id="table-setting-details" class="data-table">
                 <thead>
-                    <tr>
-                        <th>Data Group</th>
-                        <th>Feasible Num</th>
-                        <th>Space Utilization</th>
-                        <th>Planning Time</th>
-                        <th>All time</th>
-                    </tr>
+
                 </thead>
                 <tbody>
                     <!-- Rows will be filled dynamically by JavaScript -->
