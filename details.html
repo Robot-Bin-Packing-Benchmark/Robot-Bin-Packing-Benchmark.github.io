@@ -181,7 +181,7 @@
         headRow.innerHTML = `
             <th>Data Group</th>
             <th>Feasible Num</th>
-            <th>Space Utilization</th>
+            <th>Occupancy</th>
             <th>Planning Time</th>
             <th>All time</th>
         `;
@@ -218,7 +218,7 @@
     }
 
     data.forEach(function(row, index) {
-        if (row['Feasible Num'] === undefined || row['Space Utilization'] === undefined) {
+        if (row['Feasible Num'] === undefined || row['Occupancy'] === undefined) {
             console.warn(`Skipping row with incomplete data at index ${index}: `, row);
             return; // Skip this row if any critical value is undefined
         }
@@ -228,7 +228,7 @@
             tr.innerHTML = `
                 <td>${index}</td>
                 <td>${row['Feasible Num']}</td>
-                <td>${row['Space Utilization']}</td>
+                <td>${row['Occupancy']}</td>
                 <td>${row['Planning Time']}</td>
                 <td>${row['All time']}</td>
             `;
