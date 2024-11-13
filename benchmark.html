@@ -396,9 +396,6 @@
 
 
         function getColumnIndex(column, setting) {
-            var columns = (setting === 'setting1') ? 
-                ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time'] :
-                ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
 	    if (setting === 'setting1'){
 		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time'];
 	}
@@ -406,7 +403,7 @@
 		var columns = ['Method', 'Feasible Num', 'Static Stability', 'Position Offset Mean', 'Position Offset Max', 'Occupancy', 'Planning Time', 'Packing Time'];
 	}
             if (setting === 'setting3'){
-		var columns = ['Method', 'Feasible Num', 'Static Stability', 'Position Offset Mean', 'Position Offset Max', 'Occupancy', 'Planning Time', 'Packing Time'];
+		var columns = ['Method', 'Feasible Num', 'Static Stability', 'Arm Path', 'Position Offset Mean', 'Position Offset Max', 'Occupancy', 'Planning Time', 'Packing Time'];
 	}
 
     
@@ -459,43 +456,67 @@
             }
 
             var maxFeasibleNum = Math.max(...data.map(row => parseNumber(row['Feasible Num'])));
-            var maxSpaceUtilization = Math.max(...data.map(row => parseNumber(row['Occupancy'])));
-            var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
-
+            var maxOccupancy = Math.max(...data.map(row => parseNumber(row['Occupancy'])));
             var minPlanningTime = Math.min(...data.map(row => parseNumber(row['Planning Time'], true)));
             var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing Time'], true)));
+	    var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
             var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
             var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
+ 	    var minArmPath = setting == 'setting3' ? Math.min(...data.map(row => parseNumber(row['Arm Path'], true))) : null;
 
 
             console.log("maxFeasibleNum: ", maxFeasibleNum);
-            console.log("maxSpaceUtilization: ", maxSpaceUtilization);
+            console.log("maxOccupancy: ", maxOccupancy);
 	    console.log("maxStaticStability: ", maxStaticStability);
             console.log("minPlanningTime: ", minPlanningTime);
 	    console.log("minPackingTime: ", minPackingTime);
             console.log("minPositionOffsetMean: ", minPositionOffsetMean);
 	    console.log("minPositionOffsetMax: ", minPositionOffsetMax);
+	    console.log("minArmPath: ", minArmPath);
 
 
 
-            var headers = (setting === 'setting1') ? `
-                <tr>
+	    if (setting === 'setting1'){
+		var headers =  
+ 	        `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
                     <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
-                </tr>` : `
-                <tr>
+                </tr>`;
+	    }
+
+	    if (setting === 'setting2'){
+		var headers =  
+                `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
-                    <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
-                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
-                    <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
                     <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
                     <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
+                    <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
+                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                 </tr>`;
+	    }
+
+	    if (setting === 'setting3'){
+		var headers =  
+                `<tr>
+                    <th data-column="Method">Method<span class="arrow"></span></th>
+                    <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
+                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
+                    <th onclick="sortTable('Arm Path', '${setting}', '${dataType}')">Arm Path<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
+                    <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
+                    <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
+                </tr>`;
+	    }
+
+
 
             tableHead.innerHTML = headers;
 
@@ -508,22 +529,24 @@
                 var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
 
                 var feasibleNum = parseNumber(row['Feasible Num']);
-                var spaceUtilization = parseNumber(row['Occupancy']);
+                var occupancy = parseNumber(row['Occupancy']);
                 var planningTime = parseNumber(row['Planning Time'], true);
                 var packingTime = parseNumber(row['Packing Time'], true);
                 var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
                 var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
                 var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
+                var armPath = setting == 'setting3' ? parseNumber(row['Arm Path'], true) : null;
 
                 tr.innerHTML = `
                 <td><a href="${childPageUrl}">${row.Method}</a></td>
                 <td style="${feasibleNum === maxFeasibleNum ? 'font-weight: bold;' : ''}">${feasibleNum}</td>
-                <td style="${spaceUtilization === maxSpaceUtilization ? 'font-weight: bold;' : ''}">${spaceUtilization}</td>
+                <td style="${occupancy === maxOccupancy ? 'font-weight: bold;' : ''}">${occupancy}</td>
                 <td style="${planningTime === minPlanningTime ? 'font-weight: bold;' : ''}">${planningTime}</td>
                 <td style="${packingTime === minPackingTime ? 'font-weight: bold;' : ''}">${packingTime}</td>
                 ${setting !== 'setting1' ? `<td style="${staticStability === maxStaticStability ? 'font-weight: bold;' : ''}">${staticStability}</td>` : ''}
                 ${setting !== 'setting1' ? `<td style="${positionOffsetMean === minPositionOffsetMean ? 'font-weight: bold;' : ''}">${positionOffsetMean}</td>` : ''}
                 ${setting !== 'setting1' ? `<td style="${positionOffsetMax === minPositionOffsetMax ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
+                ${setting == 'setting3' ? `<td style="${armPath === minArmPath ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
             `;
                 tableBody.appendChild(tr);
             });
