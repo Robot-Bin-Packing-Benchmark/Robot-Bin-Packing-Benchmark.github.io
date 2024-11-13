@@ -400,10 +400,10 @@
 		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time'];
 	}
 	    if (setting === 'setting2'){
-		var columns = ['Method', 'Feasible Num', 'Static Stability', 'Position Offset Mean', 'Position Offset Max', 'Occupancy', 'Planning Time', 'Packing Time'];
+		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
 	}
             if (setting === 'setting3'){
-		var columns = ['Method', 'Feasible Num', 'Static Stability', 'Arm Path', 'Position Offset Mean', 'Position Offset Max', 'Occupancy', 'Planning Time', 'Packing Time'];
+		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max', 'Arm Path'];
 	}
 
     
@@ -485,6 +485,7 @@
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                 </tr>`;
+console.log("setting1 headers ", headers);
 	    }
 
 	    if (setting === 'setting2'){
@@ -492,13 +493,14 @@
                 `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
-                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
                     <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
                 </tr>`;
+console.log("setting2 headers ", headers);
 	    }
 
 	    if (setting === 'setting3'){
@@ -506,14 +508,15 @@
                 `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
-                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
-                    <th onclick="sortTable('Arm Path', '${setting}', '${dataType}')">Arm Path<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
                     <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
+                    <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
+                    <th onclick="sortTable('Arm Path', '${setting}', '${dataType}')">Arm Path<span class="arrow"></span></th>
                 </tr>`;
+console.log("setting3 headers ", headers);
 	    }
 
 
