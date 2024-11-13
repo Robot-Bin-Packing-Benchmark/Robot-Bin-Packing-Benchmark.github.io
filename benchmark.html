@@ -462,7 +462,7 @@
 	    var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
             var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
             var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
- 	    var minArmPath = setting == 'setting3' ? Math.min(...data.map(row => parseNumber(row['Arm Path'], true))) : null;
+ 	    var minArmPath = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Arm Path'], true))) : null;
 
 
             console.log("maxFeasibleNum: ", maxFeasibleNum);
@@ -538,7 +538,7 @@ console.log("setting3 headers ", headers);
                 var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
                 var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
                 var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
-                var armPath = setting == 'setting3' ? parseNumber(row['Arm Path'], true) : null;
+                var armPath = setting === 'setting3' ? parseNumber(row['Arm Path'], true) : null;
 
                 tr.innerHTML = `
                 <td><a href="${childPageUrl}">${row.Method}</a></td>
@@ -549,7 +549,7 @@ console.log("setting3 headers ", headers);
                 ${setting !== 'setting1' ? `<td style="${staticStability === maxStaticStability ? 'font-weight: bold;' : ''}">${staticStability}</td>` : ''}
                 ${setting !== 'setting1' ? `<td style="${positionOffsetMean === minPositionOffsetMean ? 'font-weight: bold;' : ''}">${positionOffsetMean}</td>` : ''}
                 ${setting !== 'setting1' ? `<td style="${positionOffsetMax === minPositionOffsetMax ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
-                ${setting == 'setting3' ? `<td style="${armPath === minArmPath ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
+                ${setting === 'setting3' ? `<td style="${armPath === minArmPath ? 'font-weight: bold;' : ''}">${armPath}</td>` : ''}
             `;
                 tableBody.appendChild(tr);
             });
