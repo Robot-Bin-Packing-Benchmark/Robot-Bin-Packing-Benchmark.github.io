@@ -267,7 +267,66 @@
     <p>It is not permitted to register on this webpage with <b>multiple e-mail addresses nor information misrepresenting the identity of the user</b>. We will ban users or domains if required.</p>
 
     <p><br>&nbsp;<br>&nbsp;</p>
-        
+    
+    <!-- Script Submission Section -->
+    <h2>Sample Script and Submission Guidelines</h2>
+    <p>To participate in the evaluation, please submit your algorithm script and the corresponding trained policy models. The process works as follows:</p>
+    
+    <h3>1. Prepare Your Script</h3>
+    <p>Your script should follow the provided sample format. It must take the packed box sequence as input and output the appropriate placement actions. The input and output formats are as follows:</p>
+    
+    <h4>Input:</h4>
+    <ul>
+        <li>A sequence of packed boxes.</li>
+        <li>Related configuration information for your algorithm (e.g., model type, hyperparameters).</li>
+    </ul>
+    
+    <h4>Output:</h4>
+    <ul>
+        <li>Action: a tuple (rot, lx, ly) representing the rotation and placement coordinates.</li>
+        <li>Planning time: the time taken by your algorithm to plan the placement.</li>
+    </ul>
+
+    <p>You can refer to the <a href="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/tree/main/code/PCT-port" target="_blank">sample script files in the PCT-port directory</a> for more guidance. For detailed instructions, please check the <a href="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/code/PCT-port/readme.md" target="_blank">readme.md</a>. Specifically, ensure that the format of <code>main.py</code> and <code>pack.py</code> remains consistent with the sample script files, and modify the <code>pack_box</code> function to implement your own algorithm. Be sure to maintain the same input-output format as shown in the sample.</p>
+    
+    <h3>2. Required Files</h3>
+    <p>Along with your script, please provide the following two trained policy models for each data type:</p>
+    <ul>
+        <li><b>Ideal Model</b> (corresponding to the ideal conditions).</li>
+        <li><b>Physics Model</b> (considering the physics-based constraints).</li>
+    </ul>
+
+    <h3>3. Submission Process</h3>
+    <p>Send the following materials to our email address (<a href="mailto:robot-bin-packing-benchmark@gmail.com">robot-bin-packing-benchmark@gmail.com</a>) for evaluation:</p>
+    <ul>
+        <li>Your algorithm script in the provided format.</li>
+        <li>The two policy models (Ideal, Physics) trained for the respective data types.</li>
+    </ul>
+
+    <h3>4. Test Process</h3>
+    <p>Once submitted, we will use our test data to evaluate your script. The script must:</p>
+    <ul>
+        <li>Read the test data and the related configuration (e.g., trained model).</li>
+        <li>Output the predicted placement actions (rot, lx, ly) and planning time.</li>
+    </ul>
+
+    <h4>Example Input-Output Format:</h4>
+    <pre>
+    Input:
+    Box sequence: [box1, box2, box3, ...]
+
+    Output:
+    Action: (rotation, lx, ly)
+    Planning time: 5.2 seconds
+    </pre>
+
+    <p>Please ensure your script adheres to this format and submit it according to the instructions above.</p>
+
+
+    <p><br>&nbsp;<br>&nbsp;</p>
+
+
+
     <div class="text-center">
         <h4>You can reach the authors at the following address:</h4>
         <p><a href="mailto:robot-bin-packing-benchmark@gmail.com">robot-bin-packing-benchmark@gmail.com</a></p>
@@ -279,7 +338,7 @@
         <p><a href="https://robot-bin-packing-benchmark.github.io/" target="_blank">https://robot-bin-packing-benchmark.github.io/</a></p>
     </div>
 
-    </div>
+</div>
 
 </body>
 </html>
