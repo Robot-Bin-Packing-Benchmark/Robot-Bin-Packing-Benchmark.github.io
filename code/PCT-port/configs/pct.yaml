@@ -1,0 +1,41 @@
+setting: 2
+lnes: 'EMS'
+internal_node_holder: 80
+leaf_node_holder: 50
+shuffle: True
+continuous: False
+id: 'PctDiscrete-v0'
+
+no_cuda: False
+device: 0
+seed: 4
+use_acktr: True
+num_processes: 1
+num_steps: 5
+learning_rate: 1e-6
+actor_loss_coef: 1.0
+critic_loss_coef: 1.0
+max_grad_norm: 0.5
+embedding_size: 64
+hidden_size: 128
+gat_layer_num: 1
+gamma: 1.0
+
+evaluate: True
+evaluation_episodes: 100
+load_model: True
+model_path: '/media/wzf/goodluck/Workspace/rl/pct/PCT.pt'
+model_path_random_time_series: '/media/wzf/goodluck/Workspace/rl/pct/PCT-time_series-2024.11.16-21-25-58_2024.11.18-18-20-30.pt'
+model_path_occupancy: '/media/wzf/goodluck/Workspace/rl/pct/PCT-occupancy-2024.11.16-21-26-26_2024.11.18-18-37-36.pt'
+model_path_flat_long: '/media/wzf/goodluck/Workspace/rl/pct/PCT-flat_long-2024.11.16-21-32-04_2024.11.18-18-12-31.pt'
+
+model_path_random_time_series_pybullet: '/media/wzf/goodluck/Workspace/rl/pct/PCT-pybullet_time_series-2024.11.18-20-42-05_2024.11.21-13-45-09.pt'
+model_path_occupancy_pybullet: '/media/wzf/goodluck/Workspace/rl/pct/PCT-pybullet_occupancy-2024.11.18-20-42-06_2024.11.21-12-16-47.pt'
+model_path_flat_long_pybullet: '/media/wzf/goodluck/Workspace/rl/pct/PCT-pybullet_flat_long-2024.11.18-20-42-08_2024.11.21-12-30-03.pt'
+load_dataset: False
+dataset_path: None
+
+sample_from_distribution: False
+sample_left_bound: 'a'
+sample_right_bound: 'b'
+

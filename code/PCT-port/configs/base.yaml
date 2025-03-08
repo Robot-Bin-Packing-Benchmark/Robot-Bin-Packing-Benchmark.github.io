@@ -1,0 +1,20 @@
+Scene:
+    block_unit: 0.01   # 3cm一个单位 # 立方体的单位尺寸
+    target_container_size: [10, 10, 10]     # 目标容器的整体尺寸，默认为[10, 10, 10]，会根据选择测试的Data自动修改场景
+
+
+Data:
+    # 3d regular
+    Random:
+        data_path: 'dataset/10_[7]_[1_4]_003_mess_real/train/0/sizes.npy'
+        container_size: [10, 10, 10]
+    Time_series:
+        data_path: '/media/wzf/goodluck/Workspace/rl/data/time_series'
+        container_size: [134, 125, 100]
+    Occupancy:
+        data_path: '/media/wzf/goodluck/Workspace/rl/data/occupancy'
+        container_size: [120, 100, 170]
+    Flat_long:
+        data_path: '/media/wzf/goodluck/Workspace/rl/data/flat_long'
+        container_size: [250, 120, 100]
+
