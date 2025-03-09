@@ -79,7 +79,7 @@ This file demonstrates the implementation of the packing algorithm, using the **
 
 3. **Model and Algorithm**:
 
-   - Modify the `pack_box()` function to integrate your algorithm's logic. Make sure the output format matches the required structure. The model loading and environment setup (`env = PackingDiscrete()`) should remain the same unless you are introducing custom modifications.
+   - Modify the `pack_box()` function to integrate your algorithm's logic. Make sure the output format matches the required structure.
 
 4. **Training Your Model**:
 
