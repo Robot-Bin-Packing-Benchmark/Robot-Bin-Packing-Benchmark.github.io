@@ -397,13 +397,13 @@
 
         function getColumnIndex(column, setting) {
 	    if (setting === 'setting1'){
-		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time'];
+		var columns = ['Method', 'Feasible Num', 'Plain Occupancy', 'Planning Time', 'Packing Time'];
 	}
 	    if (setting === 'setting2'){
-		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean'];
+		var columns = ['Method', 'Feasible Num', 'Plain Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset'];
 	}
             if (setting === 'setting3'){
-		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Arm Path', 'Collapsed Placement Num', 'Dangerous Operation Num'];
+		var columns = ['Method', 'Feasible Num', 'Plain Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset', 'Arm Path', 'Collapsed Placement', 'Dangerous Operation'];
 	}
 
     
@@ -456,25 +456,25 @@
             }
 
             var maxFeasibleNum = Math.max(...data.map(row => parseNumber(row['Feasible Num'])));
-            var maxOccupancy = Math.max(...data.map(row => parseNumber(row['Occupancy'])));
+            var maxOccupancy = Math.max(...data.map(row => parseNumber(row['Plain Occupancy'])));
             var minPlanningTime = Math.min(...data.map(row => parseNumber(row['Planning Time'], true)));
             var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing Time'], true)));
 	    var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
-            var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
+            var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset'], true))) : null;
  	    var minArmPath = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Arm Path'], true))) : null;
- 	    var minCollapsedPlacementNum = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Collapsed Placement Num'], true))) : null;
- 	    var minDangerousOperationNum = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Dangerous Operation Num'], true))) : null;
+ 	    var minCollapsedPlacementNum = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Collapsed Placement'], true))) : null;
+ 	    var minDangerousOperationNum = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Dangerous Operation'], true))) : null;
 
 
            console.log("maxFeasibleNum: ", maxFeasibleNum);
            console.log("maxOccupancy: ", maxOccupancy);
-	    console.log("maxStaticStability: ", maxStaticStability);
+	   console.log("maxStaticStability: ", maxStaticStability);
            console.log("minPlanningTime: ", minPlanningTime);
-	    console.log("minPackingTime: ", minPackingTime);
+	   console.log("minPackingTime: ", minPackingTime);
            console.log("minPositionOffsetMean: ", minPositionOffsetMean);
-	    console.log("minArmPath: ", minArmPath);
-	    console.log("minCollapsedPlacementNum: ", minCollapsedPlacementNum);
-	    console.log("minDangerousOperationNum: ", minDangerousOperationNum);
+	   console.log("minArmPath: ", minArmPath);
+	   console.log("minCollapsedPlacementNum: ", minCollapsedPlacementNum);
+	   console.log("minDangerousOperationNum: ", minDangerousOperationNum);
 
 
 
@@ -483,7 +483,7 @@
  	        `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
-                    <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
+                    <th onclick="sortTable('Plain Occupancy', '${setting}', '${dataType}')">Plain Occupancy<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                 </tr>`;
@@ -495,11 +495,11 @@ console.log("setting1 headers ", headers);
                 `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
-                    <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
+                    <th onclick="sortTable('Plain Occupancy', '${setting}', '${dataType}')">Plain Occupancy<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset', '${setting}', '${dataType}')">Position Offset<span class="arrow"></span></th>
                 </tr>`;
 console.log("setting2 headers ", headers);
 	    }
@@ -509,14 +509,14 @@ console.log("setting2 headers ", headers);
                 `<tr>
                     <th data-column="Method">Method<span class="arrow"></span></th>
                     <th onclick="sortTable('Feasible Num', '${setting}', '${dataType}')">Feasible Num<span class="arrow"></span></th>
-                    <th onclick="sortTable('Occupancy', '${setting}', '${dataType}')">Occupancy<span class="arrow"></span></th>
+                    <th onclick="sortTable('Plain Occupancy', '${setting}', '${dataType}')">Plain Occupancy<span class="arrow"></span></th>
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset', '${setting}', '${dataType}')">Position Offset<span class="arrow"></span></th>
                     <th onclick="sortTable('Arm Path', '${setting}', '${dataType}')">Arm Path<span class="arrow"></span></th>
-                    <th onclick="sortTable('Collapsed Placement Num', '${setting}', '${dataType}')">Collapsed Placement<span class="arrow"></span></th>
-                    <th onclick="sortTable('Dangerous Operation Num', '${setting}', '${dataType}')">Dangerous Operation<span class="arrow"></span></th>
+                    <th onclick="sortTable('Collapsed Placement', '${setting}', '${dataType}')">Collapsed Placement<span class="arrow"></span></th>
+                    <th onclick="sortTable('Dangerous Operation', '${setting}', '${dataType}')">Dangerous Operation<span class="arrow"></span></th>
                 </tr>`;
 console.log("setting3 headers ", headers);
 	    }
@@ -527,21 +527,21 @@ console.log("setting3 headers ", headers);
 
             // Populate table data
             data.forEach(function(row, index) {
-                if (!row.Method || row['Feasible Num'] === undefined || row['Occupancy'] === undefined) {
+                if (!row.Method || row['Feasible Num'] === undefined || row['Plain Occupancy'] === undefined) {
                     return;
                 }
                 var tr = document.createElement('tr');
                 var childPageUrl = `details.html?setting=${setting}&dataType=${dataType}&method=${row.Method}`;
 
                 var feasibleNum = parseNumber(row['Feasible Num']);
-                var occupancy = parseNumber(row['Occupancy']);
+                var occupancy = parseNumber(row['Plain Occupancy']);
                 var planningTime = parseNumber(row['Planning Time'], true);
                 var packingTime = parseNumber(row['Packing Time'], true);
                 var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
-                var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
+                var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset'], true) : null;
                 var armPath = setting === 'setting3' ? parseNumber(row['Arm Path'], true) : null;
-                var collapsedPlacementNum = setting === 'setting3' ? parseNumber(row['Collapsed Placement Num'], true) : null;
-                var dangerousOperationNum = setting === 'setting3' ? parseNumber(row['Dangerous Operation Num'], true) : null;
+                var collapsedPlacementNum = setting === 'setting3' ? parseNumber(row['Collapsed Placement'], true) : null;
+                var dangerousOperationNum = setting === 'setting3' ? parseNumber(row['Dangerous Operation'], true) : null;
 
                 tr.innerHTML = `
                 <td><a href="${childPageUrl}">${row.Method}</a></td>
