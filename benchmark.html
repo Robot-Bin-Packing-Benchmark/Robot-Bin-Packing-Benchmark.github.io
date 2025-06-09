@@ -400,10 +400,10 @@
 		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time'];
 	}
 	    if (setting === 'setting2'){
-		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max'];
+		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean'];
 	}
             if (setting === 'setting3'){
-		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Position Offset Max', 'Arm Path'];
+		var columns = ['Method', 'Feasible Num', 'Occupancy', 'Planning Time', 'Packing Time', 'Static Stability', 'Position Offset Mean', 'Arm Path', 'Collapsed Placement Num', 'Dangerous Operation Num'];
 	}
 
     
@@ -461,18 +461,20 @@
             var minPackingTime = Math.min(...data.map(row => parseNumber(row['Packing Time'], true)));
 	    var maxStaticStability = setting !== 'setting1' ? Math.max(...data.map(row => parseNumber(row['Static Stability']))) : null;
             var minPositionOffsetMean = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Mean'], true))) : null;
-            var minPositionOffsetMax = setting !== 'setting1' ? Math.min(...data.map(row => parseNumber(row['Position Offset Max'], true))) : null;
  	    var minArmPath = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Arm Path'], true))) : null;
+ 	    var minCollapsedPlacementNum = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Collapsed Placement Num'], true))) : null;
+ 	    var minDangerousOperationNum = setting === 'setting3' ? Math.min(...data.map(row => parseNumber(row['Dangerous Operation Num'], true))) : null;
 
 
-            console.log("maxFeasibleNum: ", maxFeasibleNum);
-            console.log("maxOccupancy: ", maxOccupancy);
+           console.log("maxFeasibleNum: ", maxFeasibleNum);
+           console.log("maxOccupancy: ", maxOccupancy);
 	    console.log("maxStaticStability: ", maxStaticStability);
-            console.log("minPlanningTime: ", minPlanningTime);
+           console.log("minPlanningTime: ", minPlanningTime);
 	    console.log("minPackingTime: ", minPackingTime);
-            console.log("minPositionOffsetMean: ", minPositionOffsetMean);
-	    console.log("minPositionOffsetMax: ", minPositionOffsetMax);
+           console.log("minPositionOffsetMean: ", minPositionOffsetMean);
 	    console.log("minArmPath: ", minArmPath);
+	    console.log("minCollapsedPlacementNum: ", minCollapsedPlacementNum);
+	    console.log("minDangerousOperationNum: ", minDangerousOperationNum);
 
 
 
@@ -497,8 +499,7 @@ console.log("setting1 headers ", headers);
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset<span class="arrow"></span></th>
                 </tr>`;
 console.log("setting2 headers ", headers);
 	    }
@@ -512,9 +513,10 @@ console.log("setting2 headers ", headers);
                     <th onclick="sortTable('Planning Time', '${setting}', '${dataType}')">Planning Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Packing Time', '${setting}', '${dataType}')">Packing Time<span class="arrow"></span></th>
                     <th onclick="sortTable('Static Stability', '${setting}', '${dataType}')">Static Stability<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset Mean<span class="arrow"></span></th>
-                    <th onclick="sortTable('Position Offset Max', '${setting}', '${dataType}')">Position Offset Max<span class="arrow"></span></th>
+                    <th onclick="sortTable('Position Offset Mean', '${setting}', '${dataType}')">Position Offset<span class="arrow"></span></th>
                     <th onclick="sortTable('Arm Path', '${setting}', '${dataType}')">Arm Path<span class="arrow"></span></th>
+                    <th onclick="sortTable('Collapsed Placement Num', '${setting}', '${dataType}')">Collapsed Placement<span class="arrow"></span></th>
+                    <th onclick="sortTable('Dangerous Operation Num', '${setting}', '${dataType}')">Dangerous Operation<span class="arrow"></span></th>
                 </tr>`;
 console.log("setting3 headers ", headers);
 	    }
@@ -537,8 +539,9 @@ console.log("setting3 headers ", headers);
                 var packingTime = parseNumber(row['Packing Time'], true);
                 var staticStability = setting !== 'setting1' ? parseNumber(row['Static Stability']) : null;
                 var positionOffsetMean = setting !== 'setting1' ? parseNumber(row['Position Offset Mean'], true) : null;
-                var positionOffsetMax = setting !== 'setting1' ? parseNumber(row['Position Offset Max'], true) : null;
                 var armPath = setting === 'setting3' ? parseNumber(row['Arm Path'], true) : null;
+                var collapsedPlacementNum = setting === 'setting3' ? parseNumber(row['Collapsed Placement Num'], true) : null;
+                var dangerousOperationNum = setting === 'setting3' ? parseNumber(row['Dangerous Operation Num'], true) : null;
 
                 tr.innerHTML = `
                 <td><a href="${childPageUrl}">${row.Method}</a></td>
@@ -548,8 +551,9 @@ console.log("setting3 headers ", headers);
                 <td style="${packingTime === minPackingTime ? 'font-weight: bold;' : ''}">${packingTime}</td>
                 ${setting !== 'setting1' ? `<td style="${staticStability === maxStaticStability ? 'font-weight: bold;' : ''}">${staticStability}</td>` : ''}
                 ${setting !== 'setting1' ? `<td style="${positionOffsetMean === minPositionOffsetMean ? 'font-weight: bold;' : ''}">${positionOffsetMean}</td>` : ''}
-                ${setting !== 'setting1' ? `<td style="${positionOffsetMax === minPositionOffsetMax ? 'font-weight: bold;' : ''}">${positionOffsetMax}</td>` : ''}
                 ${setting === 'setting3' ? `<td style="${armPath === minArmPath ? 'font-weight: bold;' : ''}">${armPath}</td>` : ''}
+                ${setting === 'setting3' ? `<td style="${collapsedPlacementNum === minCollapsedPlacementNum ? 'font-weight: bold;' : ''}">${collapsedPlacementNum}</td>` : ''}
+                ${setting === 'setting3' ? `<td style="${dangerousOperationNum === minDangerousOperationNum ? 'font-weight: bold;' : ''}">${dangerousOperationNum}</td>` : ''}
             `;
                 tableBody.appendChild(tr);
             });
