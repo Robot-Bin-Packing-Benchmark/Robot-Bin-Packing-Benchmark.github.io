@@ -254,6 +254,19 @@
             line-height: 1.6;
             text-align: justify;
         }
+
+	.code-block {
+	 background-color: #f5f5f5;
+  	 border: 1px solid #ddd;
+   	 border-radius: 6px;
+   	 padding: 12px;
+   	 font-family: Consolas, Monaco, 'Courier New', monospace;
+   	 font-size: 14px;
+   	 line-height: 1.5;
+   	 overflow-x: auto;
+   	 white-space: pre;
+	}
+
     </style>
 </head>
 <body>
@@ -320,7 +333,8 @@
     <div class="sidebar">
         <a href="#dataset-a">1. DataA: 3D Regular Household Items Dataset</a>
         <a href="#dataset-b">2. DataB: 3D Regular Office Supplies Dataset</a>
-        <a href="#environment">3. Simulation Environment</a>
+	<a href="#dataset-c">3. DataC: 3D Regular Long Board Dataset</a>
+        <a href="#environment">4. Simulation Environment</a>
     </div>    
 
     <!-- 页面内容 -->
@@ -333,6 +347,7 @@
     <p>With the rapid development of e-commerce and the retail industry, the variety and quantity of household items have continuously increased. Efficiently arranging and packing these regularly shaped three-dimensional items to maximize space utilization has become a critical issue in logistics management. Many companies record specific information about each item's size, weight, volume, and its handling in storage and transportation, aiming to optimize picking and distribution processes.</p>
     
     <p>This dataset contains a total of 16,767 such order records, including the processing time of each order, the dimensions, volume, and weight of each item, and the quantity of items to be picked, sorted in a real-time sequence. Time-series sorted test data can better simulate the bin packing process in actual operations, making the test results more realistic. Some algorithms may perform poorly in real-world applications due to their inability to adapt to sequence requirements, or they may experience performance degradation or errors when faced with large volumes of continuous input data. Time-series sorted data helps verify whether algorithms can effectively handle specific constraints, such as requiring items to be loaded in a specific order or certain items not being allowed to be placed on top of others. This data can help identify bottlenecks and improvement points in algorithms, for example, by analyzing phases with low packing efficiency to find ways to improve the algorithm and enhance overall efficiency.</p>
+    <p>You can <a href="https://drive.google.com/file/d/1J3DSXhSOVvSGHNrQbzA_Zv3GBrUX5ehq/view?usp=drive_link" target="_blank">click here to download sample files</a>.</p>
 
     <!-- Insert the first dataset -->
     <div class="table-container">
@@ -389,6 +404,8 @@
     
     <p>The dataset contains a total of 6,849 such order records, including the dimensions, volume, weight, and occupancy rate of each office supply item in the order. Notably, the dataset also includes the names of office supplies, providing rich occupancy information that helps optimize packing strategies. For example, many identical types of items can be grouped together to facilitate categorization and management. The occupancy rate information in the dataset helps evaluate the performance of algorithms in maximizing space utilization. Different office supplies may have different priorities and constraints during packing. The occupancy data can help verify whether an algorithm can handle these practical constraints, such as whether high-occupancy items need to be loaded first, or certain items cannot be packed together with others. The occupancy dataset for office supplies offers a more realistic testing environment for 3D bin packing algorithms, helping researchers evaluate and improve algorithm performance in real-world applications.</p>
 
+    <p>You can <a href="https://drive.google.com/file/d/1jIiCfKP1wwoDCOUTDxP6wht0s1tR4kok/view?usp=drive_link" target="_blank">click here to download sample files</a>.</p>
+
     <!-- Insert the second dataset -->
     <div class="table-container">
         <table>
@@ -439,22 +456,110 @@
         </table>
     </div>
 
+
+<h3 id="dataset-c">C. 3D Regular Long Board Dataset</h3>
+    <p>In production and logistics management, long strips of board materials often face problems such as low space utilization efficiency and difficulty in arrangement when loading and placing due to their long sides. The packing requirements of this type of material are high, and algorithms are required to optimize space more accurately to maximize utilization. The long strip plate data set contains data of long strip plates of various sizes, and each data record the length, width, and height information of the plate.</p>
+    <p>The main feature of this dataset is that the material has a long side, which makes it relatively difficult to load in practice, especially when space is limited. The algorithm needs to pay special attention to the placement order and relative position of long materials to avoid wasting space and ensure the stability of loading. The long sheet material dataset provides a challenging test scenario for the packing algorithm, which is particularly suitable for evaluating the performance of the algorithm when processing materials with long sides. By analyzing these data, researchers can better optimize the algorithm and improve the loading efficiency and space utilization when facing such special-shaped materials.</p>
+    <p>You can <a href="https://drive.google.com/file/d/1j4h03nUZs9dN9yhaQlrcpsgiziChDzc6/view?usp=drive_link" target="_blank">click here to download sample files</a>.</p>
+
+<!-- Insert the third dataset -->
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Length</th>
+                    <th>Width</th>
+                    <th>Height</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>62</td>
+                    <td>35.5</td>
+                    <td>13</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>273</td>
+                    <td>26</td>
+                    <td>6</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>85</td>
+                    <td>61</td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>151</td>
+                    <td>62</td>
+                    <td>8</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
     <!-- Simulation Environment Section -->
-    <h2 id="environment"> Simulation Environment </h2>
-    <p>We tested a series of classic heuristic algorithms and learning-based algorithms for their performance on the 3D online regular bin packing problem. The tests were conducted on the 3D Regular Household Items Time-Series Dataset and the 3D Regular Office Supplies Occupancy Dataset provided. Below is a brief introduction to the algorithms we summarized.</p>
+<h2 id="environment">Simulation Environment</h2>
+<p>To bridge the gap between simulation and real-world applications, we implemented three progressively realistic settings using the PyBullet physics engine:</p>
+<ul>
+    <li><strong>Setting 1</strong>: Pure geometric placement without any physical simulation or robotic involvement. This serves as a baseline to evaluate the packing performance without real-world constraints.</li>
+    <li><strong>Setting 2</strong>: Incorporates physical simulation in PyBullet but omits the use of robotic arms. This helps assess how gravity and collisions affect algorithmic feasibility and stability.</li>
+    <li><strong>Setting 3</strong>: Introduces a robotic arm to physically manipulate and place each box at its planned position under physical constraints. This simulates real-world industrial scenarios where algorithms must be compatible with robotic control and execution.</li>
+</ul>
 
-    <p>We introduced eight regular heuristic algorithms. The Left-Bottom heuristic selects the bottom-most, left-most, and back-most positions. The Heightmap-Min (HM) heuristic aims to minimize the volume increase observed from top to bottom, i.e., minimizing the height map sum. The LSAH heuristic selects the placement location that minimizes the surface area. The MACS heuristic chooses the position with the maximum available free space. The OnlineBPH heuristic selects the first available position in the EMS space sorted by the deep-bottom-left principle, avoiding blockage issues. The DBL heuristic selects the Deepest Bottom Left filling position. The BR heuristic selects a location in the EMS that is large and compatible with future items, assuming all possible item placements are known. The RANDOM heuristic randomly selects a placement location.</p>
+<p>These three settings form a tiered evaluation framework that allows us to analyze how different packing strategies perform under increasingly realistic constraints—from ideal geometric logic to full physical execution with robotics. This design helps reveal the robustness, adaptability, and real-world viability of each algorithm.</p>
 
-    <p>In learning-based methods, we chose the PCT method as a representative. The PCT method proposes using a packing configuration tree to represent the state and action space of packing and develops a deep reinforcement learning model to encode the spatial relationships of all configuration nodes, narrowing the exploration action space using limited leaf nodes. We trained the Online3D-BPP-PCT solver with default parameters, modifying the data used for training to match the item sizes in the benchmark datasets.</p>
+<p>Our simulation environment is built with the PyBullet physics engine. The robotic arm used in Setting 3 is configured based on a 6-DOF UR5 model. During the simulation, the robot is required to perform the pick-and-place action from the loading area to the target position using inverse kinematics (IK) and motion planning.</p>
 
-    <p>We set up three settings:</p>
-    <ul>
-        <li><strong>Setting 1</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
-        <li><strong>Setting 2</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
-        <li><strong>Setting 3</strong>: Consideration of physical simulation and robotic arms.</li>
-    </ul>
+<p>We consider both geometric and physical constraints: geometrically, boxes must remain within the container without overlap; physically, we enforce gravity, friction, collision response, and ensure the robotic arm avoids self-collision and environmental obstacles.</p>
 
-    <p>The placement results of these eight heuristic methods and the learning-based PCT method under the three settings are shown in the tables below.</p>
+<p>The system is implemented in Python and supports both direct geometric simulation and full physics-based interaction. A unified interface encapsulates the simulation engine, robotic control, and evaluation metrics. Users can launch simulations with different settings via a single entry point, allowing convenient algorithm testing and scenario switching.</p>
+
+
+<p>
+To enhance the reusability and scalability of our bin packing simulation environment, we have encapsulated the entire system into a Python package named <strong>packsim</strong>, now available on PyPI. Users can install it using the following command:
+</p>
+
+<div class="code-block">pip install packsim</div>
+
+<p>
+After installation, the simulation process can be invoked in Python as follows:
+</p>
+
+<div class="code-block">from packsim import simulate
+
+result = simulate({
+    'setting': 1,
+    'data': 'flat_long',
+    'method': 'PCT',
+    'test_data_config': 0,
+    'gui': 1,
+    'config': '/rl/pypi/default.yaml',
+    'action_path': '/rl/pypi/action.json',
+    'planning_time_path': '/rl/pypi/planning_time.json',
+    'save_path': '/rl/pypi'
+})
+</div>
+
+<p>
+By calling the <code>simulate</code> function and passing a dictionary of parameters, users can execute a complete simulation process. The input parameters include the simulation setting, dataset name, test configuration ID, visualization option, path to the default configuration file, action sequence file, planning time log, and result save path. Upon completion, the system returns evaluation results including packing efficiency, decision trajectories, and execution time for subsequent algorithm benchmarking and performance analysis.
+</p>
+
+<p>
+Before running the simulation, users need to generate <code>action.json</code> and <code>planning_time.json</code> using the Submit module, and configure the <code>default.yaml</code> file accordingly—especially the data path for testing.
+<br>
+You can <a href="https://drive.google.com/file/d/1seFWeYfRbSfO-7_PdRL7uBL1WLHnj_S6/view?usp=drive_link" target="_blank">click here to download sample files</a>.
+</p>
+
+<p>
+This module supports fast switching of algorithms and dataset configurations, making it a versatile tool for testing and comparing online bin packing algorithms. It offers high compatibility and strong visualization capabilities.
+</p>
+
 
 </div>
 
