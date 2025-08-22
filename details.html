@@ -181,7 +181,7 @@
         headRow.innerHTML = `
             <th>Data Group</th>
             <th>Feasible Num</th>
-            <th>Occupancy</th>
+            <th>Plain Occupancy</th>
             <th>Planning Time</th>
             <th>All time</th>
         `;
@@ -190,9 +190,8 @@
             <th>Data Group</th>
             <th>Feasible Num</th>
             <th>Static Stability</th>
-            <th>Position Offset Mean</th>
-            <th>Position Offset Max</th>
-            <th>Occupancy</th>
+            <th>Position Offset</th>
+            <th>Plain Occupancy</th>
             <th>Planning Time</th>
             <th>All time</th>
         `;
@@ -200,11 +199,12 @@
         headRow.innerHTML = `
             <th>Data Group</th>
             <th>Feasible Num</th>
-            <th>Arm Path</th>
             <th>Static Stability</th>
-            <th>Position Offset Mean</th>
-            <th>Position Offset Max</th>
-            <th>Occupancy</th>
+            <th>Arm Path</th>
+            <th>Position Offset</th>
+            <th>Collapsed Placement</th>
+            <th>Dangerous Operation</th>
+            <th>Plain Occupancy</th>
             <th>Planning Time</th>
             <th>All time</th>
         `;
@@ -218,7 +218,7 @@
     }
 
     data.forEach(function(row, index) {
-        if (row['Feasible Num'] === undefined || row['Occupancy'] === undefined) {
+        if (row['Feasible Num'] === undefined || row['Plain Occupancy'] === undefined) {
             console.warn(`Skipping row with incomplete data at index ${index}: `, row);
             return; // Skip this row if any critical value is undefined
         }
@@ -228,7 +228,7 @@
             tr.innerHTML = `
                 <td>${index}</td>
                 <td>${row['Feasible Num']}</td>
-                <td>${row['Occupancy']}</td>
+                <td>${row['Plain Occupancy']}</td>
                 <td>${row['Planning Time']}</td>
                 <td>${row['All time']}</td>
             `;
@@ -237,9 +237,8 @@
                 <td>${index}</td>
                 <td>${row['Feasible Num']}</td>
                 <td>${row['Static Stability']}</td>
-                <td>${row['Position Offset Mean']}</td>
-                <td>${row['Position Offset Max']}</td>
-                <td>${row['Occupancy']}</td>
+                <td>${row['Position Offset']}</td>
+                <td>${row['Plain Occupancy']}</td>
                 <td>${row['Planning Time']}</td>
                 <td>${row['All time']}</td>
             `;
@@ -247,11 +246,12 @@
             tr.innerHTML = `
                 <td>${index}</td>
                 <td>${row['Feasible Num']}</td>
-                <td>${row['Arm Path']}</td>
                 <td>${row['Static Stability']}</td>
-                <td>${row['Position Offset Mean']}</td>
-                <td>${row['Position Offset Max']}</td>
-                <td>${row['Occupancy']}</td>
+                <td>${row['Arm Path']}</td>
+                <td>${row['Position Offset']}</td>
+                <td>${row['Collapsed Placement']}</td>
+                <td>${row['Dangerous Operation']}</td>
+                <td>${row['Plain Occupancy']}</td>
                 <td>${row['Planning Time']}</td>
                 <td>${row['All time']}</td>
             `;
