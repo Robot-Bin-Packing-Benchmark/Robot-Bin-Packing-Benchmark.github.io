@@ -138,11 +138,11 @@
         function getDatasetDescription(dataType) {
             switch (dataType) {
                 case 'time_series':
-                    return "3D Regular Household Items Time-Series Dataset";
+                    return "3D Repetitive Time-Series Logistics Dataset";
                 case 'occupancy':
-                    return "3D Regular Office Supplies Occupancy Dataset";
+                    return "3D Diverse Office Supplies Dataset";
                 case 'flat_long':
-                    return "3D Regular Long Items Dataset";
+                    return "3D Long-Board Industrial Items Dataset";
                 default:
                     return "";
             }
@@ -159,8 +159,6 @@
                 }
             });
 
-            // Dynamically load images based on setting
-            loadPlotImages(setting, dataType, method);
 
             // Set default video
             loadVideo(setting, dataType, method, 0);
@@ -316,7 +314,6 @@
             var method = window.params.method;
 
             // Update plot images and video based on group selection
-            loadPlotImages(setting, dataType, method);
             loadVideo(setting, dataType, method, groupIndex);
         }
 
@@ -338,8 +335,8 @@
             document.getElementById('datatype-info').textContent = getDatasetDescription(dataType);
             document.getElementById('programming-language-info').textContent = "Python";
             document.getElementById('hardware-info').textContent = "GeForce 3090";
-            document.getElementById('submission-date-info').textContent = "16 Sep, 2024";
-            document.getElementById('last-edited-info').textContent = "16 Sep, 2024";
+            document.getElementById('submission-date-info').textContent = "12 Aug, 2024";
+            document.getElementById('last-edited-info').textContent = "16 Sep, 2025";
 
             // Load the initial data
             loadDetailData(setting, dataType, method);
