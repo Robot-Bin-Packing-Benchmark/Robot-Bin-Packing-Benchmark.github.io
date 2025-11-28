@@ -355,45 +355,62 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script>
         function sortTable(column, setting, dataType, initialSortOrder = null) {
-            var tableBody = document.querySelector(`#table-${setting} tbody`);
-            var rowsArray = Array.from(tableBody.rows);
+    var tableBody = document.querySelector(`#table-${setting} tbody`);
+    
+    // 只获取算法数据行，忽略作者信息行
+    var rowsArray = Array.from(tableBody.rows).filter(row => !row.classList.contains('author-info'));
 
-            // 判断是首次排序还是用户点击表头触发的排序
-            var currentSortOrder;
-            if (initialSortOrder) {
-                currentSortOrder = initialSortOrder; // 用于初次加载表格时设置默认排序顺序
-            } else {
-                // 判断当前列是否已经是降序排序
-                var previousSortedColumn = tableBody.getAttribute('data-sorted-column');
-                if (previousSortedColumn === column) {
-                    // 如果当前列已排序，反转排序顺序
-                    currentSortOrder = tableBody.getAttribute('data-sort-order') === 'asc' ? 'desc' : 'asc';
-                } else {
-                    // 如果是新列，默认设置为降序
-                    currentSortOrder = 'desc';
-                }
-            }
-
-            // 更新排序顺序和排序的列
-            tableBody.setAttribute('data-sort-order', currentSortOrder);
-            tableBody.setAttribute('data-sorted-column', column);
-
-            rowsArray.sort(function(a, b) {
-                var aValue = a.cells[getColumnIndex(column, setting)].innerText;
-                var bValue = b.cells[getColumnIndex(column, setting)].innerText;
-
-                if (!isNaN(aValue) && !isNaN(bValue)) {
-                    return currentSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
-                } else {
-                    return currentSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-                }
-            });
-
-            rowsArray.forEach(row => tableBody.appendChild(row));
-
-            // 更新箭头图标
-            updateArrowIcons(column, setting, currentSortOrder);
+    // 判断是首次排序还是用户点击表头触发的排序
+    var currentSortOrder;
+    if (initialSortOrder) {
+        currentSortOrder = initialSortOrder; // 用于初次加载表格时设置默认排序顺序
+    } else {
+        var previousSortedColumn = tableBody.getAttribute('data-sorted-column');
+        if (previousSortedColumn === column) {
+            currentSortOrder = tableBody.getAttribute('data-sort-order') === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSortOrder = 'desc';
         }
+    }
+
+    // 更新排序顺序和排序的列
+    tableBody.setAttribute('data-sort-order', currentSortOrder);
+    tableBody.setAttribute('data-sorted-column', column);
+
+    // 排序算法行
+    rowsArray.sort(function(a, b) {
+        var aValue = a.cells[getColumnIndex(column, setting)].innerText;
+        var bValue = b.cells[getColumnIndex(column, setting)].innerText;
+
+        if (!isNaN(aValue) && !isNaN(bValue)) {
+            return currentSortOrder === 'asc' ? aValue - bValue : bValue - aValue;
+        } else {
+            return currentSortOrder === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+        }
+    });
+
+    // 清空tbody并重新插入数据行 + 作者行
+    tableBody.innerHTML = '';
+    rowsArray.forEach(row => {
+        tableBody.appendChild(row);
+
+        // 获取算法名
+        var methodName = row.cells[0].innerText;
+
+        // 添加对应作者信息行
+        var infoTr = document.createElement('tr');
+        infoTr.classList.add('author-info');
+        // 动态列数，根据当前行的单元格数量
+        var colCount = row.cells.length;
+        infoTr.innerHTML = `<td colspan="${colCount}" style="font-style: italic; color: gray; font-size: 0.9em;">
+            ${algorithmInfo[methodName] || ''}
+        </td>`;
+        tableBody.appendChild(infoTr);
+    });
+
+    // 更新箭头图标
+    updateArrowIcons(column, setting, currentSortOrder);
+}
 
 
 
@@ -447,6 +464,25 @@
                 }
             });
         }
+
+
+const algorithmInfo = {
+    "AR2L": "Yuxin Pan, Yize Chen, Fangzhen Lin: Adjustable Robust Reinforcement Learning for Online 3D Bin Packing",
+    "PCT": "Hang Zhao, Yang Yu, Kai Xu: Learning Efficient Online 3D Bin Packing on Packing Configuration Trees",
+    "LSAH": "Haoyuan Hu, Xiaodong Zhang, Xiaowei Yan, Longfei Wang, Yinghui Xu: Solving a New 3D Bin Packing Problem with Deep Reinforcement Learning Method",
+    "DBL": "Korhan Karabulut & Mustafa Murat İnceoğlu: A Hybrid Genetic Algorithm for Packing in 3D with Deepest Bottom Left with Fill Method",
+    "BR": "Hang Zhao, Qijin She, Chenyang Zhu, Yin Yang, Kai Xu: Online 3D Bin Packing with Constrained Deep Reinforcement Learning",
+    "SDFPack": "Jia-Hui Pan, Ka-Hei Hui, Xiaojie Gao, Shize Zhu, Yun-Hui Liu, Pheng-Ann Heng: SDF-Pack: Towards Compact Bin Packing with Signed-Distance-Field Minimization",
+    "TAPNet++": "Juzhan Xu, Minglun Gong, Hao Zhang, Hui Huang, Ruizhen Hu: Neural Packing: from Visual Sensing to Reinforcement Learning",
+    "HeightmapMin": "Fan Wang, Kris Hauser: Stable Bin Packing of Non-convex 3D Objects with a Robot Manipulator",
+    "OnlineBPH": "Chi Trung Ha, Trung Thanh Nguyen, Lam Thu Bui, Ran Wang: An Online Packing Heuristic for the Three-Dimensional Container Loading Problem in Dynamic Environments and the Physical Internet",
+    "MACS": "Ruizhen Hu, Juzhan Xu, Bin Chen, Minglun Gong, Hao Zhang, Hui Huang: TAP-Net: transport-and-pack using reinforcement learning",
+    "CDRL": "Hang Zhao, Chenyang Zhu, Xin Xu, Hui Huang, Kai Xu: Learning practically feasible policies for online 3D bin packing",
+    "PackE": "Zifei Yang, Shuo Yang, Shuai Song, Wei Zhang, Ran Song, Jiyu Cheng: PackerBot: Variable-Sized Product Packing with Heuristic Deep Reinforcement Learning"
+};
+
+
+
 
         function fillTable(data, setting, dataType) {
             var tableBody = document.querySelector(`#table-${setting} tbody`);
@@ -554,6 +590,26 @@
                 ${setting === 'setting3' ? `<td style="${dangerousOperationNum === minDangerousOperationNum ? 'font-weight: bold;' : ''}">${dangerousOperationNum}</td>` : ''}
             `;
                 tableBody.appendChild(tr);
+
+var lastColumnName;
+if (setting === 'setting1') {
+    lastColumnName = 'Decision Time';
+} else if (setting === 'setting2') {
+    lastColumnName = 'Static Stability';
+} else if (setting === 'setting3') {
+    lastColumnName = 'Dangerous Operation';
+}
+
+// 计算列数
+var colCount = getColumnIndex(lastColumnName, setting) + 1;
+
+var infoTr = document.createElement('tr');
+infoTr.classList.add('author-info'); // 新增标识
+infoTr.innerHTML = `<td colspan="${colCount}" style="font-style: italic; color: gray; font-size: 0.9em;">
+    ${algorithmInfo[row.Method] || ''}
+</td>`;
+tableBody.appendChild(infoTr);
+
             });
 
             // 默认按 'Space Utilization' 排序并更新箭头
