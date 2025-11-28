@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robotic Online Bin Packing Benchmark</title>
+    <title>RoboBPP</title>
     <style>
         body, html {
             margin: 0;
@@ -221,7 +221,7 @@
         }
 
 	.image-section {
-  	  max-width: 650px;
+  	  max-width: 900px;
   	  margin: 0 auto 20px auto; /* 去掉顶部的 margin，改用 JavaScript 动态计算 */
    	 text-align: center;
 	}
@@ -354,7 +354,7 @@
     <!-- 导航栏 -->
     <div class="navbar" id="navbar">
         <div class="navbar-left">
-            <a href="index.html">Robotic Online Bin Packing</a>
+            <a href="index.html">Robot Bin Packing Benchmark</a>
         </div>
         <div class="navbar-right" id="navbar-right">
             <a href="index.html">Home</a>
@@ -409,19 +409,20 @@
 
     <p>This work makes the following major contributions:</p>
     <ol>
-        <li>Provides a rich set of real industrial data targeted for the industry.</li>
-        <li>Develops a robust simulation environment for testing bin packing algorithms and introduces industrial-relevant evaluation metrics focused on robotic arm operations.</li>
-        <li>Conducts extensive tests on existing classical methods: A comprehensive evaluation of existing classical 3D bin packing algorithms and a summary of the test results.</li>
+        <li>A highly realistic physics-based simulation environment for evaluating physical feasibility.</li>
+        <li>Three large-scale, diverse datasets collected from real industrial workflows for benchmarking online bin packing.</li>
+        <li>Scientifically designed test settings, ranging from purely mathematical evaluation to physics-constrained simulation and full robotic execution.</li>
+        <li>Multi-dimensional evaluation metrics, combined with a scoring system that computes a weighted overall score, enabling insightful analysis of different approaches across various scenarios.</li>
     </ol>
 
-    <p>We set up three settings:</p>
+    <p>We set up three test settings:</p>
     <ul>
-        <li><strong>Setting 1</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
-        <li><strong>Setting 2</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
-        <li><strong>Setting 3</strong>: Consideration of physical simulation and robotic arms.</li>
+        <li><strong>Math Pack</strong>: No consideration of physical simulation, no consideration of robotic arms.</li>
+        <li><strong>Physics Pack</strong>: Consideration of physical simulation, no consideration of robotic arms.</li>
+        <li><strong>Execution Pack</strong>: Consideration of physical simulation and robotic arms.</li>
     </ul>
 
-    <p>The placement results of these eight heuristic methods and the learning-based PCT method  and TAP method under the three settings are shown in the Benchmarks section.</p>
+    <p>The placement results of these 7 heuristic methods and 5 learning-based methods under the three settings are shown in the Benchmarks section.</p>
 
 </div>
 
@@ -528,9 +529,9 @@
     // 视频组对应的描述文本
 
 const descriptions = [
-    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: time_series, occupancy, and flat_long under Setting 1：Ideal Conditions. Without considering physical simulation or robot motion trajectory planning, we only consider the optimal performance of the algorithm, which we call ideal conditions.",
-    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: time_series, occupancy, and flat_long under Setting 2：Physical Simulation Condition. Considering physical simulation, but not considering the robot motion trajectory planning, we get the performance of the algorithm under real physical simulation. The performance of the algorithm varies with the stability of the position selection, which we call physical simulation condition.",
-    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: time_series, occupancy, and flat_long under Setting 3：Robot Path Planning Condition. Considering physical simulation and robot motion trajectory planning, we introduce a robot to grab the box and place it at the target location to obtain the actual performance of the algorithm in a real industrial environment. The performance of the algorithm varies depending on the actual accessibility of the location selection, which we call the robot path planning condition."
+    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Math Pack Conditions. Without considering physical simulation or robot motion trajectory planning, we only consider the optimal performance of the algorithm, which we call the Math Pack.",
+    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Physics Pack Condition. Considering physical simulation, but not considering the robot motion trajectory planning, we get the performance of the algorithm under real physical simulation. The performance of the algorithm varies with the stability of the position selection, which we call the Physics Pack.",
+    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Execution Pack Condition. Considering physical simulation and robot motion trajectory planning, we introduce a robot to grab the box and place it at the target location to obtain the actual performance of the algorithm in a real industrial environment. The performance of the algorithm varies depending on the actual accessibility of the location selection, which we call the Execution Pack."
 ];
 
 /*
