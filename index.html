@@ -260,11 +260,27 @@
             display: flex; /* 只显示当前活动的视频组 */
         }
 
-        .video-group video {
-            width: calc(33.33% - 20px); /* 确保三个视频均匀分布并留出间距 */
-	    margin: 0 10px; /* 设置每个视频之间的空隙 */
-            height: auto;
-        }
+	.video-item {
+    display: flex;
+    flex-direction: column; /* 标题在上，视频在下 */
+    align-items: center;
+    width: calc(33.33% - 15px); /* 三个视频均分，间距稍小 */
+    margin: 0 7.5px; /* 左右间距 */
+}
+
+.video-title {
+    font-size: 13px; /* 调小标题字体 */
+    font-weight: 600;
+    margin-bottom: 4px; /* 标题和视频间距稍小 */
+    text-align: center;
+    color: #0056b3;
+}
+
+.video-group video {
+    width: 100%; /* 视频填满容器 */
+    height: auto; /* 保持宽高比例 */
+    max-height: 220px; /* 限制最大高度，可根据需求调大 */
+}
 	
 	.video-description {
             max-width: 900px;
@@ -318,7 +334,7 @@
 
         /* 控制视频轮播容器和导航栏的距离 */
         .video-carousel-container {
-            margin-top: 80px; /* 根据实际导航栏高度动态调整 */
+            margin-top: 40px; /* 根据实际导航栏高度动态调整 */
         }
 
 	/* 当屏幕宽度小于 768px 时只显示第一个视频 */
@@ -336,7 +352,6 @@
 
   	  /* 调整视频轮播容器的高度，以适应单个视频 */
   	  .video-carousel-container {
-  	      height: auto; /* 让容器自适应内容高度 */
   	      padding-left: 0; /* 移除左右边距 */
   	      padding-right: 0;
   	  }
@@ -407,6 +422,11 @@
     <h2>Introduction</h2>
     <p>The Three-Dimensional Bin Packing Problem (3D-BPP) is crucial in modern industrial and logistics systems. With the total social logistics costs reaching 18.2 trillion RMB, accounting for one-seventh of the Gross Domestic Product (GDP), the logistics industry has become a key sector in the national economy. Packaging is a core aspect of logistics, and effective 3D bin packing strategies can maximize transportation space utilization, reduce shipping costs, and ensure the stability and safety of goods. Under the framework of Industry 4.0, the use of robotic arms for 3D bin packing is becoming increasingly prevalent. Effective coordination of robotic arms in packing processes can enhance automation and intelligence in the packaging industry, reduce packaging material waste, and promote environmental sustainability.</p>
 
+
+    <p>Despite these advances, current research still suffers from several fundamental limitations. Existing methods are evaluated under inconsistent problem formulations, heterogeneous datasets, and incomparable metrics, while many state-of-the-art approaches remain closed-source, limiting reproducibility. Most works further treat online 3D-BPP as an abstract optimization problem and ignore physical constraints such as gravity, friction, and dynamic stability, making their conclusions difficult to transfer to real robotic systems. In addition, the heavy reliance on synthetic data leads to distributional gaps from real industrial workflows, raising concerns about practical validity. These issues collectively prevent fair comparison and hinder progress toward deployable packing solutions. To overcome these limitations, we introduce <strong>RoboBPP</strong>, a unified benchmarking system that standardizes evaluation through real industrial datasets, physics-based simulation, and robot-aware metrics.</p>
+
+
+
     <p>This work makes the following major contributions:</p>
     <ol>
         <li>A highly realistic physics-based simulation environment for evaluating physical feasibility.</li>
@@ -414,6 +434,18 @@
         <li>Scientifically designed test settings, ranging from purely mathematical evaluation to physics-constrained simulation and full robotic execution.</li>
         <li>Multi-dimensional evaluation metrics, combined with a scoring system that computes a weighted overall score, enabling insightful analysis of different approaches across various scenarios.</li>
     </ol>
+
+
+<p>To support comprehensive evaluation under realistic industrial conditions, RoboBPP provides three large-scale datasets sourced from real manufacturing and logistics workflows. These datasets capture the structural characteristics, operational patterns, and physical constraints that occur in real production lines, enabling more faithful benchmarking than synthetic or random data.</p>
+<ul>
+    <li><strong>Repetitive Dataset</strong>: Collected from assembly-line production environments, where objects exhibit repeated geometric patterns and highly consistent size distributions. This dataset reflects typical mass-production workflows with stable item characteristics.</li>
+<li><strong>Diverse Dataset</strong>: Extracted from logistics packing scenarios with highly heterogeneous object types. Items vary significantly in size, shape, and arrival order, representing challenging high-variance real-world packing tasks.</li>
+
+<li><strong>Long Board Dataset</strong>: Derived from furniture manufacturing sites containing elongated wooden boards and irregular slab-like materials. This dataset emphasizes long-item placement, support constraints, and orientation sensitivity.</li>
+</ul>
+
+
+
 
     <p>We set up three test settings:</p>
     <ul>
@@ -424,30 +456,61 @@
 
     <p>The placement results of these 7 heuristic methods and 5 learning-based methods under the three settings are shown in the Benchmarks section.</p>
 
+
+<p>From left to right, the three videos below show the simulation effects of the bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Math Pack, Physics Pack, and Execution Pack.</p>
+
 </div>
 
     <!-- 视频轮播容器 -->
     <div class="video-carousel-container" id="videoCarousel">
         <!-- 第一组视频 -->
-        <div class="video-group active">
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/time_series.mp4" autoplay muted loop></video>
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/occupancy.mp4" autoplay muted loop></video>
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/flat_long.mp4" autoplay muted loop></video>
-        </div>
+<div class="video-group active">
+    <div class="video-item">
+        <div class="video-title">Repetitive Dataset under Math Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/time_series.mp4" autoplay muted loop></video>
+    </div>
+    <div class="video-item">
+        <div class="video-title">Diverse Dataset under Math Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/occupancy.mp4" autoplay muted loop></video>
+    </div>
+    <div class="video-item">
+        <div class="video-title">Long Board Dataset under Math Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/flat_long.mp4" autoplay muted loop></video>
+    </div>
+</div>
         
         <!-- 第二组视频 -->
-        <div class="video-group">
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/time_series.mp4" autoplay muted loop></video>
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/occupancy.mp4" autoplay muted loop></video>
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/flat_long.mp4" autoplay muted loop></video>
-        </div>
+<div class="video-group">
+    <div class="video-item">
+        <div class="video-title">Repetitive Dataset under Physics Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/time_series.mp4" autoplay muted loop></video>
+    </div>
+    <div class="video-item">
+        <div class="video-title">Diverse Dataset under Physics Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/occupancy.mp4" autoplay muted loop></video>
+    </div>
+    <div class="video-item">
+        <div class="video-title">Long Board Dataset under Physics Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/flat_long.mp4" autoplay muted loop></video>
+    </div>
+</div>
 
-        <!-- 第三组视频 -->
-        <div class="video-group">
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/time_series.mp4" autoplay muted loop></video>
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/occupancy.mp4" autoplay muted loop></video>
-            <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/flat_long.mp4" autoplay muted loop></video>
-        </div>
+<!-- 第三组视频 -->
+<div class="video-group">
+    <div class="video-item">
+        <div class="video-title">Repetitive Dataset under Execution Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/time_series.mp4" autoplay muted loop></video>
+    </div>
+    <div class="video-item">
+        <div class="video-title">Diverse Dataset under Execution Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/occupancy.mp4" autoplay muted loop></video>
+    </div>
+    <div class="video-item">
+        <div class="video-title">Long Board Dataset under Execution Pack</div>
+        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/flat_long.mp4" autoplay muted loop></video>
+    </div>
+</div>
+
 
         <!-- 左右切换按钮 -->
         <button class="carousel-prev">❮</button>
@@ -473,7 +536,7 @@
         const videoCarousel = document.getElementById('videoCarousel');
         function adjustCarouselMargin() {
             const navbarHeight = navbar.offsetHeight;
-            videoCarousel.style.marginTop = `${navbarHeight + 10}px`; // 给导航栏和视频容器留一点空隙
+            videoCarousel.style.marginTop = `${navbarHeight + 2}px`; // 给导航栏和视频容器留一点空隙
         }
 
         // 显示当前的视频组
@@ -528,25 +591,12 @@
     <script>
     // 视频组对应的描述文本
 
-const descriptions = [
-    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Math Pack Conditions. Without considering physical simulation or robot motion trajectory planning, we only consider the optimal performance of the algorithm, which we call the Math Pack.",
-    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Physics Pack Condition. Considering physical simulation, but not considering the robot motion trajectory planning, we get the performance of the algorithm under real physical simulation. The performance of the algorithm varies with the stability of the position selection, which we call the Physics Pack.",
-    "From left to right, the three videos show the simulation effects of bin packing problem on three real industrial datasets: Repetitive Dataset, Diverse Dataset, and Long Board Dataset under Execution Pack Condition. Considering physical simulation and robot motion trajectory planning, we introduce a robot to grab the box and place it at the target location to obtain the actual performance of the algorithm in a real industrial environment. The performance of the algorithm varies depending on the actual accessibility of the location selection, which we call the Execution Pack."
-];
 
-/*
-const descriptions = [
-"",
-"",
-""
-];
-*/
+
 
 // 获取视频描述容器
 const videoDescription = document.getElementById('videoDescription');
 
-// 初始化显示第一组视频的描述
-videoDescription.innerText = descriptions[0];
 
 // 显示当前的视频组并更新描述
 function showVideoGroup(index) {
@@ -562,8 +612,6 @@ function showVideoGroup(index) {
                 video.currentTime = 0;
                 video.play();
             });
-            // 更新视频描述
-            videoDescription.innerText = descriptions[index];
         }
     });
 }
