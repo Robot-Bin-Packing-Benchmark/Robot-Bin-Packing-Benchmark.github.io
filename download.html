@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoboBPP</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-weight: 400;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+        }
+
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            width: 100%;
+        }
+
+        .navbar-left {
+            font-size: 20px;
+            font-weight: bold;
+            color: #cccccc;
+            padding-left: 180px;
+        }
+
+        .navbar-left a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .navbar-right {
+            padding-right: 180px;
+        }
+
+        .navbar-right a {
+            font-size: 16px;
+            color: #cccccc;
+            text-decoration: none;
+            padding: 0 18px;
+            font-weight: 500;
+        }
+
+        .navbar-right a:hover {
+            color: white;
+        }
+
+        /* 保证导航栏在宽度缩小时不会换行 */
+        .navbar-left, .navbar-right {
+            white-space: nowrap;
+        }
+
+	/* 折叠菜单图标，默认不显示 */
+        .menu-icon {
+            display: none;
+        }
+
+        /* 媒体查询，用于在页面缩小时调整样式 */
+        @media (max-width: 1200px) {
+            .navbar-left, .navbar-right {
+                padding-left: 100px;
+                padding-right: 100px;
+            }
+        }
+
+	@media (max-width: 1150px) {
+            .navbar-left, .navbar-right {
+                padding-left: 87px;
+                padding-right: 87px;
+            }
+        }
+
+	@media (max-width: 1100px) {
+            .navbar-left, .navbar-right {
+                padding-left: 75px;
+                padding-right: 75px;
+            }
+        }
+
+	@media (max-width: 1050px) {
+            .navbar-left, .navbar-right {
+                padding-left: 63px;
+                padding-right: 75px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .navbar-left, .navbar-right {
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+        }
+	
+	/* 在992px到768px范围内，逐步减少padding */
+	@media (max-width: 952px) {
+            .navbar-left, .navbar-right {
+                padding-left: 45px;
+                padding-right: 45px;
+            }
+        }
+
+	
+        @media (max-width: 900px) {
+            .navbar-left, .navbar-right {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+            .navbar-left, .navbar-right {
+                padding-left: 30px;
+                padding-right: 30px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .navbar-left, .navbar-right {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+
+
+        @media (max-width: 768px) {
+            .navbar {
+                justify-content: center;
+                padding: 15px 0;
+            }
+
+            .navbar-left {
+                padding: 0;
+                text-align: center;
+                flex-grow: 1;
+            }
+
+            .navbar-right {
+                display: none;
+            }
+
+            /* 折叠菜单图标 */
+            .menu-icon {
+                display: block;
+                font-size: 30px;
+                color: white;
+                position: absolute;
+                right: 20px;
+                cursor: pointer;
+            }
+
+            /* 折叠菜单展开内容 */
+            .navbar-right.active {
+                display: block;
+                position: absolute;
+                top: 60px;
+                right: 20px;
+                background-color: #333;
+                padding: 10px;
+                border-radius: 5px;
+                z-index: 1001;
+            }
+
+            .navbar-right.active a {
+                display: block;
+                margin: 5px 0;
+                padding: 5px 0;
+            }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 100px;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* 修改正文部分链接的样式 */
+        .container a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container a:visited {
+            color: #0056b3;
+        }
+
+        /* 强制按钮文字变为白色 */
+        .btn-primary {
+            color: #ffffff !important; /* 使用 !important 确保字体颜色变为白色 */
+            background-color: #337ab7;
+            border-color: #2e6da4;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- 导航栏 -->
+    <div class="navbar">
+        <div class="navbar-left">
+            <a href="index.html">Robotic Online Bin Packing</a>
+        </div>
+        <div class="navbar-right" id="navbar-right">
+            <a href="index.html">Home</a>
+            <a href="benchmark.html">Benchmarks</a>
+            <a href="documentation.html">Documentation</a>
+            <a href="submit.html">Submit</a>
+        </div>
+        <!-- 折叠菜单图标 -->
+        <span class="menu-icon" id="menu-icon" onclick="toggleMenu()">&#9776;</span>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var navbarRight = document.getElementById("navbar-right");
+            navbarRight.classList.toggle("active");
+        }
+    </script>
+
+    <!-- 页面内容 -->
+
+
+
+
+
+
+    <div class="container">
+    
+
+<!-- Data overview image -->
+<div style="text-align: center; margin: 20px 0;">
+    <img src="https://github.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/blob/main/display/visualization.png?raw=true" 
+         alt="Data Overview" 
+         style="max-width: 100%; height: auto; border-radius: 6px;">
+</div>
+
+
+<p>
+To get the RoboBPP datasets, please <a href="https://docs.google.com/forms/d/e/1FAIpQLSei9Fa_E9FX8mR109iMsfBG1vb6XdGMAGZ1YUa9tg11bnGF9g/viewform?usp=header" target="_blank">Download</a>.
+After opening the form, select the dataset(s) you want, provide your name and email address, and submit the form. 
+You will then receive an email containing the download link(s) for the selected dataset(s).
+</p>
+
+
+</div>
+
+</body>
+</html>
