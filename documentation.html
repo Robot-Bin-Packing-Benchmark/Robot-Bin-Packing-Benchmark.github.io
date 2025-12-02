@@ -274,7 +274,7 @@
     <!-- 导航栏 -->
     <div class="navbar" id="navbar">
         <div class="navbar-left">
-            <a href="index.html">Robotic Online Bin Packing</a>
+            <a href="index.html">Robot Bin Packing Benchmark</a>
         </div>
         <div class="navbar-right" id="navbar-right">
             <a href="index.html">Home</a>
@@ -335,13 +335,13 @@
         <a href="#dataset-b">2. Diverse Dataset</a>
 	<a href="#dataset-c">3. Long Board Dataset</a>
         <a href="#environment">4. Simulation Environment</a>
+        <a href="#metric">5. Metric</a>
     </div>    
 
     <!-- 页面内容 -->
     <div class="container">
     
     <!-- Data Section -->
-    <h2 id="data">Dataset</h2>
 
 <!-- Data overview image -->
     <div style="text-align: center; margin: 20px 0;">
@@ -352,7 +352,7 @@
 </div>
 
 
-    <h3 id="dataset-a">A. Repetitive Dataset</h3>
+    <h3 id="dataset-a">Repetitive Dataset</h3>
 <p>The <strong>Repetitive Dataset</strong> features consecutively repeated boxes observed in real logistics operations, where identical items are produced and packed in continuous sequences, similar to assembly-line manufacturing. It is designed to evaluate whether an algorithm can recognize repetitive patterns and maintain stable placement over time. Such repetition is common in industrial production and supply workflows.</p>
 
     
@@ -410,7 +410,7 @@
         </table>
     </div>
 
-    <h3 id="dataset-b">B. Diverse Dataset</h3>
+    <h3 id="dataset-b">Diverse Dataset</h3>
 <p>The <strong>Diverse Dataset</strong> features a large variety of boxes with differences in size, aiming to evaluate an algorithm’s adaptability to highly diverse item distributions. Such heterogeneity is common in logistics order data, from which the proportion of different item categories can be derived to reflect realistic demand distributions. It comprises 6,849 office supply items with dimensions, item names, and proportion metrics. This dataset represents a diverse task that tests an algorithm’s ability to manage diverse items while optimizing both space utilization and stacking stability.</p>
 
     
@@ -465,7 +465,7 @@
     </div>
 
 
-<h3 id="dataset-c">C. Long Board Dataset</h3>
+<h3 id="dataset-c">Long Board Dataset</h3>
 <p>The <strong>Long Board Dataset</strong> features boxes with one dimension significantly longer than the others, aiming to evaluate an algorithm’s ability to handle geometrically challenging shapes. Such items are common in manufacturing and furniture logistics, where their geometry complicates spatial arrangement and stability. This dataset represents a long-board–packing task requiring precise control of positioning and balance, providing a rigorous test of algorithm robustness under physically constrained conditions.</p>
 
     <p>The dataset contains long-board items of various sizes, each record including length, width, and height information. Testing algorithms on this dataset helps assess their capability to optimize space utilization and maintain stacking stability when dealing with elongated materials, which are particularly difficult to load efficiently in practice.</p>
@@ -591,6 +591,90 @@ You can <a href="https://drive.google.com/file/d/1seFWeYfRbSfO-7_PdRL7uBL1WLHnj_
 <p>
 This module supports fast switching of algorithms and dataset configurations, making it a versatile tool for testing and comparing online bin packing algorithms. It offers high compatibility and strong visualization capabilities.
 </p>
+
+
+
+<!-- Metric Section -->
+<h2 id="metric">Metric</h2>
+
+
+<p>
+Summary of metrics used in online bin packing. The first column indicates the type of the metric. <sup>*</sup> indicates the two metrics that we propose: Collapsed Placement and Dangerous Operation.
+</p>
+
+
+<table style="width:100%; border-collapse: collapse; text-align: left;">
+    <thead>
+        <tr>
+            <th style="border-bottom: 2px solid #000; padding: 6px; text-align: left;">Type</th>
+            <th style="border-bottom: 2px solid #000; padding: 6px; text-align: left;">Metric</th>
+            <th style="border-bottom: 2px solid #000; padding: 6px; text-align: left;">Weight</th>
+            <th style="border-bottom: 2px solid #000; padding: 6px; text-align: left;">Description</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <!-- Compactness -->
+        <tr>
+            <td rowspan="2" style="border-top: 1px solid #000; padding: 6px; text-align: left;">Compactness</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Space Utilization</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">0.35</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Ratio placed item volume to the container volume.</td>
+        </tr>
+        <tr>
+            <td style="padding: 6px; text-align: left;">Occupancy</td>
+            <td style="padding: 6px; text-align: left;">0.15</td>
+            <td style="padding: 6px; text-align: left;">Ratio of placed item volume to occupied space.</td>
+        </tr>
+
+        <!-- Inference Efficiency -->
+        <tr>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Inference Efficiency</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Decision Time</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">0.08</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Average algorithmic decision time per placement.</td>
+        </tr>
+
+        <!-- Stability -->
+        <tr>
+            <td rowspan="2" style="border-top: 1px solid #000; padding: 6px; text-align: left;">Stability</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Local Stability</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">0.07</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Average distance between target and actual positions.</td>
+        </tr>
+        <tr>
+            <td style="padding: 6px; text-align: left;">Static Stability</td>
+            <td style="padding: 6px; text-align: left;">0.15</td>
+            <td style="padding: 6px; text-align: left;">Rewards based on the linear and angular velocities of the box.</td>
+        </tr>
+
+        <!-- Execution Efficiency -->
+        <tr>
+            <td rowspan="3" style="border-top: 1px solid #000; padding: 6px; text-align: left;">Execution Efficiency</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Trajectory Length</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">0.08</td>
+            <td style="border-top: 1px solid #000; padding: 6px; text-align: left;">Average end-effector trajectory length.</td>
+        </tr>
+        <tr>
+            <td style="padding: 6px; text-align: left;">Collapsed Placement<sup>*</sup></td>
+            <td style="padding: 6px; text-align: left;">0.07</td>
+            <td style="padding: 6px; text-align: left;">Fraction of placements that collapse.</td>
+        </tr>
+        <tr>
+            <td style="padding: 6px; text-align: left;">Dangerous Operation<sup>*</sup></td>
+            <td style="padding: 6px; text-align: left;">0.05</td>
+            <td style="padding: 6px; text-align: left;">Fraction of unsafe robotic actions.</td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p>
+These metrics form the basis of the scoring system described in the Benchmark page and are
+used across the Math Pack, Physics Pack, and Execution Pack with different combinations.
+</p>
+
+
 
 
 </div>
