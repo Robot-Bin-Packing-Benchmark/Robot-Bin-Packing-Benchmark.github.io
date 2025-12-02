@@ -794,7 +794,7 @@ function makeHeaderWithSmartArrow(word1, word2, fullName, setting, dataType) {
             <a href="index.html">Home</a>
             <a href="benchmark.html">Benchmarks</a>
             <a href="documentation.html">Documentation</a>
-			<a href="download.html">Download</a>
+            <a href="download.html">Download</a>
             <a href="submit.html">Submit</a>
         </div>
         <!-- 折叠菜单图标 -->
@@ -849,6 +849,37 @@ The <b>Math Pack</b> focuses on three geometry-based metrics, with the weight ve
 
 <h2>Overall Performance Ranking</h2>
 
+<div class="container">
+<p>
+We aggregated the results of the experiments using the scoring system to compute an overall score for each algorithm, which allows us to rank all methods across different test settings and datasets. The top-4 results are highlighted as 
+<span style="background-color: rgb(221,241,212); padding: 2px 6px; border-radius: 3px;">first</span>, 
+<span style="background-color: rgb(255,250,210); padding: 2px 6px; border-radius: 3px;">second</span>, 
+<span style="background-color: rgb(194,222,235); padding: 2px 6px; border-radius: 3px;">third</span>, and 
+<span style="background-color: rgb(230,217,243); padding: 2px 6px; border-radius: 3px;">fourth</span>.
+</p>
+</div>
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        font-family: Arial, sans-serif;
+    }
+    th, td {
+        border: 1px solid #333;
+        padding: 6px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .first { background-color: rgb(221,241,212); }   /* colorfirst - green */
+    .second { background-color: rgb(255,250,210); }  /* colorsecond - yellow */
+    .third { background-color: rgb(194,222,235); }   /* colorthird - blueish */
+    .fourth { background-color: rgb(230,217,243); }  /* colorfourth - purple tint */
+</style>
+
+
 <table>
     <tr>
         <th>Setting</th>
@@ -868,19 +899,153 @@ The <b>Math Pack</b> focuses on three geometry-based metrics, with the weight ve
         <th>Diverse</th>
         <th>Long Board</th>
     </tr>
-    <tr><td>PCT</td><td>0.908</td><td>0.939</td><td>0.971</td><td>0.810</td><td>0.714</td><td>0.839</td><td>0.765</td><td>0.672</td><td>0.785</td></tr>
-    <tr><td>TAP-Net++</td><td>0.797</td><td>0.387</td><td>0.815</td><td>0.891</td><td>0.502</td><td>0.725</td><td>0.781</td><td>0.603</td><td>0.756</td></tr>
-    <tr><td>AR2L</td><td>0.914</td><td>0.878</td><td>0.824</td><td>0.740</td><td>0.611</td><td>0.694</td><td>0.708</td><td>0.737</td><td>0.688</td></tr>
-    <tr><td>PackE</td><td>0.397</td><td>0.440</td><td>0.207</td><td>0.865</td><td>0.623</td><td>0.209</td><td>0.617</td><td>0.469</td><td>0.300</td></tr>
-    <tr><td>CDRL</td><td>0.468</td><td>0.638</td><td>0.655</td><td>0.491</td><td>0.453</td><td>0.612</td><td>0.422</td><td>0.728</td><td>0.637</td></tr>
-    <tr><td>DBL</td><td>0.854</td><td>0.763</td><td>0.879</td><td>0.850</td><td>0.476</td><td>0.816</td><td>0.807</td><td>0.713</td><td>0.777</td></tr>
-    <tr><td>LSAH</td><td>0.863</td><td>0.794</td><td>0.679</td><td>0.861</td><td>0.477</td><td>0.510</td><td>0.701</td><td>0.523</td><td>0.487</td></tr>
-    <tr><td>HM</td><td>0.823</td><td>0.627</td><td>0.609</td><td>0.709</td><td>0.554</td><td>0.683</td><td>0.414</td><td>0.623</td><td>0.654</td></tr>
-    <tr><td>SDFPack</td><td>0.659</td><td>0.579</td><td>0.087</td><td>0.389</td><td>0.345</td><td>0.193</td><td>0.232</td><td>0.228</td><td>0.229</td></tr>
-    <tr><td>OnlineBPH</td><td>0.527</td><td>0.534</td><td>0.583</td><td>0.517</td><td>0.478</td><td>0.560</td><td>0.464</td><td>0.618</td><td>0.574</td></tr>
-    <tr><td>MACS</td><td>0.221</td><td>0.135</td><td>0.009</td><td>0.298</td><td>0.183</td><td>0.236</td><td>0.238</td><td>0.364</td><td>0.293</td></tr>
-    <tr><td>BR</td><td>0.781</td><td>0.677</td><td>0.396</td><td>0.542</td><td>0.330</td><td>0.291</td><td>0.410</td><td>0.360</td><td>0.295</td></tr>
+
+    <tr>
+        <td>PCT</td>
+        <td class="second">0.908</td>
+        <td class="first">0.939</td>
+        <td class="first">0.971</td>
+        <td>0.810</td>
+        <td class="first">0.714</td>
+        <td class="first">0.839</td>
+        <td class="third">0.765</td>
+        <td class="fourth">0.672</td>
+        <td class="first">0.785</td>
+    </tr>
+    <tr>
+        <td>TAP-Net++</td>
+        <td>0.797</td>
+        <td>0.387</td>
+        <td class="fourth">0.815</td>
+        <td class="first">0.891</td>
+        <td>0.502</td>
+        <td class="third">0.725</td>
+        <td class="second">0.781</td>
+        <td>0.603</td>
+        <td class="third">0.756</td>
+    </tr>
+    <tr>
+        <td>AR2L</td>
+        <td class="first">0.914</td>
+        <td class="second">0.878</td>
+        <td class="third">0.824</td>
+        <td>0.740</td>
+        <td class="third">0.611</td>
+        <td class="fourth">0.694</td>
+        <td class="fourth">0.708</td>
+        <td class="first">0.737</td>
+        <td class="fourth">0.688</td>
+    </tr>
+    <tr>
+        <td>PackE</td>
+        <td>0.397</td>
+        <td>0.440</td>
+        <td>0.207</td>
+        <td class="second">0.865</td>
+        <td class="second">0.623</td>
+        <td>0.209</td>
+        <td>0.617</td>
+        <td>0.469</td>
+        <td>0.300</td>
+    </tr>
+    <tr>
+        <td>CDRL</td>
+        <td>0.468</td>
+        <td>0.638</td>
+        <td>0.655</td>
+        <td>0.491</td>
+        <td>0.453</td>
+        <td>0.612</td>
+        <td>0.422</td>
+        <td class="second">0.728</td>
+        <td>0.637</td>
+    </tr>
+    <tr>
+        <td>DBL</td>
+        <td class="fourth">0.854</td>
+        <td class="fourth">0.763</td>
+        <td class="second">0.879</td>
+        <td class="fourth">0.850</td>
+        <td>0.476</td>
+        <td class="second">0.816</td>
+        <td class="first">0.807</td>
+        <td class="third">0.713</td>
+        <td class="second">0.777</td>
+    </tr>
+    <tr>
+        <td>LSAH</td>
+        <td class="third">0.863</td>
+        <td class="third">0.794</td>
+        <td>0.679</td>
+        <td class="third">0.861</td>
+        <td>0.477</td>
+        <td>0.510</td>
+        <td>0.701</td>
+        <td>0.523</td>
+        <td>0.487</td>
+    </tr>
+    <tr>
+        <td>HM</td>
+        <td>0.823</td>
+        <td>0.627</td>
+        <td>0.609</td>
+        <td>0.709</td>
+        <td class="fourth">0.554</td>
+        <td>0.683</td>
+        <td>0.414</td>
+        <td>0.623</td>
+        <td>0.654</td>
+    </tr>
+    <tr>
+        <td>SDFPack</td>
+        <td>0.659</td>
+        <td>0.579</td>
+        <td>0.087</td>
+        <td>0.389</td>
+        <td>0.345</td>
+        <td>0.193</td>
+        <td>0.232</td>
+        <td>0.228</td>
+        <td>0.229</td>
+    </tr>
+    <tr>
+        <td>OnlineBPH</td>
+        <td>0.527</td>
+        <td>0.534</td>
+        <td>0.583</td>
+        <td>0.517</td>
+        <td>0.478</td>
+        <td>0.560</td>
+        <td>0.464</td>
+        <td>0.618</td>
+        <td>0.574</td>
+    </tr>
+    <tr>
+        <td>MACS</td>
+        <td>0.221</td>
+        <td>0.135</td>
+        <td>0.009</td>
+        <td>0.298</td>
+        <td>0.183</td>
+        <td>0.236</td>
+        <td>0.238</td>
+        <td>0.364</td>
+        <td>0.293</td>
+    </tr>
+    <tr>
+        <td>BR</td>
+        <td>0.781</td>
+        <td>0.677</td>
+        <td>0.396</td>
+        <td>0.542</td>
+        <td>0.330</td>
+        <td>0.291</td>
+        <td>0.410</td>
+        <td>0.360</td>
+        <td>0.295</td>
+    </tr>
 </table>
+
 
 
 
