@@ -807,10 +807,42 @@ function makeHeaderWithSmartArrow(word1, word2, fullName, setting, dataType) {
         }
     </script>
 
-    <!-- Benchmark Image -->
-    <div class="first-container">
-        <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/teaser.png" alt="Benchmark Setting Image">
-    </div>
+
+
+<div class="first-container">
+<h2>Scoring System</h2>
+<p>
+To provide a unified evaluation across diverse metrics, RoboBPP adopts a normalized scoring system. 
+All metrics are converted to a common scale using min–max normalization, ensuring that higher scores consistently represent better performance. 
+After normalization, the final score of an algorithm is computed as a weighted sum of all normalized metrics, where the weights reflect the relative importance of each metric. The detailed definitions of all metrics can be found in the 
+Documentation at&nbsp;<a href="Documentation.html#metric">Metric</a>.
+</p>
+
+<p>
+In the <b>Execution Pack</b>, eight metrics are included, and the weight vector is:
+<br>
+<i>w<sub>exec</sub> = (0.35, 0.15, 0.08, 0.07, 0.15, 0.08, 0.07, 0.05)</i>.
+<br>
+This design emphasizes space utilization while accounting for stability, safety, and computational efficiency.
+</p>
+
+<p>
+The <b>Physics Pack</b> evaluates five metrics, excluding trajectory and safety-related measures. 
+The corresponding normalized weight vector becomes:
+<br>
+<i>w<sub>phys</sub> = (0.43, 0.19, 0.10, 0.09, 0.19)</i>.
+</p>
+
+<p>
+The <b>Math Pack</b> focuses on three geometry-based metrics, with the weight vector:
+<br>
+<i>w<sub>math</sub> = (0.60, 0.26, 0.14)</i>.
+</p>
+
+</div>
+
+
+
 
 
 
