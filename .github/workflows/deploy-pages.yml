@@ -1,0 +1,47 @@
+name: Deploy Pages with extended sync timeout
+
+# Recovery path for legacy Pages deployments that time out during file sync.
+# Run from main, the repository's configured Pages source branch.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-recovery
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package the complete static website
+        run: |
+          mkdir _site
+          git archive HEAD | tar -x -C _site
+          rm -rf _site/.github
+          touch _site/.nojekyll
+          test -s _site/index.html
+          test -s _site/assets/pages.css
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000
