@@ -1,627 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RoboBPP</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-weight: 400;
-        }
-
-        h1, h2, h3 {
-            text-align: center;
-            font-family: 'Arial', sans-serif;
-            font-weight: 600;
-        }
-
-        table {
-            border-collapse: collapse;
-            margin: auto;
-            text-align: center;
-            width: 100%; /* 设置表格宽度为100%，确保三个表格宽度一致 */
-            max-width: 1000px; /* 设置最大宽度，与setting2、setting3对齐 */
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-        }
-        th {
-            background-color: #f5f5f5;
-            color: #0056b3;
-            cursor: pointer;
-            text-align: center;
-            padding: 10px;
-        }
-        td a {
-            color: #0056b3;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        td a:visited {
-            color: #0056b3;
-        }
-
-        tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #ffffff;
-        }
-
-        .navbar {
-            background-color: #333;
-            color: white;
-            padding: 15px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            width: 100%;
-        }
-
-        .navbar-left {
-            font-size: 20px;
-            font-weight: bold;
-            color: #cccccc;
-            padding-left: 180px;
-        }
-
-        .navbar-left a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .navbar-right {
-            padding-right: 180px;
-        }
-
-        .navbar-right a {
-            font-size: 16px;
-            color: #cccccc;
-            text-decoration: none;
-            padding: 0 18px;
-            font-weight: 500;
-        }
-
-        .navbar-right a:hover {
-            color: white;
-        }
-
-        /* 保证导航栏在宽度缩小时不会换行 */
-        .navbar-left, .navbar-right {
-            white-space: nowrap;
-        }
-
-	/* 折叠菜单图标，默认不显示 */
-        .menu-icon {
-            display: none;
-        }
-
-        /* 媒体查询，用于在页面缩小时调整样式 */
-        @media (max-width: 1200px) {
-            .navbar-left, .navbar-right {
-                padding-left: 100px;
-                padding-right: 100px;
-            }
-        }
-
-	@media (max-width: 1150px) {
-            .navbar-left, .navbar-right {
-                padding-left: 87px;
-                padding-right: 87px;
-            }
-        }
-
-	@media (max-width: 1100px) {
-            .navbar-left, .navbar-right {
-                padding-left: 75px;
-                padding-right: 75px;
-            }
-        }
-
-	@media (max-width: 1050px) {
-            .navbar-left, .navbar-right {
-                padding-left: 63px;
-                padding-right: 75px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .navbar-left, .navbar-right {
-                padding-left: 50px;
-                padding-right: 50px;
-            }
-        }
-	
-	/* 在992px到768px范围内，逐步减少padding */
-	@media (max-width: 952px) {
-            .navbar-left, .navbar-right {
-                padding-left: 45px;
-                padding-right: 45px;
-            }
-        }
-
-	
-        @media (max-width: 900px) {
-            .navbar-left, .navbar-right {
-                padding-left: 40px;
-                padding-right: 40px;
-            }
-        }
-
-        @media (max-width: 850px) {
-            .navbar-left, .navbar-right {
-                padding-left: 30px;
-                padding-right: 30px;
-            }
-        }
-
-        @media (max-width: 800px) {
-            .navbar-left, .navbar-right {
-                padding-left: 20px;
-                padding-right: 20px;
-            }
-        }
-
-
-        @media (max-width: 768px) {
-            .navbar {
-                justify-content: center;
-                padding: 15px 0;
-            }
-
-            .navbar-left {
-                padding: 0;
-                text-align: center;
-                flex-grow: 1;
-            }
-
-            .navbar-right {
-                display: none;
-            }
-
-            /* 折叠菜单图标 */
-            .menu-icon {
-                display: block;
-                font-size: 30px;
-                color: white;
-                position: absolute;
-                right: 20px;
-                cursor: pointer;
-            }
-
-            /* 折叠菜单展开内容 */
-            .navbar-right.active {
-                display: block;
-                position: absolute;
-                top: 60px;
-                right: 20px;
-                background-color: #333;
-                padding: 10px;
-                border-radius: 5px;
-                z-index: 1001;
-            }
-
-            .navbar-right.active a {
-                display: block;
-                margin: 5px 0;
-                padding: 5px 0;
-            }
-        }
-
-	.image-section {
-  	  max-width: 900px;
-  	  margin: 0 auto 20px auto; /* 去掉顶部的 margin，改用 JavaScript 动态计算 */
-   	 text-align: center;
-	}
-
-	.image-section img {
-   	 width: 100%;
-    	height: auto;
-	}
-
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            line-height: 1.6;
-            text-align: justify;
-        }
-	
-	.video-carousel-container {
-	    max-width: 900px; /* 限制轮播器最大宽度与文字内容一致 */
-            position: relative;
-            width: 100%; /* 确保宽度自适应 */
-            height: 210px; /* 视频容器的高度 */
-            margin: 20px auto 44px auto; /* 居中并调整上下边距 */
-            padding: 0 20px; /* 与文字部分保持一致的内边距 */
-        }
-
-        .video-group {
-            display: none; /* 默认隐藏所有视频组 */
-            width: 100%;
-            justify-content: space-around; /* 使视频在组内均匀分布 */
-            align-items: center;
-        }
-
-        .video-group.active {
-            display: flex; /* 只显示当前活动的视频组 */
-        }
-
-	.video-item {
-    display: flex;
-    flex-direction: column; /* 标题在上，视频在下 */
-    align-items: center;
-    width: calc(33.33% - 15px); /* 三个视频均分，间距稍小 */
-    margin: 0 7.5px; /* 左右间距 */
-}
-
-.video-title {
-    font-size: 13px; /* 调小标题字体 */
-    font-weight: 600;
-    margin-bottom: 4px; /* 标题和视频间距稍小 */
-    text-align: center;
-    color: #0056b3;
-}
-
-.video-group video {
-    width: 100%; /* 视频填满容器 */
-    height: auto; /* 保持宽高比例 */
-    max-height: 220px; /* 限制最大高度，可根据需求调大 */
-}
-	
-	.video-description {
-            max-width: 900px;
-  	  margin: 20px auto;
-  	  font-size: 16px;
-  	  line-height: 1.6;
-  	  text-align: justify;
-  	  padding: 0 20px;
-	}
-
-        .carousel-prev, .carousel-next {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            border: none;
-            padding: 7px;
-            cursor: pointer;
-            z-index: 2;
-        }
-
-        .carousel-prev {
-            left: 10px;
-        }
-
-        .carousel-next {
-            right: 10px;
-        }
-
-        .carousel-indicators {
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 5px;
-        }
-
-        .carousel-indicators span {
-            width: 10px;
-            height: 10px;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .carousel-indicators span.active {
-            background-color: white;
-        }
-
-        /* 控制视频轮播容器和导航栏的距离 */
-        .video-carousel-container {
-            margin-top: 40px; /* 根据实际导航栏高度动态调整 */
-        }
-
-	/* 当屏幕宽度小于 768px 时只显示第一个视频 */
-        @media (max-width: 768px) {
-            .video-group video {
-   	     display: none; /* 隐藏所有视频 */
-  	  }
-
-  	  .video-group video:first-child {
-    	    display: block; /* 只显示每组中的第一个视频 */
-    	    width: 90%; /* 让视频适应页面宽度 */
-   	    height: auto; /* 保持视频比例 */
-	    margin: 0 auto; /* 让视频居中 */
-  	  }
-
-  	  /* 调整视频轮播容器的高度，以适应单个视频 */
-  	  .video-carousel-container {
-  	      padding-left: 0; /* 移除左右边距 */
-  	      padding-right: 0;
-  	  }
-
- 	   /* 隐藏左右切换按钮和指示器 */
- 	   .carousel-prev, .carousel-next, .carousel-indicators {
-  	      display: none;
-  	  }
-	}
-
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RoboBPP · Robotic Online Bin Packing · IJRR 2026</title>
+  <meta name="description" content="RoboBPP: a unified benchmark for robotic online bin packing with real industrial datasets, physics-based simulation, and robot-aware evaluation. Accepted to IJRR, 2026.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RoboBPP · Accepted to IJRR 2026">
+  <meta property="og:description" content="Benchmarking Robotic Online Bin Packing with Physics-based Simulation. Explore the benchmark, datasets, code, and demos.">
+  <meta property="og:image" content="https://robot-bin-packing-benchmark.github.io/display/overview.png">
+  <meta property="og:url" content="https://robot-bin-packing-benchmark.github.io/">
+  <meta name="theme-color" content="#174a7e">
+  <link rel="canonical" href="https://robot-bin-packing-benchmark.github.io/">
+  <link rel="stylesheet" href="assets/home.css">
+  <script src="assets/home.js" defer></script>
 </head>
 <body>
-
-    <!-- 导航栏 -->
-    <div class="navbar" id="navbar">
-        <div class="navbar-left">
-            <a href="index.html">Robotic Online Bin Packing</a>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="index.html" aria-label="RoboBPP home"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>RoboBPP</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav-links">Menu <span aria-hidden="true">☰</span></button>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="benchmark.html">Benchmarks</a>
+        <a href="documentation.html">Documentation</a>
+        <a href="download.html">Data</a>
+        <a href="submit.html">Submit</a>
+        <a class="nav-code" href="https://github.com/zhoufeng9/RoboBPP">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="paper-title">
+      <p class="venue"><span aria-hidden="true"></span> Accepted to IJRR · 2026</p>
+      <h1 id="paper-title">RoboBPP<span>Benchmarking Robotic Online Bin Packing<br class="desktop-break"> with Physics-based Simulation</span></h1>
+      <p class="authors">Zhoufeng Wang · Hang Zhao · Juzhan Xu · Shishun Zhang · Ruizhen Hu · Chenyang Zhu<span class="mobile-separator"> · </span><br class="desktop-break"> Zecui Zeng · Weiyan Zhu · Zeyu Xiong · Haibin Yu · Kai Xu</p>
+      <p class="hero-summary">Real industrial datasets. Physics-based simulation. Robot-aware evaluation.</p>
+      <div class="resource-links">
+        <a class="button primary" href="https://arxiv.org/abs/2512.04415">Read the paper <span aria-hidden="true">↗</span></a>
+        <a class="button" href="https://github.com/zhoufeng9/RoboBPP">Code <span aria-hidden="true">↗</span></a>
+        <a class="button" href="download.html">Datasets <span aria-hidden="true">↓</span></a>
+        <a class="button" href="#demos">Explore demos <span aria-hidden="true">↓</span></a>
+      </div>
+      <figure class="hero-demo">
+        <div class="hero-video-wrap">
+          <video id="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/execution-poster.jpg" aria-label="Simulated robotic arm packing boxes from the Repetitive dataset">
+            <source src="assets/execution-demo.mp4" type="video/mp4">
+            Your browser does not support embedded video. <a href="assets/execution-demo.mp4">Download the demo.</a>
+          </video>
+          <button class="play-toggle" id="hero-toggle" type="button" aria-label="Pause demo">Pause demo <span aria-hidden="true">Ⅱ</span></button>
         </div>
-        <div class="navbar-right" id="navbar-right">
-            <a href="index.html">Home</a>
-            <a href="benchmark.html">Benchmarks</a>
-            <a href="documentation.html">Documentation</a>
-            <a href="download.html">Download</a>
-            <a href="submit.html">Submit</a>
+        <figcaption class="hero-note">
+          <span class="eyebrow">Inside the benchmark</span>
+          <h2>From a placement<br>to a robot action.</h2>
+          <p>Watch a simulated robotic arm pick, move, and place boxes in <strong>Execution Pack</strong>.</p>
+          <dl class="demo-facts">
+            <div><dt>Dataset</dt><dd>Repetitive</dd></div>
+            <div><dt>Environment</dt><dd>Physics-based simulation</dd></div>
+            <div><dt>Playback</dt><dd>3× speed · 16-second loop</dd></div>
+          </dl>
+          <a class="text-link" href="#demos">Explore all three settings <span aria-hidden="true">↓</span></a>
+        </figcaption>
+      </figure>
+      <div class="news"><span class="news-label">News</span><time datetime="2026-11-09">09 Nov 2026</time><p>RoboBPP has been accepted to <strong>The International Journal of Robotics Research (IJRR)</strong>.</p></div>
+    </section>
+
+    <section class="section wrap" id="overview" aria-labelledby="overview-title">
+      <div class="section-heading"><div><p class="eyebrow">The benchmark</p><h2 id="overview-title">Packing efficiency meets<br>physical feasibility.</h2></div><p>A good placement must do more than fit. RoboBPP evaluates whether stacks remain stable and whether a robot can execute the plan.</p></div>
+      <p class="overview-copy">Existing approaches are often evaluated with different datasets, problem settings, and metrics. RoboBPP brings these elements together in a unified framework: real industrial data, physics-based simulation, and evaluation that accounts for structural stability and operational safety.</p>
+      <figure class="overview-figure"><a href="display/overview.png" aria-label="Open the full-resolution benchmark overview"><img src="display/overview.png" alt="RoboBPP overview: industrial datasets, physics-based simulation, and benchmark evaluation" width="1534" height="869" loading="lazy"></a><figcaption>The RoboBPP framework. Select the figure to view it at full resolution.</figcaption></figure>
+      <div class="research-points"><div><span>01</span><h3>Grounded in industry</h3><p>Three datasets collected from real industrial workflows.</p></div><div><span>02</span><h3>Increasing realism</h3><p>Three settings connect geometric packing to robotic execution.</p></div><div><span>03</span><h3>Shared evaluation</h3><p>Baseline code, robot-aware metrics, and an online leaderboard.</p></div></div>
+    </section>
+
+    <section class="demo-section" id="demos" aria-labelledby="demos-title">
+      <div class="wrap section">
+        <div class="section-heading"><div><p class="eyebrow">See it in action</p><h2 id="demos-title">One task. Three levels of realism.</h2></div><a class="text-link" href="benchmark.html">View benchmark results <span aria-hidden="true">↗</span></a></div>
+        <div class="setting-tabs" role="tablist" aria-label="Evaluation setting">
+          <button id="tab-math" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-setting="1"><span>01</span> Math Pack</button>
+          <button id="tab-physics" role="tab" aria-selected="false" aria-controls="demo-panel" tabindex="-1" data-setting="2"><span>02</span> Physics Pack</button>
+          <button id="tab-execution" role="tab" aria-selected="true" aria-controls="demo-panel" tabindex="0" data-setting="3"><span>03</span> Execution Pack</button>
         </div>
-        <!-- 折叠菜单图标 -->
-        <span class="menu-icon" id="menu-icon" onclick="toggleMenu()">&#9776;</span>
-    </div>
-
-    <script>
-        function toggleMenu() {
-            var navbarRight = document.getElementById("navbar-right");
-            navbarRight.classList.toggle("active");
-        }
-    </script>
-
-    
-
-    <div class="image-section">
-        <img src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/overview.png" alt="Overview Image">
-    </div>
-
-    <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    // 获取导航栏和图片部分
-    const navbar = document.getElementById('navbar');
-    const imageSection = document.querySelector('.image-section');
-    
-    // 计算导航栏高度并调整图片的 margin-top
-    function adjustImageSectionMargin() {
-        const navbarHeight = navbar.offsetHeight;
-        imageSection.style.marginTop = `${navbarHeight + 10}px`; // 导航栏下方留出10px空隙
-    }
-
-    // 页面加载时和窗口调整大小时调用
-    adjustImageSectionMargin(); // 页面加载时立即调整
-    window.onresize = adjustImageSectionMargin; // 页面大小改变时调整
-});
-    </script>
-
-
-
-
-    <!-- 页面内容 -->
-    <div class="container">
-
-    <!-- Introduction Section -->
-    <h2>Introduction</h2>
-    <p>The Three-Dimensional Bin Packing Problem (3D-BPP) is crucial in modern industrial and logistics systems. With the total social logistics costs reaching 18.2 trillion RMB, accounting for one-seventh of the Gross Domestic Product (GDP), the logistics industry has become a key sector in the national economy. Packaging is a core aspect of logistics, and effective 3D bin packing strategies can maximize transportation space utilization, reduce shipping costs, and ensure the stability and safety of goods. Under the framework of Industry 4.0, the use of robotic arms for 3D bin packing is becoming increasingly prevalent. Effective coordination of robotic arms in packing processes can enhance automation and intelligence in the packaging industry, reduce packaging material waste, and promote environmental sustainability.</p>
-
-
-    <p>Despite these advances, current research still suffers from several fundamental limitations. Existing methods are evaluated under inconsistent problem formulations, heterogeneous datasets, and incomparable metrics, while many state-of-the-art approaches remain closed-source, limiting reproducibility. Most works further treat online 3D-BPP as an abstract optimization problem and ignore physical constraints such as gravity, friction, and dynamic stability, making their conclusions difficult to transfer to real robotic systems. In addition, the heavy reliance on synthetic data leads to distributional gaps from real industrial workflows, raising concerns about practical validity. These issues collectively prevent fair comparison and hinder progress toward deployable packing solutions. To overcome these limitations, we introduce <strong>RoboBPP</strong>, a unified benchmarking system that standardizes evaluation through real industrial datasets, physics-based simulation, and robot-aware metrics.</p>
-
-
-
-    <p>This work makes the following major contributions:</p>
-    <ol>
-        <li>A highly realistic physics-based simulation environment for evaluating physical feasibility.</li>
-        <li>Three large-scale, diverse datasets collected from real industrial workflows for benchmarking online bin packing.</li>
-        <li>Scientifically designed test settings, ranging from purely mathematical evaluation to physics-constrained simulation and full robotic execution.</li>
-        <li>Multi-dimensional evaluation metrics, combined with a scoring system that computes a weighted overall score, enabling insightful analysis of different approaches across various scenarios.</li>
-    </ol>
-
-
-<h2>Acknowledgements</h2>
-<p>
-This project is built on top of our team's previously proposed RoboBPP benchmark and reconstructs the core implementations of several representative online packing methods. 
-It is contributed by members of a joint team from:
-</p>
-
-<ul>
-  <li>Institute of AI For Industries, Chinese Academy of Sciences</li>
-  <li>Shenzhen University</li>
-  <li>National University of Defense Technology</li>
-  <li>Wuhan University</li>
-  <li>China Post Technology</li>
-  <li>JD Technology</li>
-  <li>SF Technology</li>
-</ul>
-
-
-		
-<h2>Demo</h2>
-<p>From left to right, the three videos below show the simulation effects of the bin packing problem on three real industrial datasets under three test setting.</p>
-
-</div>
-
-    <!-- 视频轮播容器 -->
-    <div class="video-carousel-container" id="videoCarousel">
-        <!-- 第一组视频 -->
-<div class="video-group active">
-    <div class="video-item">
-        <div class="video-title">Repetitive Dataset under Math Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/time_series.mp4" autoplay muted loop></video>
-    </div>
-    <div class="video-item">
-        <div class="video-title">Diverse Dataset under Math Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/occupancy.mp4" autoplay muted loop></video>
-    </div>
-    <div class="video-item">
-        <div class="video-title">Wood Board Dataset under Math Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting1/flat_long.mp4" autoplay muted loop></video>
-    </div>
-</div>
-        
-        <!-- 第二组视频 -->
-<div class="video-group">
-    <div class="video-item">
-        <div class="video-title">Repetitive Dataset under Physics Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/time_series.mp4" autoplay muted loop></video>
-    </div>
-    <div class="video-item">
-        <div class="video-title">Diverse Dataset under Physics Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/occupancy.mp4" autoplay muted loop></video>
-    </div>
-    <div class="video-item">
-        <div class="video-title">Wood Board Dataset under Physics Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting2/flat_long.mp4" autoplay muted loop></video>
-    </div>
-</div>
-
-<!-- 第三组视频 -->
-<div class="video-group">
-    <div class="video-item">
-        <div class="video-title">Repetitive Dataset under Execution Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/time_series.mp4" autoplay muted loop></video>
-    </div>
-    <div class="video-item">
-        <div class="video-title">Diverse Dataset under Execution Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/occupancy.mp4" autoplay muted loop></video>
-    </div>
-    <div class="video-item">
-        <div class="video-title">Wood Board Dataset under Execution Pack</div>
-        <video src="https://raw.githubusercontent.com/Robot-Bin-Packing-Benchmark/Robot-Bin-Packing-Benchmark.github.io/main/display/setting3/flat_long.mp4" autoplay muted loop></video>
-    </div>
-</div>
-
-
-        <!-- 左右切换按钮 -->
-        <button class="carousel-prev">❮</button>
-        <button class="carousel-next">❯</button>
-
-        <!-- 轮播指示器 -->
-        <div class="carousel-indicators">
-            <span class="active"></span>
-            <span></span>
-            <span></span>
+        <div id="demo-panel" role="tabpanel" aria-labelledby="tab-execution" tabindex="0">
+          <div class="setting-description"><h3 id="setting-title">Can the robot execute the placement?</h3><p id="setting-description">Physics simulation meets robotic motion planning and control, accounting for reachability, collisions, and stability during execution.</p></div>
+          <div class="demo-grid">
+            <figure><video controls muted loop playsinline preload="none" src="display/setting3/time_series.mp4" poster="assets/setting3-time_series.jpg" data-dataset="time_series" aria-label="Repetitive dataset under Execution Pack"></video><figcaption><strong>Repetitive</strong><span>Repeated item dimensions</span></figcaption></figure>
+            <figure><video controls muted loop playsinline preload="none" src="display/setting3/occupancy.mp4" poster="assets/setting3-occupancy.jpg" data-dataset="occupancy" aria-label="Diverse dataset under Execution Pack"></video><figcaption><strong>Diverse</strong><span>Heterogeneous item sizes</span></figcaption></figure>
+            <figure><video controls muted loop playsinline preload="none" src="display/setting3/flat_long.mp4" poster="assets/setting3-flat_long.jpg" data-dataset="flat_long" aria-label="Wood Board dataset under Execution Pack"></video><figcaption><strong>Wood Board</strong><span>Long, slender materials</span></figcaption></figure>
+          </div>
         </div>
-    </div>
+        <p class="media-note">All demos show simulation footage. Use the video controls to play each sequence.</p>
+        <noscript><p>JavaScript is disabled. The three Execution Pack videos above remain playable. Download the other demos: <a href="display/setting1/time_series.mp4">Math / Repetitive</a> · <a href="display/setting1/occupancy.mp4">Math / Diverse</a> · <a href="display/setting1/flat_long.mp4">Math / Wood Board</a> · <a href="display/setting2/time_series.mp4">Physics / Repetitive</a> · <a href="display/setting2/occupancy.mp4">Physics / Diverse</a> · <a href="display/setting2/flat_long.mp4">Physics / Wood Board</a>.</p></noscript>
+      </div>
+    </section>
 
-    <script>
-        let currentIndex = 0;
-        const videoGroups = document.querySelectorAll('.video-group');
-        const indicators = document.querySelectorAll('.carousel-indicators span');
-        const prevButton = document.querySelector('.carousel-prev');
-        const nextButton = document.querySelector('.carousel-next');
+    <section class="section wrap" id="datasets" aria-labelledby="datasets-title">
+      <div class="section-heading"><div><p class="eyebrow">Real industrial workflows</p><h2 id="datasets-title">Three datasets.<br>Distinct packing challenges.</h2></div><p>Evaluate methods across repeated supply streams, mixed-size items, and long, slender materials.</p></div>
+      <div class="dataset-list">
+        <a href="documentation.html#dataset-a"><span class="dataset-index">01</span><h3>Repetitive</h3><p>Manufacturing and supply workflows with consecutive items of repeated dimensions.</p><span class="dataset-code">time_series</span><span aria-hidden="true">↗</span></a>
+        <a href="documentation.html#dataset-b"><span class="dataset-index">02</span><h3>Diverse</h3><p>Office supplies and logistics packing with heterogeneous item sizes.</p><span class="dataset-code">occupancy</span><span aria-hidden="true">↗</span></a>
+        <a href="documentation.html#dataset-c"><span class="dataset-index">03</span><h3>Wood Board</h3><p>Furniture manufacturing with long, slender industrial materials.</p><span class="dataset-code">flat_long</span><span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="section-actions"><a class="button primary" href="download.html">Get the datasets <span aria-hidden="true">↗</span></a><a class="text-link" href="documentation.html">Read the documentation <span aria-hidden="true">↗</span></a></div>
+    </section>
 
-        // 获取顶部导航栏高度并调整视频容器与导航栏的距离
-        const navbar = document.getElementById('navbar');
-        const videoCarousel = document.getElementById('videoCarousel');
-        function adjustCarouselMargin() {
-            const navbarHeight = navbar.offsetHeight;
-            videoCarousel.style.marginTop = `${navbarHeight + 2}px`; // 给导航栏和视频容器留一点空隙
-        }
+    <section class="get-started wrap" aria-labelledby="start-title"><div><p class="eyebrow">Build on RoboBPP</p><h2 id="start-title">Bring your method to the benchmark.</h2><p>Explore the baseline implementations, run evaluations, and compare results across settings.</p></div><div class="start-links"><a href="https://github.com/zhoufeng9/RoboBPP#readme">Explore the code <span aria-hidden="true">↗</span></a><a href="documentation.html#environment">Use the simulator <span aria-hidden="true">↗</span></a><a href="submit.html">Submit your method <span aria-hidden="true">↗</span></a></div></section>
 
-        // 显示当前的视频组
-        function showVideoGroup(index) {
-            videoGroups.forEach((group, i) => {
-                group.classList.remove('active');
-                indicators[i].classList.remove('active');
-                if (i === index) {
-                    group.classList.add('active');
-                    indicators[i].classList.add('active');
-                    // 重新播放当前视频组中的所有视频
-                    const videos = group.querySelectorAll('video');
-                    videos.forEach(video => {
-                        video.currentTime = 0;
-                        video.play();
-                    });
-                }
-            });
-        }
+    <section class="section wrap citation-section" id="citation" aria-labelledby="citation-title">
+      <div class="section-heading"><div><p class="eyebrow">Reference</p><h2 id="citation-title">Cite RoboBPP</h2></div><p>Accepted to IJRR. Use the arXiv citation below until the journal publication details are available.</p></div>
+      <div class="citation-box"><div class="citation-bar"><span>BibTeX</span><button id="copy-citation" type="button">Copy citation</button></div><pre><code id="bibtex">@article{wang2025robobpp,
+  title   = {{RoboBPP}: Benchmarking Robotic Online Bin Packing with Physics-based Simulation},
+  author  = {Wang, Zhoufeng and Zhao, Hang and Xu, Juzhan and Zhang, Shishun and
+             Hu, Ruizhen and Zhu, Chenyang and Zeng, Zecui and Zhu, Weiyan and
+             Xiong, Zeyu and Yu, Haibin and Xu, Kai},
+  journal = {arXiv preprint arXiv:2512.04415},
+  year    = {2025},
+  doi     = {10.48550/arXiv.2512.04415},
+  url     = {https://arxiv.org/abs/2512.04415}
+}</code></pre></div><p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
+    </section>
 
-        // 显示下一个视频组
-        function nextVideoGroup() {
-            currentIndex = (currentIndex + 1) % videoGroups.length;
-            showVideoGroup(currentIndex);
-        }
-
-        // 显示上一个视频组
-        function prevVideoGroup() {
-            currentIndex = (currentIndex - 1 + videoGroups.length) % videoGroups.length;
-            showVideoGroup(currentIndex);
-        }
-
-        nextButton.addEventListener('click', nextVideoGroup);
-        prevButton.addEventListener('click', prevVideoGroup);
-
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener('click', () => {
-                currentIndex = index;
-                showVideoGroup(currentIndex);
-            });
-        });
-
-        // 在页面加载时调整视频轮播容器与导航栏的距离
-        window.onload = adjustCarouselMargin;
-        window.onresize = adjustCarouselMargin;
-    </script>
-
-
-    <!-- 视频轮播器下方的解释文本容器 -->
-    <div class="video-description" id="videoDescription"></div>
-
-    <script>
-    // 视频组对应的描述文本
-
-
-
-
-// 获取视频描述容器
-const videoDescription = document.getElementById('videoDescription');
-
-
-// 显示当前的视频组并更新描述
-function showVideoGroup(index) {
-    videoGroups.forEach((group, i) => {
-        group.classList.remove('active');
-        indicators[i].classList.remove('active');
-        if (i === index) {
-            group.classList.add('active');
-            indicators[i].classList.add('active');
-            // 重新播放当前视频组中的所有视频
-            const videos = group.querySelectorAll('video');
-            videos.forEach(video => {
-                video.currentTime = 0;
-                video.play();
-            });
-        }
-    });
-}
-    </script>
-
-<p><br>&nbsp;<br>&nbsp;</p>
-
-
-
-
-
-
+    <section class="acknowledgements wrap" aria-labelledby="thanks-title"><p class="eyebrow">A collaborative effort</p><h2 id="thanks-title">Acknowledgements</h2><p>We thank the collaborators from the following institutions, and the authors of the packing methods and open-source tools used in this benchmark.</p><ul><li>Institute of AI For Industries, Chinese Academy of Sciences</li><li>Shenzhen University</li><li>National University of Defense Technology</li><li>Wuhan University</li><li>China Post Technology</li><li>JD Technology</li><li>SF Technology</li></ul></section>
+  </main>
+  <footer class="site-footer wrap"><a class="brand" href="index.html">RoboBPP</a><p>Robotic online bin packing · IJRR 2026</p><div><a href="https://arxiv.org/abs/2512.04415">Paper</a><a href="https://github.com/zhoufeng9/RoboBPP">GitHub</a><a href="#citation">Citation</a></div></footer>
 </body>
 </html>
